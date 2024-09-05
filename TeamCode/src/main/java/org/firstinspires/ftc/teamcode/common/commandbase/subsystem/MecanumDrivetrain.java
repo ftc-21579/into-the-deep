@@ -51,10 +51,10 @@ public class MecanumDrivetrain extends SubsystemBase {
             double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
             double[] normalizedPowers = normalizeWheelSpeeds(powers);
 
-            frontLeft.setPower(powers[0]);
-            frontRight.setPower(powers[1]);
-            backLeft.setPower(powers[2]);
-            backRight.setPower(powers[3]);
+            frontLeft.setPower(normalizedPowers[0]);
+            frontRight.setPower(normalizedPowers[1]);
+            backLeft.setPower(normalizedPowers[2]);
+            backRight.setPower(normalizedPowers[3]);
 
             return;
         }
@@ -64,7 +64,7 @@ public class MecanumDrivetrain extends SubsystemBase {
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-        //rotX *= 1.1; // counteract imperfect strafe
+        rotX *= 1.1; // counteract imperfect strafe
 
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
         double frontLeftPower = (rotY + rotX + rx) / denominator;
@@ -73,14 +73,15 @@ public class MecanumDrivetrain extends SubsystemBase {
         double backRightPower = (rotY + rotX - rx) / denominator;
 
         double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
-        //powers = normalizeWheelSpeeds(powers);
+        double[] normalizedPowers = normalizeWheelSpeeds(powers);
 
-        frontLeft.setPower(powers[0]);
-        frontRight.setPower(powers[1]);
-        backLeft.setPower(powers[2]);
-        backRight.setPower(powers[3]);
+        frontLeft.setPower(normalizedPowers[0]);
+        frontRight.setPower(normalizedPowers[1]);
+        backLeft.setPower(normalizedPowers[2]);
+        backRight.setPower(normalizedPowers[3]);
     }
 
+    // TODO: Try to implement heading lock
     public void toggleHeadingLock() {
         headingLock = !headingLock;
     }
