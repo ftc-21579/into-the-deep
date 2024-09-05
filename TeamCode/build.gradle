@@ -27,3 +27,7 @@ dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 }
+
+dependencies {
+    implementation 'org.ftclib.ftclib:core:2.1.1' // FTC Lib (commands)
+}
