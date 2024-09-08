@@ -31,7 +31,7 @@ public class MecanumDrivetrain extends SubsystemBase {
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {

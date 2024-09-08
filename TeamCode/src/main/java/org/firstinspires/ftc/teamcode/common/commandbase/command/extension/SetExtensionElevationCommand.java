@@ -14,9 +14,9 @@ public class SetExtensionElevationCommand extends CommandBase {
     private int currentPosition;
     private boolean isFinished = false;
 
-    private static double kP = 0.1;
-    private static double kI = 0.0;
-    private static double kD = 0.0;
+    public static double kP = 0.1;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
     private MiniPID pidController = new MiniPID(kP, kI, kD);
 
     public SetExtensionElevationCommand(Extension extension, double elevationRad) {

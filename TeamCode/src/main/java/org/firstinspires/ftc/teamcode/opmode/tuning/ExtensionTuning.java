@@ -38,11 +38,11 @@ public class ExtensionTuning extends LinearOpMode {
 
             double targetLength = 0.0;
 
-            if (operator.wasJustPressed(GamepadKeys.Button.A)) {
+            if (operator.isDown(GamepadKeys.Button.A)) {
                 new SetExtensionPositionCommand(extension, 48.0).schedule();
                 telemetry.addData("Extension Target Position", 48.0);
                 targetLength = 48.0;
-            } else if (operator.wasJustPressed(GamepadKeys.Button.Y)) {
+            } else if (operator.isDown(GamepadKeys.Button.Y)) {
                 new SetExtensionPositionCommand(extension, 12.0).schedule();
                 telemetry.addData("Extension Target Position", 12.0);
                 targetLength = 12.0;
@@ -55,11 +55,11 @@ public class ExtensionTuning extends LinearOpMode {
 
             double targetElevation = 0.0;
 
-            if (operator.wasJustPressed(GamepadKeys.Button.X)) {
+            if (operator.isDown(GamepadKeys.Button.X)) {
                 new SetExtensionElevationCommand(extension, Math.PI).schedule();
                 telemetry.addData("Extension Target Elevation", Math.PI);
                 targetElevation = Math.PI;
-            } else if (operator.wasJustPressed(GamepadKeys.Button.B)) {
+            } else if (operator.isDown(GamepadKeys.Button.B)) {
                 new SetExtensionElevationCommand(extension, (Math.PI / 2)).schedule();
                 telemetry.addData("Extension Target Elevation", Math.PI / 2);
                 targetElevation = Math.PI / 2;

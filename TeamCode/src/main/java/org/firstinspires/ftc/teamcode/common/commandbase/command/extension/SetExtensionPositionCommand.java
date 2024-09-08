@@ -16,9 +16,9 @@ public class SetExtensionPositionCommand extends CommandBase {
 
     public static double ticksPerCm = 0.2495;
 
-    private static double kP = 0.1;
-    private static double kI = 0.0;
-    private static double kD = 0.0;
+    public static double kP = 0.1;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
     private MiniPID pidController = new MiniPID(kP, kI, kD);
 
     public SetExtensionPositionCommand(Extension extension, double targetLengthCm) {
