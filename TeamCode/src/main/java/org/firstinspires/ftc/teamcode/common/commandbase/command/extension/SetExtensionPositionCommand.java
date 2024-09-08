@@ -7,24 +7,26 @@ import com.mineinjava.quail.util.MiniPID;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 
 @Config
-public class SetExtensionElevationCommand extends CommandBase {
+public class SetExtensionPositionCommand extends CommandBase {
 
     private final Extension extension;
     private final int targetTicks;
     private int currentPosition;
     private boolean isFinished = false;
 
+    public static double ticksPerCm = 0.2495;
+
     private static double kP = 0.1;
     private static double kI = 0.0;
     private static double kD = 0.0;
     private MiniPID pidController = new MiniPID(kP, kI, kD);
 
-    public SetExtensionElevationCommand(Extension extension, double elevationRad) {
+    public SetExtensionPositionCommand(Extension extension, double targetLengthCm) {
         this.extension = extension;
 
-        targetTicks = (int) ((elevationRad * 128.3) / (2 * Math.PI));
+        targetTicks = (int) (targetLengthCm * ticksPerCm);
 
-        currentPosition = extension.getElevationMotorPosition();
+        currentPosition = extension.getExtensionMotorPosition();
         if (Math.abs(targetTicks - currentPosition) < 30) {
             isFinished = true;
         }
@@ -33,14 +35,14 @@ public class SetExtensionElevationCommand extends CommandBase {
     @Override
     public void execute() {
 
-        currentPosition = extension.getElevationMotorPosition();
+        currentPosition = extension.getExtensionMotorPosition();
         if (Math.abs(targetTicks - currentPosition) < 30) {
             isFinished = true;
             return;
         }
 
         double power = pidController.getOutput(currentPosition, targetTicks);
-        extension.setElevationMotorPower(power);
+        extension.setExtensionMotorPower(power);
 
     }
 

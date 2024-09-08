@@ -8,16 +8,17 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 public class Extension extends SubsystemBase {
 
     private final Bot bot;
-    private final DcMotor elevationMotor, extensionMotor;
+    private final DcMotor leftElevationMotor, rightElevationMotor, extensionMotor;
 
 
     public Extension(Bot bot) {
         this.bot = bot;
 
-        this.elevationMotor = bot.hMap.get(DcMotor.class, "elevationMotor");
-        elevationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftElevationMotor = bot.hMap.get(DcMotor.class, "leftElevationMotor");
+        rightElevationMotor = bot.hMap.get(DcMotor.class, "rightElevationMotor");
+        rightElevationMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        this.extensionMotor = bot.hMap.get(DcMotor.class, "extensionMotor");
+        extensionMotor = bot.hMap.get(DcMotor.class, "extensionMotor");
 
     }
 
@@ -26,19 +27,14 @@ public class Extension extends SubsystemBase {
     // 537.7 cpr on motor
     // 4.2:1 on sprocket
     // target ticks = (Angle in RAD * 128.3) / 2pi
-    public void setElevation(double targetRad, double power) {
-        double targetTicks = (targetRad * 128.3) / (2 * Math.PI);
-
-        elevationMotor.setTargetPosition((int) targetTicks);
-        elevationMotor.setPower(power);
-    }
 
     public void setElevationMotorPower(double power) {
-        elevationMotor.setPower(power);
+        leftElevationMotor.setPower(power);
+        rightElevationMotor.setPower(power);
     }
 
     public int getElevationMotorPosition() {
-        return elevationMotor.getCurrentPosition();
+        return leftElevationMotor.getCurrentPosition();
     }
 
     //endregion

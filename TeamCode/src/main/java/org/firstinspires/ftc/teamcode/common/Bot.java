@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.vision.Vision;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -17,6 +18,7 @@ public class Bot extends Robot {
 
     private final MecanumDrivetrain drivetrain;
     private final Vision vision;
+    private final Extension extension;
 
     public Bot(Telemetry telem, HardwareMap hMap) {
         this.telem = telem;
@@ -36,6 +38,7 @@ public class Bot extends Robot {
         /* Subsystems */
         vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
+        extension = new Extension(this);
     }
 
 
@@ -56,4 +59,10 @@ public class Bot extends Robot {
      * @return the vision subsystem object
      */
     public Vision getVision() { return vision; }
+
+    /**
+     * Get the Extension subsystem of the robot
+     * @return the extension subsystem object
+     */
+    public Extension getExtension() { return extension; }
 }
