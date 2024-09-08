@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.checkerframework.checker.initialization.qual.Initialized;
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.RunExtensionPidCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevationCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
@@ -56,18 +57,20 @@ public class ExtensionTuning extends LinearOpMode {
             double targetElevation = 0.0;
 
             if (operator.isDown(GamepadKeys.Button.X)) {
-                new SetExtensionElevationCommand(extension, Math.PI).schedule();
-                telemetry.addData("Extension Target Elevation", Math.PI);
-                targetElevation = Math.PI;
+                new SetExtensionElevationCommand(extension, 90).schedule();
+                telemetry.addData("Extension Target Elevation", 90);
+                targetElevation = 90;
             } else if (operator.isDown(GamepadKeys.Button.B)) {
-                new SetExtensionElevationCommand(extension, (Math.PI / 2)).schedule();
-                telemetry.addData("Extension Target Elevation", Math.PI / 2);
-                targetElevation = Math.PI / 2;
+                new SetExtensionElevationCommand(extension, 45).schedule();
+                telemetry.addData("Extension Target Elevation", 45);
+                targetElevation = 45;
             }
 
             // targetTicks = (int) ((elevationRad * 128.3) / (2 * Math.PI)) reversed
             telemetry.addData("Extension Current Elevation", (extension.getElevationMotorPosition() * (2 * Math.PI) / 128.3));
             telemetry.addData("Extension Elevation Error", targetElevation - (extension.getElevationMotorPosition() * (2 * Math.PI) / 128.3));
+
+            s.schedule(new RunExtensionPidCommand(extension));
 
             telemetry.update();
             s.run();

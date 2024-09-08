@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevatorPowerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionPowerCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.SetGripperPowerCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.SetWristPowerCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperGrabCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Manipulator;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
@@ -77,22 +77,20 @@ public class TeleOp extends LinearOpMode {
             }
 
 
-            if (driver.isDown(GamepadKeys.Button.A)) {
-                s.schedule(new SetGripperPowerCommand(manipulator, 0.25));
-            } else if (driver.isDown(GamepadKeys.Button.Y)) {
-                s.schedule(new SetGripperPowerCommand(manipulator, -0.25));
-            } else {
-                s.schedule(new SetGripperPowerCommand(manipulator, 0.0));
+            if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+                new GripperGrabCommand(manipulator).schedule();
             }
 
-            if (driver.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-                s.schedule(new SetWristPowerCommand(manipulator, 0.25));
-            } else if (driver.isDown(GamepadKeys.Button.DPAD_UP)) {
-                s.schedule(new SetWristPowerCommand(manipulator, -0.25));
-            } else {
-                s.schedule(new SetWristPowerCommand(manipulator, 0.0));
+            if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+                new GripperGrabCommand(manipulator).schedule();
             }
 
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                new WristDownCommand(manipulator).schedule();
+            }
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                new WristDownCommand(manipulator).schedule();
+            }
 
             telemetry.update();
             s.run();

@@ -10,7 +10,7 @@ public class LiftTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        DcMotor liftMotor = hardwareMap.get(DcMotor.class, "extensionMotor");
+        DcMotor liftMotor = hardwareMap.get(DcMotor.class, "leftElevationMotor");
 
         waitForStart();
 
@@ -22,6 +22,11 @@ public class LiftTest extends LinearOpMode {
             } else {
                 liftMotor.setPower(0.0);
             }
+
+            telemetry.addData("Ticks", (int) (liftMotor.getCurrentPosition()));
+            telemetry.addData("Pos", (int) (liftMotor.getCurrentPosition() / 6.2732));
+            telemetry.addData("Pos2", (int) (liftMotor.getCurrentPosition() * 0.3556));
+            telemetry.update();
         }
     }
 

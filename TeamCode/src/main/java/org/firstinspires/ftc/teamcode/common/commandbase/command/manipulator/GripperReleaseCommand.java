@@ -4,8 +4,9 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Manipulator;
 
-public class SetWristPowerCommand extends InstantCommand {
-    public SetWristPowerCommand(Manipulator m, double power) {
-        super(() -> {m.setWristPower(power);} );
+public class GripperReleaseCommand extends InstantCommand {
+
+    public GripperReleaseCommand(Manipulator m) {
+        super(m::release);
     }
 }
