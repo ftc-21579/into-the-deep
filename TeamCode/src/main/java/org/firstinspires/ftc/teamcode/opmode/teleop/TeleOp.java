@@ -73,7 +73,7 @@ public class TeleOp extends LinearOpMode {
             if (driver.wasJustPressed(GamepadKeys.Button.X)) {
                 s.schedule(new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)));
             } else if (driver.isDown(GamepadKeys.Button.B)) {
-                s.schedule(new SetExtensionElevationCommand(extension, -0.5));
+                s.schedule(new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)));
             }
 
             if (driver.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
