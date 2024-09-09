@@ -63,7 +63,7 @@ public class ExtensionTuning extends LinearOpMode {
             telemetry.addData("Extension Target Elevation", evTargetTicks);
             telemetry.addData("Extension Current Elevation", extension.getElevationMotorPosition());
             telemetry.addData("Extension Elevation Error", evTargetTicks - extension.getElevationMotorPosition());
-            
+
             s.schedule(new RunExtensionPidCommand(extension));
 
             telemetry.update();

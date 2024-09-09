@@ -11,9 +11,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevationCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevatorPowerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionPowerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperGrabCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperReleaseCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Manipulator;
@@ -68,12 +70,16 @@ public class TeleOp extends LinearOpMode {
                     operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
                     operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));*/
 
+            if (driver.wasJustPressed(GamepadKeys.Button.X)) {
+                s.schedule(new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)));
+            } else if (driver.isDown(GamepadKeys.Button.B)) {
+                s.schedule(new SetExtensionElevationCommand(extension, -0.5));
+            }
+
             if (driver.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                s.schedule(new SetExtensionElevatorPowerCommand(extension, 0.5));
+                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() + 20)).schedule();
             } else if (driver.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-                s.schedule(new SetExtensionElevatorPowerCommand(extension, -0.5));
-            } else {
-                s.schedule(new SetExtensionElevatorPowerCommand(extension, 0.0));
+                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() - 20)).schedule();
             }
 
 
@@ -81,8 +87,8 @@ public class TeleOp extends LinearOpMode {
                 new GripperGrabCommand(manipulator).schedule();
             }
 
-            if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-                new GripperGrabCommand(manipulator).schedule();
+            if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
+                new GripperReleaseCommand(manipulator).schedule();
             }
 
             if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
