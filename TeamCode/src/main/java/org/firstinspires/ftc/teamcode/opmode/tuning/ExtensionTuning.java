@@ -58,22 +58,12 @@ public class ExtensionTuning extends LinearOpMode {
 
 
 
-            double targetElevation = 0.0;
 
-            if (operator.isDown(GamepadKeys.Button.X)) {
-                new SetExtensionElevationCommand(extension, 90).schedule();
-                telemetry.addData("Extension Target Elevation", 90);
-                targetElevation = 90;
-            } else if (operator.isDown(GamepadKeys.Button.B)) {
-                new SetExtensionElevationCommand(extension, 45).schedule();
-                telemetry.addData("Extension Target Elevation", 45);
-                targetElevation = 45;
-            }
-
-            // targetTicks = (int) ((elevationRad * 128.3) / (2 * Math.PI)) reversed
-            telemetry.addData("Extension Current Elevation", (extension.getElevationMotorPosition() * (2 * Math.PI) / 128.3));
-            telemetry.addData("Extension Elevation Error", targetElevation - (extension.getElevationMotorPosition() * (2 * Math.PI) / 128.3));
-
+            new SetExtensionElevationCommand(extension, evTargetTicks).schedule();
+            telemetry.addData("Extension Target Elevation", evTargetTicks);
+            telemetry.addData("Extension Current Elevation", extension.getElevationMotorPosition());
+            telemetry.addData("Extension Elevation Error", evTargetTicks - extension.getElevationMotorPosition());
+            
             s.schedule(new RunExtensionPidCommand(extension));
 
             telemetry.update();
