@@ -11,6 +11,8 @@ public class LiftTest extends LinearOpMode {
     public void runOpMode() {
 
         DcMotor liftMotor = hardwareMap.get(DcMotor.class, "leftElevationMotor");
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -24,8 +26,8 @@ public class LiftTest extends LinearOpMode {
             }
 
             telemetry.addData("Ticks", (int) (liftMotor.getCurrentPosition()));
-            telemetry.addData("Pos", (int) (liftMotor.getCurrentPosition() / 6.2732));
-            telemetry.addData("Pos2", (int) (liftMotor.getCurrentPosition() * 0.3556));
+            telemetry.addData("Div 6.2", (int) (liftMotor.getCurrentPosition() / 6.2732));
+            telemetry.addData("Times 0.35", (int) (liftMotor.getCurrentPosition() * 0.3556));
             telemetry.update();
         }
     }

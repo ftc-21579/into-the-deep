@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -16,7 +17,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 
 @TeleOp(name = "Extension Tuning", group = "Tuning")
+@Config
 public class ExtensionTuning extends LinearOpMode {
+
+    public static int evTargetTicks = 0;
 
     @Override
     public void runOpMode() {

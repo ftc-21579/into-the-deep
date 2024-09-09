@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.mineinjava.quail.util.MiniPID;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -13,11 +14,11 @@ public class Extension extends SubsystemBase {
     private final Bot bot;
     private final DcMotor leftElevationMotor, rightElevationMotor, extensionMotor;
 
-    public static double ex_kP = 0.01, ex_kI = 0.0, ex_kD = 0.0;
-    public static double ev_kP = 0.01, ev_kI = 0.0, ev_kD = 0.0;
+    public static double ex_kP = 0.0, ex_kI = 0.0, ex_kD = 0.0;
+    public static double ev_kP = 0.0, ev_kI = 0.0, ev_kD = 0.0, ev_kF = 0.0;
 
-    private MiniPID exPID = new MiniPID(ex_kP, ex_kI, ex_kD),
-            evPID = new MiniPID(ev_kP, ex_kI, ex_kD);
+    private PIDController exPID = new PIDController(ex_kP, ex_kI, ex_kD);
+    private PIDFController evPIDF = new PIDFController(ev_kP, ev_kI, ev_kD, ev_kF);
 
     public double exSetpoint = 0.0, evSetpoint = 0.0;
 
@@ -76,19 +77,19 @@ public class Extension extends SubsystemBase {
 
     //endregion
 
+    // evSetpoint * 6.2732 = target ticks
     public void runPID() {
-        double evTargetTicks = (int) (evSetpoint * 6.2732);
+        double evTargetTicks = (int) (evSetpoint);
         bot.telem.addData("evTargetTicks", evTargetTicks);
-        double evCurrentPosition = -getElevationMotorPosition();
+        double evCurrentPosition = getElevationMotorPosition();
         bot.telem.addData("evCurrentPos", evCurrentPosition);
-        double evPower = evPID.getOutput(evCurrentPosition, evTargetTicks);
-        double evPowerNorm = Math.max(-1, Math.min(1, evPower));
-        bot.telem.addData("evPower", evPowerNorm);
-        setElevationMotorPower(-evPowerNorm);
+        double evPower = evPIDF.calculate(evCurrentPosition, evTargetTicks);
+        bot.telem.addData("evPower", evPower);
+        setElevationMotorPower(evPower);
 
         double exTargetTicks = (int) (exSetpoint * 0.2495);
         double exCurrentPosition = getExtensionMotorPosition();
-        double exPower = exPID.getOutput(exCurrentPosition, exTargetTicks);
+        double exPower = exPID.calculate(exCurrentPosition, exTargetTicks);
         setExtensionMotorPower(exPower);
     }
 }
