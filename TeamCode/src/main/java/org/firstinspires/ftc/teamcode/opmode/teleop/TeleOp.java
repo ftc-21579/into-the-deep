@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.RunExtensionPidCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevationCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevatorPowerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionPowerCommand;
@@ -71,9 +72,10 @@ public class TeleOp extends LinearOpMode {
                     operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));*/
 
             if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-                s.schedule(new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)));
-            } else if (driver.isDown(GamepadKeys.Button.B)) {
-                s.schedule(new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)));
+                new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)).schedule();
+            }
+            if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+                new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)).schedule();
             }
 
             if (driver.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -97,6 +99,8 @@ public class TeleOp extends LinearOpMode {
             if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 new WristDownCommand(manipulator).schedule();
             }
+
+            new RunExtensionPidCommand(extension).schedule();
 
             telemetry.update();
             s.run();

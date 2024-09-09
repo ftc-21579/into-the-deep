@@ -87,9 +87,9 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("evPower", evPower);
         setElevationMotorPower(evPower);
 
-        double exTargetTicks = (int) (exSetpoint * 0.2495);
-        double exCurrentPosition = getExtensionMotorPosition();
-        double exPower = exPID.calculate(exCurrentPosition, exTargetTicks);
-        setExtensionMotorPower(exPower);
+        //double exTargetTicks = (int) (exSetpoint * 0.2495);
+        //double exCurrentPosition = getExtensionMotorPosition();
+        //double exPower = exPID.calculate(exCurrentPosition, exTargetTicks);
+        //setExtensionMotorPower(exPower);
     }
 }
