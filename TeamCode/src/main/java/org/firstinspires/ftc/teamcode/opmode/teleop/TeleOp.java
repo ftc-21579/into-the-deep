@@ -66,10 +66,10 @@ public class TeleOp extends LinearOpMode {
                     driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
 
-            if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-                new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)).schedule();
-            }
             if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+                new SetExtensionElevationCommand(extension, (int) (100 * 6.2732)).schedule();
+            }
+            if (driver.wasJustPressed(GamepadKeys.Button.X)) {
                 new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)).schedule();
             }
 
