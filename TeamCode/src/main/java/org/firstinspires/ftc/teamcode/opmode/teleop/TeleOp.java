@@ -88,10 +88,10 @@ public class TeleOp extends LinearOpMode {
                 new GripperReleaseCommand(manipulator).schedule();
             }
 
-            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 new WristDownCommand(manipulator).schedule();
             }
-            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
                 new WristUpCommand(manipulator).schedule();
             }
 

@@ -13,8 +13,8 @@ public class Manipulator extends SubsystemBase {
     private final Bot bot;
     private final Servo wrist, gripper;
 
-    public static double grabPos = 0.0, releasePos = 0.0;
-    public static double wristDownPos = 0.0, wristUpPos = 0.0;
+    public static double grabPos = 0.0, releasePos = 0.2;
+    public static double wristDownPos = 0.0, wristUpPos = 0.6;
 
     public Manipulator(Bot bot) {
         this.bot = bot;
