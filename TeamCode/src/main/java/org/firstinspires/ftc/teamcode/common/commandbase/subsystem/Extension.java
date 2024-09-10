@@ -79,12 +79,12 @@ public class Extension extends SubsystemBase {
 
     // evSetpoint * 6.2732 = target ticks
     public void runPID() {
-        double evTargetTicks = (int) (evSetpoint);
-        bot.telem.addData("evTargetTicks", evTargetTicks);
-        double evCurrentPosition = getElevationMotorPosition();
-        bot.telem.addData("evCurrentPos", evCurrentPosition);
+        int evTargetTicks = (int) (evSetpoint);
+        //bot.telem.addData("evTargetTicks", evTargetTicks);
+        int evCurrentPosition = getElevationMotorPosition();
+        //bot.telem.addData("evCurrentPos", evCurrentPosition);
         double evPower = evPIDF.calculate(evCurrentPosition, evTargetTicks);
-        bot.telem.addData("evPower", evPower);
+        //bot.telem.addData("evPower", evPower);
         setElevationMotorPower(evPower);
 
         //double exTargetTicks = (int) (exSetpoint * 0.2495);

@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperGrabCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperReleaseCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristDownCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristUpCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Manipulator;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
@@ -64,12 +65,6 @@ public class TeleOp extends LinearOpMode {
                     driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
                     driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-            /*s.schedule(new SetExtensionElevatorPowerCommand(extension,
-                    operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
-                            operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)));
-            telemetry.addData("Elevator Power",
-                    operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
-                    operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));*/
 
             if (driver.wasJustPressed(GamepadKeys.Button.X)) {
                 new SetExtensionElevationCommand(extension, (int) (120 * 6.2732)).schedule();
@@ -97,7 +92,7 @@ public class TeleOp extends LinearOpMode {
                 new WristDownCommand(manipulator).schedule();
             }
             if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                new WristDownCommand(manipulator).schedule();
+                new WristUpCommand(manipulator).schedule();
             }
 
             new RunExtensionPidCommand(extension).schedule();
