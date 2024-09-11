@@ -55,8 +55,8 @@ public class TeleOp extends LinearOpMode {
             operator.readButtons();
 
             s.schedule(new TeleOpDriveCommand(drivetrain,
-                    new Vec2d(driver.getLeftX(), driver.getRightX()),
-                    -driver.getLeftY(), 1.0));
+                    new Vec2d(driver.getRightX(), -driver.getLeftY()),
+                    driver.getLeftX(), 1.0));
 
             s.schedule(new SetExtensionPowerCommand(extension,
                     driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
@@ -73,10 +73,10 @@ public class TeleOp extends LinearOpMode {
                 new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)).schedule();
             }
 
-            if (driver.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() + 20)).schedule();
-            } else if (driver.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() - 20)).schedule();
+            if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() + 100)).schedule();
+            } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                new SetExtensionElevationCommand(extension, (extension.getElevationMotorPosition() - 100)).schedule();
             }
 
 
