@@ -31,9 +31,9 @@ public class Extension extends SubsystemBase {
         rightElevationMotor.setDirection(DcMotor.Direction.REVERSE);
 
         leftElevationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftElevationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftElevationMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightElevationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightElevationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightElevationMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         extensionMotor = bot.hMap.get(DcMotor.class, "extensionMotor");
 

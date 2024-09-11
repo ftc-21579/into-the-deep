@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.mineinjava.quail.pathing.Path;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -29,6 +30,11 @@ public class MecanumDrivetrain extends SubsystemBase {
         frontRight = bot.hMap.get(DcMotorEx.class, "frontRight");
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
