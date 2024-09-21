@@ -4,9 +4,9 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Manipulator;
 
-public class GripperReleaseCommand extends InstantCommand {
+public class IntakeCommand extends InstantCommand {
 
-    public GripperReleaseCommand(Manipulator m) {
-        super(m::release);
+    public IntakeCommand(Manipulator m) {
+        super(m::intake);
     }
 }

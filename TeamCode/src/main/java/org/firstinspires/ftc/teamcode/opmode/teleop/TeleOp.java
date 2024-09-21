@@ -15,8 +15,9 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.RunEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevationCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionElevatorPowerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionPowerCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperGrabCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.GripperReleaseCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.DepositCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.IdleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.manipulator.WristUpCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
@@ -70,7 +71,7 @@ public class TeleOp extends LinearOpMode {
                 new SetExtensionElevationCommand(extension, (int) (90 * 6.2732)).schedule();
             }
             if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-                new SetExtensionElevationCommand(extension, (int) (10 * 6.2732)).schedule();
+                new SetExtensionElevationCommand(extension, (int) (20 * 6.2732)).schedule();
             }
 
             if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -80,13 +81,23 @@ public class TeleOp extends LinearOpMode {
             }
 
 
-            if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-                new GripperGrabCommand(manipulator).schedule();
+            if (driver.isDown(GamepadKeys.Button.A)) {
+                new IntakeCommand(manipulator).schedule();
+                telemetry.addLine("a");
+                telemetry.addData("Left Servo Power: ", manipulator.getLeftServoPower());
+                telemetry.addData("Right Servo Power: ", manipulator.getRightServoPower());
+            } else if (driver.isDown(GamepadKeys.Button.Y)) {
+                new DepositCommand(manipulator).schedule();
+                telemetry.addLine("y");
+                telemetry.addData("Left Servo Power: ", manipulator.getLeftServoPower());
+                telemetry.addData("Right Servo Power: ", manipulator.getRightServoPower());
+            } else {
+                new IdleCommand(manipulator).schedule();
+                telemetry.addLine("nothing");
+                telemetry.addData("Left Servo Power: ", manipulator.getLeftServoPower());
+                telemetry.addData("Right Servo Power: ", manipulator.getRightServoPower());
             }
 
-            if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
-                new GripperReleaseCommand(manipulator).schedule();
-            }
 
             if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                 new WristDownCommand(manipulator).schedule();

@@ -15,7 +15,7 @@ public class Extension extends SubsystemBase {
     private final DcMotor leftElevationMotor, rightElevationMotor, extensionMotor;
 
     public static double ex_kP = 0.0, ex_kI = 0.0, ex_kD = 0.0;
-    public static double ev_kP = 0.0005, ev_kI = 0.0, ev_kD = 0.000005, ev_kF = 0.000025;
+    public static double ev_kP = 0.001, ev_kI = 0.0, ev_kD = 0.00001, ev_kF = 0.0003;
 
     private PIDController exPID = new PIDController(ex_kP, ex_kI, ex_kD);
     private PIDFController evPIDF = new PIDFController(ev_kP, ev_kI, ev_kD, ev_kF);
