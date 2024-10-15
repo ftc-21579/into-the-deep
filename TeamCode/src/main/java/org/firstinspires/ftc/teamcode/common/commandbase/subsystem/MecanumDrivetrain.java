@@ -2,17 +2,13 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.mineinjava.quail.pathing.Path;
-import com.mineinjava.quail.util.geometry.Pose2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.common.Bot;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -30,8 +26,14 @@ public class MecanumDrivetrain extends SubsystemBase {
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
+
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    @Override
+    public void periodic() {
+        // Will be called every loop in the command scheduler
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
