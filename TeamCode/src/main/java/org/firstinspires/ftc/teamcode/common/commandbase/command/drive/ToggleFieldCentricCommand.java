@@ -9,5 +9,6 @@ public class ToggleFieldCentricCommand extends InstantCommand {
         super(
                 d::toggleFieldCentric
         );
+        addRequirements(d);
     }
 }

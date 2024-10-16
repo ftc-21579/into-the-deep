@@ -10,5 +10,6 @@ public class TeleOpDriveCommand extends InstantCommand {
         super(
                 () -> d.teleopDrive(leftStick, rot, multiplier)
         );
+        addRequirements(d);
     }
 }
