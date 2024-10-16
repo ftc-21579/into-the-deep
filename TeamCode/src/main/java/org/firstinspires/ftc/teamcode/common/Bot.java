@@ -14,7 +14,7 @@ public class Bot {
     public final HardwareMap hMap;
 
     private final MecanumDrivetrain drivetrain;
-    //private final Vision vision;
+    private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap) {
         this.telem = telem;
@@ -32,7 +32,7 @@ public class Bot {
         );
 
         /* Subsystems */
-        //vision = new Vision(this);
+        vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
     }
 
@@ -53,5 +53,5 @@ public class Bot {
      * Get the Vision subsystem of the robot
      * @return the vision subsystem object
      */
-    //public Vision getVision() { return vision; }
+    public Vision getVision() { return vision; }
 }
