@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
 
     private Bot bot;
