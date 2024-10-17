@@ -27,7 +27,7 @@ public class MecanumDrivetrain extends SubsystemBase {
 
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override

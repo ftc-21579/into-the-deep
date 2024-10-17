@@ -27,9 +27,9 @@ public class TeleOp extends CommandOpMode {
 
         driveCommand = new TeleOpDriveCommand(
                 drivetrain,
-                () ->driverGamepad.getLeftX(),
-                ()-> driverGamepad.getLeftY(),
-                () -> driverGamepad.getRightX(),
+                () -> -driverGamepad.getRightX(),
+                () -> driverGamepad.getLeftY(),
+                () -> -driverGamepad.getLeftX(),
                 () -> 0.8
         );
 
