@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common;
 
+import com.arcrobotics.ftclib.command.Robot;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
-public class Bot {
+public class Bot extends Robot {
     private final IMU imu;
     public final Telemetry telem;
     public final HardwareMap hMap;

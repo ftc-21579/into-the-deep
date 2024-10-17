@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.common.Bot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
     private final Bot bot;
@@ -25,14 +28,8 @@ public class MecanumDrivetrain extends SubsystemBase {
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
-
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
-
-    @Override
-    public void periodic() {
-        // Will be called every loop in the command scheduler
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
