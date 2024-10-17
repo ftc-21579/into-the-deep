@@ -1,14 +1,33 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
 
-import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
-public class TeleOpDriveCommand extends InstantCommand {
-    public TeleOpDriveCommand(MecanumDrivetrain d, Vec2d leftStick, double rot, double multiplier) {
-        super(
-                () -> d.teleopDrive(leftStick, rot, multiplier)
-        );
+import java.util.function.DoubleSupplier;
+
+public class TeleOpDriveCommand extends CommandBase {
+
+    private final MecanumDrivetrain drivetrain;
+    private final DoubleSupplier leftStickX, leftStickY, rot, multiplier;
+
+    public TeleOpDriveCommand(MecanumDrivetrain d, DoubleSupplier leftStickX,
+                              DoubleSupplier leftStickY,
+                              DoubleSupplier rot,
+                              DoubleSupplier multiplier) {
+
+        this.drivetrain = d;
+        this.leftStickX = leftStickX;
+        this.leftStickY = leftStickY;
+        this.rot = rot;
+        this.multiplier = multiplier;
+
+        addRequirements(this.drivetrain);
+    }
+
+    @Override
+    public void execute() {
+        drivetrain.teleopDrive(new Vec2d(leftStickX.getAsDouble(), leftStickY.getAsDouble()), rot.getAsDouble(), multiplier.getAsDouble());
     }
 }
