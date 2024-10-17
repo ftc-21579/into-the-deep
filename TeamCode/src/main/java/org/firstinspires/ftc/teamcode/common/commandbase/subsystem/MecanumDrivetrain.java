@@ -9,9 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.common.Bot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
     private final Bot bot;
