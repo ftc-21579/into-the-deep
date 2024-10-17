@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.vision.Vision;
 
 public class Bot {
     private final IMU imu;
