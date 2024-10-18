@@ -14,6 +14,11 @@ public class ManualPivotDownCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // move the pivot down
+        pivot.setSetpointDEG(pivot.getSetpointDEG() - 5);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
