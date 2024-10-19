@@ -14,6 +14,11 @@ public class ManualPivotUpCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // move the pivot up
+        pivot.setSetpointDEG(pivot.getSetpointDEG() + 5);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
