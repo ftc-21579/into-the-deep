@@ -21,14 +21,11 @@ public class SetPivotAngleCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // set the pivot angle
+        // nothing needed
     }
 
     @Override
     public boolean isFinished() {
-        if (Math.abs(pivot.getPosition() - angle) < Config.pivot_tolerance) {
-            return true;
-        }
-        return false;
+        return Math.abs(pivot.getPosition() - angle) < Config.pivot_tolerance;
     }
 }

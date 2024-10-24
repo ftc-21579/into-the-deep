@@ -14,6 +14,11 @@ public class ManualExtensionOutCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // move the extension out
+        extension.setSetpointCM(extension.getPositionCM() + 5);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
