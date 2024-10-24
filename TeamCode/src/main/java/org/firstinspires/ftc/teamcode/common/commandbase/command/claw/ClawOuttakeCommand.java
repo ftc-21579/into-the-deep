@@ -21,11 +21,13 @@ public class ClawOuttakeCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // deposit
+        // outtake the game element
+        claw.outtakePowers();
     }
 
     @Override
     public void end(boolean interrupted) {
-        // stop the claw
+        // stop the claw when the command ends
+        claw.stop();
     }
 }

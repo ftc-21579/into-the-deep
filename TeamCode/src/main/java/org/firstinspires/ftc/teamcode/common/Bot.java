@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
@@ -17,6 +18,7 @@ public class Bot extends Robot {
     public BotState state = BotState.INTAKE;
 
     private final MecanumDrivetrain drivetrain;
+    private final Claw claw;
     //private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap) {
@@ -37,6 +39,7 @@ public class Bot extends Robot {
         /* Subsystems */
         //vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
+        claw = new Claw(this);
     }
 
 
@@ -51,6 +54,12 @@ public class Bot extends Robot {
      * @return the mecanum subsystem of the robot
      */
     public MecanumDrivetrain getDrivetrain() { return drivetrain; }
+
+    /**
+     * Get the Claw subsystem of the robot
+     * @return the claw subsystem of the robot
+     */
+    public Claw getClaw() { return claw; }
 
     /**
      * Get the state of the robot
