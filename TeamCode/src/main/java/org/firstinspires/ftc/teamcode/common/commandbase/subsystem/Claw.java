@@ -16,6 +16,22 @@ public class Claw extends SubsystemBase {
 
         left = bot.hMap.get(CRServo.class, "leftClaw");
         right = bot.hMap.get(CRServo.class, "rightClaw");
+        right.setDirection(CRServo.Direction.REVERSE);
+    }
+
+    public void intakePowers() {
+        left.setPower(1);
+        right.setPower(1);
+    }
+
+    public void outtakePowers() {
+        left.setPower(-1);
+        right.setPower(-1);
+    }
+
+    public void stop() {
+        left.setPower(0);
+        right.setPower(0);
     }
 
 }
