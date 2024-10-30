@@ -18,6 +18,11 @@ public class SetWristPositionCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // set the wrist position
+        wrist.setTwistAndAngle(position.x, position.y);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

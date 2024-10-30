@@ -17,6 +17,13 @@ public class ManualWristTwistCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // twist the wrist
+        switch (direction) {
+            case LEFT:
+                wrist.incrementTwist();
+                break;
+            case RIGHT:
+                wrist.decrementTwist();
+                break;
+        }
     }
 }
