@@ -7,7 +7,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
 public class Bot extends Robot {
@@ -19,6 +22,9 @@ public class Bot extends Robot {
 
     private final MecanumDrivetrain drivetrain;
     private final Claw claw;
+    private final Extension extension;
+    private final Wrist wrist;
+    private final Pivot pivot;
     //private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap) {
@@ -40,6 +46,9 @@ public class Bot extends Robot {
         //vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
         claw = new Claw(this);
+        extension = new Extension(this);
+        wrist = new Wrist(this);
+        pivot = new Pivot(this);
     }
 
 
@@ -60,6 +69,24 @@ public class Bot extends Robot {
      * @return the claw subsystem of the robot
      */
     public Claw getClaw() { return claw; }
+
+    /**
+     * Get the Extension subsystem of the robot
+     * @return the extension subsystem of the robot
+     */
+    public Extension getExtension() { return extension; }
+
+    /**
+     * Get the Wrist subsystem of the robot
+     * @return the wrist subsystem of the robot
+     */
+    public Wrist getWrist() { return wrist; }
+
+    /**
+     * Get the Pivot subsystem of the robot
+     * @return the pivot subsystem of the robot
+     */
+    public Pivot getPivot() { return pivot; }
 
     /**
      * Get the state of the robot
