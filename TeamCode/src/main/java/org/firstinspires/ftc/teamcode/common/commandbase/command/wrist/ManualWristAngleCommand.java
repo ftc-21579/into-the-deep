@@ -17,6 +17,18 @@ public class ManualWristAngleCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // angle the wrist
+        switch (direction) {
+            case UP:
+                wrist.incrementAngle();
+                break;
+            case DOWN:
+                wrist.decrementAngle();
+                break;
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
