@@ -14,7 +14,9 @@ public class ManualExtensionInCommand extends CommandBase {
 
     @Override
     public void execute() {
-        extension.setSetpointCM(extension.getPositionCM() - 5);
+        if (extension.getSetpointCM() > extension.getMinExtension()) {
+            extension.setSetpointCM(extension.getSetpointCM() - 5);
+        }
     }
 
     @Override

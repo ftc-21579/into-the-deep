@@ -2,19 +2,28 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
+
+import java.util.Locale;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
     private final Bot bot;
 
     private final DcMotorEx frontLeft, frontRight, backLeft, backRight;
+    private GoBildaPinpointDriver odo;
     public static boolean fieldCentric = false, headingLock = false;
+
+    private static Pose2D pose;
 
 
     public MecanumDrivetrain(Bot bot) {
@@ -25,8 +34,31 @@ public class MecanumDrivetrain extends SubsystemBase {
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setOffsets(0, 0); // TODO: Set offsets
+        odo.setEncoderResolution(234.057142857);
+        odo.setEncoderDirections(
+                GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                GoBildaPinpointDriver.EncoderDirection.FORWARD
+        ); // TODO: Set encoder directions
+    }
+
+    @Override
+    public void periodic() {
+        pose = odo.getPosition();
+        bot.telem.addData("Pose",
+                String.format(
+                        Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
+                        pose.getX(DistanceUnit.CM),
+                        pose.getY(DistanceUnit.CM),
+                        pose.getHeading(AngleUnit.DEGREES)
+                )
+        );
+
+        bot.telem.addData("Pinpoint Frequency", odo.getFrequency());
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
@@ -104,5 +136,33 @@ public class MecanumDrivetrain extends SubsystemBase {
             }
         }
         return largestAbsolute;
+    }
+
+    public Pose2d getOdoPositionDEG() {
+        return new Pose2d(
+                pose.getX(DistanceUnit.CM),
+                pose.getY(DistanceUnit.CM),
+                pose.getHeading(AngleUnit.DEGREES)
+        );
+    }
+
+    public Pose2d getOdoPositionRAD() {
+        return new Pose2d(
+                pose.getX(DistanceUnit.CM),
+                pose.getY(DistanceUnit.CM),
+                pose.getHeading(AngleUnit.RADIANS)
+        );
+    }
+
+    public void setOdoPositionDEG(Pose2d pose) {
+        Pose2D pose2D = new Pose2D(
+                DistanceUnit.CM,
+                pose.x,
+                pose.y,
+                AngleUnit.DEGREES,
+                pose.heading
+        );
+
+        odo.setPosition(pose2D);
     }
 }

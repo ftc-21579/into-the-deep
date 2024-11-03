@@ -23,8 +23,8 @@ public class ToIntakeCommand extends SequentialCommandGroup {
         addCommands(
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(wrist_twist, wrist_angle)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
-                new SetPivotAngleCommand(bot.getPivot(), 0.0),
-                new InstantCommand(() -> bot.setState(BotState.INTAKE))
+                new InstantCommand(() -> bot.setState(BotState.INTAKE)),
+                new SetPivotAngleCommand(bot.getPivot(), 0.0)
         );
     }
 }

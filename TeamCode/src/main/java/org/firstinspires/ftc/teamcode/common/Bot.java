@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
+import com.mineinjava.quail.util.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -46,11 +47,10 @@ public class Bot extends Robot {
         //vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
         claw = new Claw(this);
-        extension = new Extension(this);
         wrist = new Wrist(this);
         pivot = new Pivot(this);
+        extension = new Extension(this);
     }
-
 
     /**
      * Get the IMU object for the robot
@@ -63,6 +63,13 @@ public class Bot extends Robot {
      * @return the mecanum subsystem of the robot
      */
     public MecanumDrivetrain getDrivetrain() { return drivetrain; }
+
+    /**
+     * Set the pose estimate of the robot
+     */
+    public void setPoseEstimateDEG(Pose2d pose) {
+        drivetrain.setOdoPositionDEG(pose);
+    }
 
     /**
      * Get the Claw subsystem of the robot

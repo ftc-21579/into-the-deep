@@ -11,9 +11,9 @@ public class ToggleStateCommand extends InstantCommand {
     public ToggleStateCommand(Bot bot) {
         super(() -> {
             if (bot.getState() == BotState.INTAKE) {
-                new ToDepositCommand(bot).schedule();
+                new ToDepositCommand(bot).whenFinished(()-> bot.setState(BotState.DEPOSIT)).schedule();
             } else {
-                new ToIntakeCommand(bot).schedule();
+                new ToIntakeCommand(bot).whenFinished(()-> bot.setState(BotState.INTAKE)).schedule();
             }
         });
     }
