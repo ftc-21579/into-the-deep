@@ -28,6 +28,10 @@ public class TeleOpDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        drivetrain.teleopDrive(new Vec2d(leftStickX.getAsDouble(), leftStickY.getAsDouble()), rot.getAsDouble(), multiplier.getAsDouble());
+        drivetrain.teleopDrive(
+                new Vec2d(rot.getAsDouble(), leftStickY.getAsDouble()),
+                leftStickX.getAsDouble(),
+                multiplier.getAsDouble()
+        );
     }
 }

@@ -4,11 +4,13 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.hardware.AbsoluteAnalogEncoder;
 
+@com.acmerobotics.dashboard.config.Config
 public class Pivot extends SubsystemBase {
 
     private final Bot bot;
@@ -17,12 +19,13 @@ public class Pivot extends SubsystemBase {
     private final AbsoluteAnalogEncoder pivotEncoder;
 
     private final PIDFController pivotController;
-    private static double setpointDEG = 0.0;
+    public static double setpointDEG = 0.0;
 
     public Pivot(Bot bot) {
         this.bot = bot;
 
         pivotMotor = bot.hMap.get(DcMotor.class, "pivot");
+
         pivotEncoder = new AbsoluteAnalogEncoder(
                 bot.hMap.get(AnalogInput.class, "pivotEncoder")
         );
@@ -33,7 +36,7 @@ public class Pivot extends SubsystemBase {
                 Config.pivot_kD,
                 Config.pivot_kF
         );
-        pivotController.setTolerance(Config.pivot_tolerance);
+        //pivotController.setTolerance(Config.pivot_tolerance);
     }
 
     @Override
@@ -41,9 +44,14 @@ public class Pivot extends SubsystemBase {
 
         double power = pivotController.calculate(
                 Math.toDegrees(pivotEncoder.getCurrentPosition()),
-                setpointDEG
+                setpointDEG + 60
         );
         pivotMotor.setPower(power);
+
+        bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
+        bot.telem.addData("Setpoint DEG", setpointDEG);
+        bot.telem.addData("Power", power);
+        bot.telem.update();
     }
 
 

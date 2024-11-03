@@ -46,11 +46,10 @@ public class Bot extends Robot {
         //vision = new Vision(this);
         drivetrain = new MecanumDrivetrain(this);
         claw = new Claw(this);
-        extension = new Extension(this);
         wrist = new Wrist(this);
         pivot = new Pivot(this);
+        extension = new Extension(this);
     }
-
 
     /**
      * Get the IMU object for the robot

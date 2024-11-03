@@ -25,7 +25,7 @@ public class MecanumDrivetrain extends SubsystemBase {
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
