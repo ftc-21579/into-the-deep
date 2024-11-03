@@ -16,7 +16,7 @@ public class Extension extends SubsystemBase {
     private DcMotor extensionMotor;
 
     private final PIDFController extensionController;
-    public static double setpointCM = 0.0, ticksperCM = 2.1;
+    public static double setpointCM = 0.0, ticksperCM = 2.1, minExtension = 0.0, maxExtension = 300.0;
 
     public Extension(Bot bot) {
         this.bot = bot;
@@ -45,8 +45,9 @@ public class Extension extends SubsystemBase {
 
         bot.telem.addData("Ext Encoder", extensionMotor.getCurrentPosition());
         bot.telem.addData("Ext Target", setpointCM * ticksperCM);
-        bot.telem.addData("ext act pwr", extensionMotor.getPower());
+        bot.telem.addData("Ext Act Pwr", extensionMotor.getPower());
         bot.telem.addData("Ext Power", power);
+        bot.telem.addData("Ext setpointCM", setpointCM);
     }
 
     public void setSetpointCM(double setpoint) {
@@ -67,6 +68,14 @@ public class Extension extends SubsystemBase {
 
     public int getPositionCM() {
         return extensionMotor.getCurrentPosition();
+    }
+
+    public double getMaxExtension() {
+        return maxExtension;
+    }
+
+    public double getMinExtension() {
+        return minExtension;
     }
 
 }

@@ -143,9 +143,9 @@ public class TeleOp extends CommandOpMode {
         //region Extension
         extension = bot.getExtension();
 
-        Button extensionOutButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
+        Button extensionOutButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(new ManualExtensionOutCommand(extension));
-        Button extensionInButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
+        Button extensionInButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
                 .whenPressed(new ManualExtensionInCommand(extension));
         register(extension);
         //endregion

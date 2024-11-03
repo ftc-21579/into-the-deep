@@ -19,7 +19,7 @@ public class Pivot extends SubsystemBase {
     private final AbsoluteAnalogEncoder pivotEncoder;
 
     private final PIDFController pivotController;
-    public static double setpointDEG = 0.0;
+    public static double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 90;
 
     public Pivot(Bot bot) {
         this.bot = bot;
