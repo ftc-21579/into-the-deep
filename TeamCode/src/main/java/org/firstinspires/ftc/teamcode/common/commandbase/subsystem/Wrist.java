@@ -25,6 +25,11 @@ public class Wrist extends SubsystemBase {
         right = bot.hMap.get(Servo.class, "rightWrist");
     }
 
+    @Override
+    public void periodic() {
+        updateServoPositions();
+    }
+
     // Set target twist in degrees (0 to 180)
     public void setTwist(double targetTwistDegrees) {
         this.twistTarget = degreesToServoPosition(targetTwistDegrees);
