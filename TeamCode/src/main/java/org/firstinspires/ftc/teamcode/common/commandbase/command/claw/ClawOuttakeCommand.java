@@ -16,18 +16,15 @@ public class ClawOuttakeCommand extends CommandBase {
 
     public ClawOuttakeCommand(Claw claw) {
         this.claw = claw;
+
+        claw.outtake();
+
         addRequirements(this.claw);
     }
 
     @Override
-    public void execute() {
-        // outtake the game element
-        claw.outtakePowers();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        // stop the claw when the command ends
-        claw.stop();
+    public boolean isFinished() {
+        // need to track timings at some point
+        return true;
     }
 }

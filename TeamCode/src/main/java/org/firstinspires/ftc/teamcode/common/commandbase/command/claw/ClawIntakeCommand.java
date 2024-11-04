@@ -9,23 +9,15 @@ public class ClawIntakeCommand extends CommandBase {
 
     public ClawIntakeCommand(Claw claw) {
         this.claw = claw;
+
+        claw.intake();
+
         addRequirements(this.claw);
     }
 
     @Override
-    public void execute() {
-        // intake the game element
-        claw.intakePowers();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        // stop the claw when using sensors
-    }
-
-    @Override
     public boolean isFinished() {
-        // need to poll sensors at some point
+        // need to track timings at some point
         return true;
     }
 }
