@@ -88,11 +88,14 @@ public class TeleOp extends CommandOpMode {
         intakeCommand = new ClawIntakeCommand(claw);
         outtakeCommand = new ClawOuttakeCommand(claw);
 
-        Button intakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+        //ClawIntakeCommand intakeCommand = new ClawIntakeCommand(claw);
+        //ClawOuttakeCommand outtakeCommand = new ClawOuttakeCommand(claw);
+
+        Button intakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
                 .whenPressed(intakeCommand);
 
-        Button outtakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
-                .whenPressed(outtakeCommand.withTimeout(2000));
+        Button outtakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+                .whenPressed(outtakeCommand);
 
         register(claw);
         //endregion

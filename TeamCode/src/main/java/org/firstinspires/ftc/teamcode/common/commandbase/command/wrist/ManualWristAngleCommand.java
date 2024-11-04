@@ -20,10 +20,10 @@ public class ManualWristAngleCommand extends CommandBase {
     public void execute() {
         switch (direction) {
             case UP:
-                wrist.incrementAngle(Config.wristAngleIncrement);
+                wrist.incrementAngle(-Config.wristAngleIncrement);
                 break;
             case DOWN:
-                wrist.incrementAngle(-Config.wristAngleIncrement);
+                wrist.incrementAngle(Config.wristAngleIncrement);
                 break;
         }
     }

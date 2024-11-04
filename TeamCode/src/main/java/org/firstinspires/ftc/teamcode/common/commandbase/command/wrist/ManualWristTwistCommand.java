@@ -27,4 +27,9 @@ public class ManualWristTwistCommand extends CommandBase {
                 break;
         }
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

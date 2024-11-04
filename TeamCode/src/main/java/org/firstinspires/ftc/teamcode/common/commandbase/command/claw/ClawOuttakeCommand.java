@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.claw;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 
 /**
@@ -16,15 +15,17 @@ public class ClawOuttakeCommand extends CommandBase {
 
     public ClawOuttakeCommand(Claw claw) {
         this.claw = claw;
-
-        claw.outtake();
-
         addRequirements(this.claw);
     }
 
     @Override
+    public void initialize() {
+        claw.outtake();
+    }
+
+    @Override
     public boolean isFinished() {
-        // need to track timings at some point
         return true;
     }
 }
+

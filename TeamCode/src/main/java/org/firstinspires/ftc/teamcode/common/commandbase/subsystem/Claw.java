@@ -20,10 +20,12 @@ public class Claw extends SubsystemBase {
 
     public void intake() {
         claw.setPosition(1.0);
+        bot.telem.addData("position", claw.getPosition());
     }
 
     public void outtake() {
         claw.setPosition(0.0);
+        bot.telem.addData("position", claw.getPosition());
     }
 }
 
