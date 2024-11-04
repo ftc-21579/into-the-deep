@@ -91,6 +91,9 @@ public class Wrist extends SubsystemBase {
         double leftPosition = clampServoPosition((twistTarget + angleTarget) / 2);
         double rightPosition = clampServoPosition((twistTarget - angleTarget) / 2);
 
+        bot.telem.addData("Left Wrist Position", leftPosition);
+        bot.telem.addData("Right Wrist Position", rightPosition);
+
         // Set the servo positions
         left.setPosition(leftPosition);
         right.setPosition(rightPosition);

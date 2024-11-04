@@ -6,5 +6,5 @@ public class Config {
 
     public static double extension_kP = 0.05, extension_kI = 0.0, extension_kD = 0.0, extension_kF = 0.0, extension_tolerance = 2.0;
 
-    public static double wristAngleIncrement = 0.1, wristTwistIncrement = 0.1;
+    public static double wristAngleIncrement = 10, wristTwistIncrement = 10;
 }
