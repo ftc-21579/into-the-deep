@@ -5,15 +5,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
-import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawOuttakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.StopClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionInCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionOutCommand;
@@ -42,7 +39,6 @@ public class TeleOp extends CommandOpMode {
     private TeleOpDriveCommand driveCommand;
 
     private ClawIntakeCommand intakeCommand;
-    private StopClawCommand stopClawCommand;
     private ClawOuttakeCommand outtakeCommand;
 
     private ManualPivotDownCommand pivotDownCommand;
@@ -90,14 +86,16 @@ public class TeleOp extends CommandOpMode {
         claw = bot.getClaw();
 
         intakeCommand = new ClawIntakeCommand(claw);
-        stopClawCommand = new StopClawCommand(claw);
         outtakeCommand = new ClawOuttakeCommand(claw);
 
-        Button intakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
-                .whenPressed(intakeCommand).whenReleased(stopClawCommand);
+        //ClawIntakeCommand intakeCommand = new ClawIntakeCommand(claw);
+        //ClawOuttakeCommand outtakeCommand = new ClawOuttakeCommand(claw);
 
-        Button outtakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
-                .whenPressed(outtakeCommand.withTimeout(2000));
+        Button intakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
+                .whenPressed(intakeCommand);
+
+        Button outtakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+                .whenPressed(outtakeCommand);
 
         register(claw);
         //endregion

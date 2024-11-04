@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.claw;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 
 /**
@@ -20,14 +19,13 @@ public class ClawOuttakeCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        // outtake the game element
-        claw.outtakePowers();
+    public void initialize() {
+        claw.outtake();
     }
 
     @Override
-    public void end(boolean interrupted) {
-        // stop the claw when the command ends
-        claw.stop();
+    public boolean isFinished() {
+        return true;
     }
 }
+

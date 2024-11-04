@@ -18,7 +18,8 @@ public class SetWristPositionCommand extends CommandBase {
 
     @Override
     public void execute() {
-        wrist.setTwistAndAngle(position.x, position.y);
+        wrist.setTwist(position.x);
+        wrist.setAngle(position.y);
     }
 
     @Override

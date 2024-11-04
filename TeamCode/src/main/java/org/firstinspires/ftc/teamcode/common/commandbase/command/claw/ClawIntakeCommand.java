@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.claw;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 
 public class ClawIntakeCommand extends CommandBase {
@@ -13,19 +12,13 @@ public class ClawIntakeCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        // intake the game element
-        claw.intakePowers();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        // stop the claw when using sensors
+    public void initialize() {
+        claw.intake();
     }
 
     @Override
     public boolean isFinished() {
-        // need to poll sensors at some point
         return true;
     }
 }
+
