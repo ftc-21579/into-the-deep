@@ -12,6 +12,12 @@ public class Claw extends SubsystemBase {
 
     private final Servo claw;
 
+    public enum ClawState {
+        OPEN,
+        CLOSED
+    }
+    private ClawState state = ClawState.OPEN;
+
     public Claw(Bot bot) {
         this.bot = bot;
 
@@ -20,12 +26,22 @@ public class Claw extends SubsystemBase {
 
     public void intake() {
         claw.setPosition(1.0);
-        bot.telem.addData("position", claw.getPosition());
+        state = ClawState.OPEN;
+        bot.telem.addData("Claw State", state);
     }
 
     public void outtake() {
         claw.setPosition(0.0);
-        bot.telem.addData("position", claw.getPosition());
+        state = ClawState.CLOSED;
+        bot.telem.addData("Claw State", state);
+    }
+
+    public void toggle() {
+        if (state == ClawState.OPEN) {
+            outtake();
+        } else {
+            intake();
+        }
     }
 }
 
