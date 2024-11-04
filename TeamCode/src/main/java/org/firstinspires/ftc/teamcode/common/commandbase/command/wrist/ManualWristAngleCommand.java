@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.wrist;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 
@@ -19,10 +20,10 @@ public class ManualWristAngleCommand extends CommandBase {
     public void execute() {
         switch (direction) {
             case UP:
-                wrist.incrementAngle();
+                wrist.incrementAngle(Config.wristAngleIncrement);
                 break;
             case DOWN:
-                wrist.decrementAngle();
+                wrist.incrementAngle(-Config.wristAngleIncrement);
                 break;
         }
     }
