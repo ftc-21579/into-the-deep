@@ -13,7 +13,10 @@ public class Wrist extends SubsystemBase {
 
     private final Servo left, right;
 
-    public static double increment = 0.1;
+    private double twistTarget = 0.5;
+    private double angleTarget = 0.5;
+
+    private static final double SERVO_RANGE_DEGREES = 270.0;
 
     public Wrist(Bot bot) {
         this.bot = bot;
@@ -22,78 +25,70 @@ public class Wrist extends SubsystemBase {
         right = bot.hMap.get(Servo.class, "rightWrist");
     }
 
-    public void incrementTwist() {
-        double currentTwist = getTwist();
-        setTwist(Math.min(1.0, currentTwist + increment));
+    // Set target twist in degrees (0 to 180)
+    public void setTwist(double targetTwistDegrees) {
+        this.twistTarget = degreesToServoPosition(targetTwistDegrees);
+        updateServoPositions();
     }
 
-    public void decrementTwist() {
-        double currentTwist = getTwist();
-        setTwist(Math.max(0.0, currentTwist - increment));
+    // Set target angle in degrees (0 to 180)
+    public void setAngle(double targetAngleDegrees) {
+        this.angleTarget = degreesToServoPosition(targetAngleDegrees);
+        updateServoPositions();
     }
 
-    public void incrementAngle() {
-        double currentAngle = getAngle();
-        setAngle(Math.min(1.0, currentAngle + increment));
+    // Increment twist by a certain amount in degrees
+    public void incrementTwist(double deltaTwistDegrees) {
+        double newTwistDegrees = getTwistDegrees() + deltaTwistDegrees;
+        setTwist(clampDegrees(newTwistDegrees));
     }
 
-    public void decrementAngle() {
-        double currentAngle = getAngle();
-        setAngle(Math.max(0.0, currentAngle - increment));
+    // Increment angle by a certain amount in degrees
+    public void incrementAngle(double deltaAngleDegrees) {
+        double newAngleDegrees = getAngleDegrees() + deltaAngleDegrees;
+        setAngle(clampDegrees(newAngleDegrees));
     }
 
-    public double getTwist() {
-        double servo1Position = left.getPosition();
-        double servo2Position = right.getPosition();
-        return servo1Position - servo2Position;
+    // Get the current twist angle in degrees
+    public double getTwistDegrees() {
+        return servoPositionToDegrees(twistTarget);
     }
 
-    public double getAngle() {
-        double servo1Position = left.getPosition();
-        double servo2Position = right.getPosition();
-        return (servo1Position + servo2Position) / 2;
+    // Get the current angle in degrees
+    public double getAngleDegrees() {
+        return servoPositionToDegrees(angleTarget);
     }
 
-    public void setTwist(double twist) {
-        // Ensure twist is within the valid range
-        twist = Math.max(0.0, Math.min(1.0, twist));
-
-        // Calculate individual servo positions based on twist
-        double servo1Position = 0.5 + twist / 2;
-        double servo2Position = 0.5 - twist / 2;
-
-        // Set servo positions
-        left.setPosition(servo1Position);
-        right.setPosition(servo2Position);
+    // Convert degrees to servo position (0.0 to 1.0)
+    private double degreesToServoPosition(double degrees) {
+        return clampServoPosition(degrees / SERVO_RANGE_DEGREES);
     }
 
-    public void setAngle(double angle) {
-        // Ensure angle is within the valid range
-        angle = Math.max(0.0, Math.min(1.0, angle));
-
-        // Set both servos to the same position for angle control
-        left.setPosition(angle);
-        right.setPosition(angle);
+    // Convert servo position (0.0 to 1.0) to degrees
+    private double servoPositionToDegrees(double position) {
+        return position * SERVO_RANGE_DEGREES;
     }
 
-    public void setTwistAndAngle(double twist, double angle) {
-        // Ensure twist and angle are within the valid range
-        twist = Math.max(0.0, Math.min(1.0, twist));
-        angle = Math.max(0.0, Math.min(1.0, angle));
-
-        // Calculate individual servo positions
-        double servo1Position = angle + twist / 2;
-        double servo2Position = angle - twist / 2;
-
-        // Ensure servo positions are within the valid range
-        servo1Position = Math.max(0.0, Math.min(1.0, servo1Position));
-        servo2Position = Math.max(0.0, Math.min(1.0, servo2Position));
-
-        // Set servo positions
-        left.setPosition(servo1Position);
-        right.setPosition(servo2Position);
+    // Clamp servo position between 0.0 and 1.0
+    private double clampServoPosition(double position) {
+        return Math.max(0.0, Math.min(1.0, position));
     }
 
+    // Clamp degrees between 0 and the maximum range of motion
+    private double clampDegrees(double degrees) {
+        return Math.max(0.0, Math.min(SERVO_RANGE_DEGREES, degrees));
+    }
 
+    // Update servo positions based on current twist and angle targets
+    private void updateServoPositions() {
+        // The servo positions are calculated based on twist and angle targets.
+        // Servo1 controls the sum of twist and angle, and Servo2 controls the difference.
+        double leftPosition = clampServoPosition((twistTarget + angleTarget) / 2);
+        double rightPosition = clampServoPosition((twistTarget - angleTarget) / 2);
+
+        // Set the servo positions
+        left.setPosition(leftPosition);
+        right.setPosition(rightPosition);
+    }
 
 }
