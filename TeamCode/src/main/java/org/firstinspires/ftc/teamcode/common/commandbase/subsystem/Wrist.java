@@ -23,6 +23,7 @@ public class Wrist extends SubsystemBase {
 
         left = bot.hMap.get(Servo.class, "leftWrist");
         right = bot.hMap.get(Servo.class, "rightWrist");
+        right.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
