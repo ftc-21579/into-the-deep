@@ -45,9 +45,9 @@ public class Bot extends Robot {
 
         /* Subsystems */
         //vision = new Vision(this);
-        drivetrain = new MecanumDrivetrain(this);
         claw = new Claw(this);
         wrist = new Wrist(this);
+        drivetrain = new MecanumDrivetrain(this);
         pivot = new Pivot(this);
         extension = new Extension(this);
     }
