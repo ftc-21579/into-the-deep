@@ -29,9 +29,4 @@ public class ManualExtensionCommand extends CommandBase {
             extension.setSetpointCM(extension.getSetpointCM() + (Config.ext_increment * outModifier.getAsDouble()));
         }
     }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
 }
