@@ -10,10 +10,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionInCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionOutCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
@@ -120,7 +119,15 @@ public class TeleOp extends CommandOpMode {
 
         //region Extension
         extension = bot.getExtension();
+
+        ManualExtensionCommand extensionCommand = new ManualExtensionCommand(
+                extension,
+                () -> driverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
+                () -> driverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+        );
+
         register(extension);
+        extension.setDefaultCommand(extensionCommand);
         //endregion
 
         // region State
