@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 public class ToIntakeCommand extends SequentialCommandGroup {
     // Create a SequentialCommandGroup or FunctionalCommand or ParallelCommandGroup to transition to the intake state
 
-    public static double wrist_twist = 0.5, wrist_angle = 0.5;
+    public static double wrist_twist = 135, wrist_angle = 135;
 
     public ToIntakeCommand(Bot bot) {
         addCommands(

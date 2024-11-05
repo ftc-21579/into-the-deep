@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
@@ -140,19 +141,12 @@ public class TeleOp extends CommandOpMode {
 
         //region Automation
 
+        Button autoSpecimenButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
+                .whenPressed(
+                        new AutoSpecimenCommand(bot)
+                );
+
         //endregion
-
-    }
-
-    @Override
-    public void run() {
-
-        CommandScheduler.getInstance().schedule(
-                new ManualExtensionOutCommand(extension, driverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER))
-        );
-        CommandScheduler.getInstance().schedule(
-                new ManualExtensionInCommand(extension, driverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER))
-        );
 
     }
 }
