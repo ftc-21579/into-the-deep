@@ -46,9 +46,6 @@ public class Extension extends SubsystemBase {
 
         bot.telem.addData("Ext Encoder", extensionMotor.getCurrentPosition());
         bot.telem.addData("Ext Target", setpointCM * ticksperCM);
-        bot.telem.addData("Ext Act Pwr", extensionMotor.getPower());
-        bot.telem.addData("Ext Power", power);
-        bot.telem.addData("Ext setpointCM", setpointCM);
     }
 
     public void setSetpointCM(double setpoint) {

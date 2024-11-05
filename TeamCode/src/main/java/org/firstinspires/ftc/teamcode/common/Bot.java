@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -13,13 +15,16 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivet
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
+import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 
 public class Bot extends Robot {
     private final IMU imu;
     public final Telemetry telem;
     public final HardwareMap hMap;
+    public final Gamepad gamepad;
 
     public BotState state = BotState.INTAKE;
+    private GameElement targetElement = GameElement.SAMPLE;
 
     private final MecanumDrivetrain drivetrain;
     private final Claw claw;
@@ -28,9 +33,10 @@ public class Bot extends Robot {
     private final Pivot pivot;
     //private final Vision vision;
 
-    public Bot(Telemetry telem, HardwareMap hMap) {
+    public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad) {
         this.telem = telem;
         this.hMap = hMap;
+        this.gamepad = gamepad;
 
         // TODO: Adjust IMU parameters to match hub orientation
         imu = hMap.get(IMU.class, "imu");
@@ -106,6 +112,28 @@ public class Bot extends Robot {
      * @param state - the state to set the robot to
      */
     public void setState(BotState state) { this.state = state; }
+
+
+    /**
+     * Get the target element of the robot
+     * @param element - the target element of the robot
+     */
+    public void setTargetElement(GameElement element) {
+        targetElement = element;
+
+        switch (element) {
+            case SAMPLE:
+                gamepad.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
+            case SPECIMEN:
+                gamepad.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
+        }
+    }
+
+    /**
+     * Get the target element of the robot
+     * @return GameElement - the target element of the robot
+     */
+    public GameElement getTargetElement() { return targetElement; }
 
     /**
      * Get the Vision subsystem of the robot

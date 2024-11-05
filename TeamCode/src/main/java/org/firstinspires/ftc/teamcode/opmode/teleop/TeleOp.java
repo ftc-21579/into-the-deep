@@ -2,22 +2,24 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSampleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionInCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionOutCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
@@ -27,6 +29,9 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivet
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
+import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
+
+import java.util.HashMap;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
@@ -51,8 +56,9 @@ public class TeleOp extends CommandOpMode {
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
+        gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
-        bot = new Bot(telem, hardwareMap);
+        bot = new Bot(telem, hardwareMap, gamepad1);
 
         //region Drivetrain
         drivetrain = bot.getDrivetrain();
@@ -141,9 +147,20 @@ public class TeleOp extends CommandOpMode {
 
         //region Automation
 
-        Button autoSpecimenButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
+        Button autoScoreButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
                 .whenPressed(
-                        new AutoSpecimenCommand(bot)
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(GameElement.SAMPLE, new AutoSampleCommand(bot));
+                                    put(GameElement.SPECIMEN, new AutoSpecimenCommand(bot));
+                                }},
+                                () -> bot.getTargetElement()
+                        )
+                );
+
+        Button toggleElementButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))
+                .whenPressed(
+                    new ToggleElementCommand(bot)
                 );
 
         //endregion
