@@ -10,16 +10,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Test extends LinearOpMode {
     @Override
     public void runOpMode() {
-        //DcMotor motor = hardwareMap.get(DcMotorEx.class, "extension");
-        Servo claw = hardwareMap.get(Servo.class, "claw");
+        DcMotor motor = hardwareMap.get(DcMotorEx.class, "extension");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //Servo claw = hardwareMap.get(Servo.class, "claw");
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.a) {
-                claw.setPosition(1.0);
-            } else {
-                claw.setPosition(0.0);
-            }
+            //if (gamepad1.a) {
+                //claw.setPosition(1.0);
+            //} else {
+                //claw.setPosition(0.0);
+            //}
             //motor.setPower(1.0);
+            telemetry.addData("Extension Encoder: ", motor.getCurrentPosition());
+            telemetry.update();
         }
     }
 }
