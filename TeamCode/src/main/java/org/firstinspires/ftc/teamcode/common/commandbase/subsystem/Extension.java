@@ -16,8 +16,8 @@ public class Extension extends SubsystemBase {
     private DcMotor extensionMotor;
 
     private final PIDFController extensionController;
-    public static double setpointCM = 0.0, ticksperCM = 4.2;
-    public static double minExtension = 0.0, depositMaxExtension = 1200, intakeMaxExtension = 600;
+    public static double setpointCM = 0.0, ticksperCM = 21.65;
+    public static double minExtension = 0.0, depositMaxExtension = 65, intakeMaxExtension = 35;
 
     public Extension(Bot bot) {
         this.bot = bot;

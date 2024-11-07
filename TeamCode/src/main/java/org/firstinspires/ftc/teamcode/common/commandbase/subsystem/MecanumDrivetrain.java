@@ -38,12 +38,13 @@ public class MecanumDrivetrain extends SubsystemBase {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(0, 0); // TODO: Set offsets
-        odo.setEncoderResolution(234.057142857);
+        odo.setOffsets(82.66924, 110.83076);
+        odo.setEncoderResolution(20.371825606031);
         odo.setEncoderDirections(
                 GoBildaPinpointDriver.EncoderDirection.FORWARD,
                 GoBildaPinpointDriver.EncoderDirection.FORWARD
         ); // TODO: Set encoder directions
+        odo.resetPosAndIMU();
     }
 
     @Override

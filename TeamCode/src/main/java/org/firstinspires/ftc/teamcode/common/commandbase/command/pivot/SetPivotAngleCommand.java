@@ -14,14 +14,12 @@ public class SetPivotAngleCommand extends CommandBase {
         this.pivot = pivot;
         this.angle = angleDEG;
 
-        pivot.setSetpointDEG(angle);
-
         addRequirements(pivot);
     }
 
     @Override
-    public void execute() {
-        // nothing needed
+    public void initialize() {
+        pivot.setSetpointDEG(angle);
     }
 
     @Override

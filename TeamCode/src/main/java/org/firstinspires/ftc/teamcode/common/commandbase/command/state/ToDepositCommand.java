@@ -22,7 +22,7 @@ public class ToDepositCommand extends SequentialCommandGroup {
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(wrist_twist, wrist_angle)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
-                new SetPivotAngleCommand(bot.getPivot(), 95.0)
+                new SetPivotAngleCommand(bot.getPivot(), 85.0)
         );
     }
 }
