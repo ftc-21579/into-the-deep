@@ -17,7 +17,7 @@ public class Extension extends SubsystemBase {
 
     private final PIDFController extensionController;
     public static double setpointCM = 0.0, ticksperCM = 21.65;
-    public static double minExtension = 0.0, depositMaxExtension = 65, intakeMaxExtension = 35;
+    public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 35;
 
     public Extension(Bot bot) {
         this.bot = bot;

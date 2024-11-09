@@ -16,18 +16,18 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristP
 @Config
 public class AutoSampleCommand extends SequentialCommandGroup {
 
-    public static double wristTwistAngle = 0, pivotAngle = 90.0, extensionHeight = 62.0;
+    public static double wristTwistAngle = 0, pivotAngle = 85.0, extensionHeight = 60.0;
 
     public AutoSampleCommand(Bot bot) {
         addCommands(
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(wristTwistAngle, 0)),
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(wristTwistAngle, 45)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new SetPivotAngleCommand(bot.getPivot(), pivotAngle),
                 new WaitCommand(1000),
                 new SetExtensionCommand(bot.getExtension(), extensionHeight),
-                new WaitCommand(2000),
+                new WaitCommand(3000),
                 new ToggleClawCommand(bot.getClaw()),
-                new WaitCommand(1000),
+                new WaitCommand(2000),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new WaitCommand(1000),
                 new ToIntakeCommand(bot)

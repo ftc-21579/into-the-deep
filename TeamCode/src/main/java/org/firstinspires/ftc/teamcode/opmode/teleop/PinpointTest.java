@@ -77,10 +77,10 @@ public class PinpointTest extends LinearOpMode {
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
         odo.setOffsets(82.66924, 110.83076);
-        odo.setEncoderResolution(20.371825606031);
+        odo.setEncoderResolution(20.371825606031 * 4);
         odo.setEncoderDirections(
                 GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.FORWARD
+                GoBildaPinpointDriver.EncoderDirection.REVERSED
         );
 
         /*
