@@ -20,8 +20,8 @@ public class SetExtensionCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        // nothing needed
+    public void initialize() {
+        extension.setSetpointCM(distance);
     }
 
     @Override

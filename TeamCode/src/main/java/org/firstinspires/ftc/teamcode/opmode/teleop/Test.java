@@ -10,15 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Test extends LinearOpMode {
     @Override
     public void runOpMode() {
-        //DcMotor motor = hardwareMap.get(DcMotorEx.class, "extension");
         Servo claw = hardwareMap.get(Servo.class, "claw");
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.a) {
-                claw.setPosition(1.0);
-            } else {
-                claw.setPosition(0.0);
-            }
+            //if (gamepad1.a) {
+                //claw.setPosition(1.0);
+            //} else {
+                claw.setPosition(0.05);
+            //}
             //motor.setPower(1.0);
         }
     }

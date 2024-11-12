@@ -16,7 +16,7 @@ public class Wrist extends SubsystemBase {
     private double twistTarget = 0.0;
     private double angleTarget = 0.5;
 
-    private double twistRatio = 18.0 / 52.0;
+    private final double twistRatio = 18.0 / 52.0;
 
     private static final double SERVO_RANGE_DEGREES = 270.0;
 
@@ -89,7 +89,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private double clampTwistDegrees(double degrees) {
-        return Math.max(-90.0 * twistRatio, Math.min(90.0 * twistRatio, degrees));
+        return Math.max(-90.0, Math.min(90.0, degrees));
     }
 
     // Update servo positions based on current twist and angle targets
@@ -99,8 +99,8 @@ public class Wrist extends SubsystemBase {
         //double leftPosition = clampServoPosition((twistTarget + angleTarget) / 2);
         //double rightPosition = clampServoPosition((twistTarget - angleTarget) / 2);
 
-        double leftPosition = clampServoPosition(angleTarget + twistTarget);
-        double rightPosition = clampServoPosition(angleTarget - twistTarget);
+        double leftPosition = clampServoPosition(angleTarget + (twistTarget * twistRatio));
+        double rightPosition = clampServoPosition(angleTarget - (twistTarget * twistRatio));
 
         //double leftPosition = angleTarget + twistTarget;
         //double rightPosition = angleTarget - twistTarget;

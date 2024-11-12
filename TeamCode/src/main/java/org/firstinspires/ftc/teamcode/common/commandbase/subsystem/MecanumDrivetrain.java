@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.mineinjava.quail.pathing.Path;
+import com.mineinjava.quail.pathing.PathFollower;
+import com.mineinjava.quail.util.MiniPID;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,7 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.common.hardware.PinpointLocalizer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 @Config
@@ -24,6 +30,16 @@ public class MecanumDrivetrain extends SubsystemBase {
     public static boolean fieldCentric = false, headingLock = false;
 
     private static Pose2D pose;
+
+    private final PinpointLocalizer localizer;
+    private PathFollower follower;
+
+    private Path emptyPath = new Path(
+        new ArrayList<>(Arrays.asList(
+                new Pose2d(0, 0, 0),
+                new Pose2d(0, 10, 0)
+        ))
+    );
 
 
     public MecanumDrivetrain(Bot bot) {
@@ -38,12 +54,27 @@ public class MecanumDrivetrain extends SubsystemBase {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(0, 0); // TODO: Set offsets
-        odo.setEncoderResolution(234.057142857);
+        odo.setOffsets(82.66924, 110.83076);
+        odo.setEncoderResolution(20.371825606031 * 4);
         odo.setEncoderDirections(
                 GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.FORWARD
+                GoBildaPinpointDriver.EncoderDirection.REVERSED
         ); // TODO: Set encoder directions
+        odo.resetPosAndIMU();
+
+        localizer = new PinpointLocalizer(odo);
+
+        follower = new PathFollower(
+                localizer,
+                60,
+                2,
+                2,
+                10,
+                new MiniPID(0.01, 0, 0),
+                1.0,
+                3.0,
+                0.5
+        );
     }
 
     @Override
@@ -136,6 +167,10 @@ public class MecanumDrivetrain extends SubsystemBase {
             }
         }
         return largestAbsolute;
+    }
+
+    public PathFollower getFollower() {
+        return follower;
     }
 
     public Pose2d getOdoPositionDEG() {

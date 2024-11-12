@@ -2,20 +2,24 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawOuttakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSampleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionInCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionOutCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
@@ -25,6 +29,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivet
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
+import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
+
+import java.lang.annotation.Inherited;
+import java.util.HashMap;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
@@ -36,41 +44,27 @@ public class TeleOp extends CommandOpMode {
     private Wrist wrist;
     private MecanumDrivetrain drivetrain;
 
-    private TeleOpDriveCommand driveCommand;
-
-    private ClawIntakeCommand intakeCommand;
-    private ClawOuttakeCommand outtakeCommand;
-
-    private ManualPivotDownCommand pivotDownCommand;
-    private ManualPivotUpCommand pivotUpCommand;
-
-    private ManualExtensionOutCommand extensionOutCommand;
-    private ManualExtensionInCommand extensionInCommand;
-
-    private ManualWristAngleCommand wristUpCommand;
-    private ManualWristAngleCommand wristDownCommand;
-    private ManualWristTwistCommand wristTwistLeftCommand;
-    private ManualWristTwistCommand wristTwistRightCommand;
-
-    private GamepadEx driverGamepad, operatorGamepad;
+    private GamepadEx driverGamepad;
 
     private MultipleTelemetry telem;
 
 
+    // Gamepad layout
+    // https://www.padcrafter.com/?templates=Gamepad+1%2FDriver+Gamepad&plat=1&col=%23242424%2C%23606A6E%2C%23FFFFFF&rightStick=Yaw%2FRotation&leftStick=Translation&dpadUp=Wrist+Up&dpadRight=Wrist+Clockwise&dpadLeft=Wrist+Counter-Clockwise&dpadDown=Wrist+Down&aButton=Robot+State+Toggle&yButton=Sample%2FSpecimen+Auto+Deposit&xButton=Sample%2FSpecimen+State+Toggle&bButton=Toggle+Claw&rightTrigger=Extension+Out&leftTrigger=Extension+In&leftBumper=Pivot+Down&rightBumper=Pivot+Up&backButton=Red+%3D+Sample%2C+Blue+%3D+Specimen%2C+Green+%3D+Ascent
     @Override
     public void initialize() {
 
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
-        operatorGamepad = new GamepadEx(gamepad2);
+        gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
-        bot = new Bot(telem, hardwareMap);
+        bot = new Bot(telem, hardwareMap, gamepad1);
 
         //region Drivetrain
         drivetrain = bot.getDrivetrain();
 
-        driveCommand = new TeleOpDriveCommand(
+        TeleOpDriveCommand driveCommand = new TeleOpDriveCommand(
                 drivetrain,
                 () -> -driverGamepad.getRightX(),
                 () -> driverGamepad.getLeftY(),
@@ -85,17 +79,10 @@ public class TeleOp extends CommandOpMode {
         //region Claw
         claw = bot.getClaw();
 
-        intakeCommand = new ClawIntakeCommand(claw);
-        outtakeCommand = new ClawOuttakeCommand(claw);
-
-        //ClawIntakeCommand intakeCommand = new ClawIntakeCommand(claw);
-        //ClawOuttakeCommand outtakeCommand = new ClawOuttakeCommand(claw);
-
-        Button intakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
-                .whenPressed(intakeCommand);
-
-        Button outtakeButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
-                .whenPressed(outtakeCommand);
+        Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
+                .whenPressed(
+                        new ToggleClawCommand(claw)
+                );
 
         register(claw);
         //endregion
@@ -103,17 +90,14 @@ public class TeleOp extends CommandOpMode {
         //region Pivot
         pivot = bot.getPivot();
 
-        pivotDownCommand = new ManualPivotDownCommand(pivot);
-        pivotUpCommand = new ManualPivotUpCommand(pivot);
-
-        ToggleStateCommand toggleStateCommand = new ToggleStateCommand(bot);
-        Button toggleStateButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.START))
-                .whenPressed(toggleStateCommand);
-
-        Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))
-                .whenPressed(pivotDownCommand);
-        Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
-                .whenPressed(pivotUpCommand);
+        Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
+                .whenPressed(
+                        new ManualPivotDownCommand(pivot)
+                );
+        Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
+                .whenPressed(
+                        new ManualPivotUpCommand(pivot)
+                );
 
         register(pivot);
         //endregion
@@ -121,19 +105,22 @@ public class TeleOp extends CommandOpMode {
         //region Wrist
         wrist = bot.getWrist();
 
-        wristUpCommand = new ManualWristAngleCommand(wrist, Direction.UP);
-        wristDownCommand = new ManualWristAngleCommand(wrist, Direction.DOWN);
-        wristTwistLeftCommand = new ManualWristTwistCommand(wrist, Direction.LEFT);
-        wristTwistRightCommand = new ManualWristTwistCommand(wrist, Direction.RIGHT);
-
         Button wristUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_UP))
-                .whenPressed(wristUpCommand);
+                .whenPressed(
+                        new ManualWristAngleCommand(wrist, Direction.UP)
+                );
         Button wristDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_DOWN))
-                .whenPressed(wristDownCommand);
+                .whenPressed(
+                        new ManualWristAngleCommand(wrist, Direction.DOWN)
+                );
         Button wristTwistLeftButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_LEFT))
-                .whenPressed(wristTwistLeftCommand);
+                .whenPressed(
+                        new ManualWristTwistCommand(wrist, Direction.LEFT)
+                );
         Button wristTwistRightButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_RIGHT))
-                .whenPressed(wristTwistRightCommand);
+                .whenPressed(
+                        new ManualWristTwistCommand(wrist, Direction.RIGHT)
+                );
 
         register(wrist);
         //endregion
@@ -141,13 +128,43 @@ public class TeleOp extends CommandOpMode {
         //region Extension
         extension = bot.getExtension();
 
-        Button extensionOutButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
-                .whenPressed(new ManualExtensionOutCommand(extension));
-        Button extensionInButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
-                .whenPressed(new ManualExtensionInCommand(extension));
+        ManualExtensionCommand extensionCommand = new ManualExtensionCommand(
+                extension,
+                () -> driverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
+                () -> driverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+        );
+
         register(extension);
+        extension.setDefaultCommand(extensionCommand);
         //endregion
 
+        // region State
+
+        Button stateButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+                .whenPressed(
+                        new ToggleStateCommand(bot)
+                );
+        //endregion
+
+        //region Automation
+
+        Button autoScoreButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
+                .whenPressed(
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(GameElement.SAMPLE, new AutoSampleCommand(bot));
+                                    put(GameElement.SPECIMEN, new AutoSpecimenCommand(bot));
+                                }},
+                                () -> bot.getTargetElement()
+                        )
+                );
+
+        Button toggleElementButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))
+                .whenPressed(
+                    new ToggleElementCommand(bot)
+                );
+
+        //endregion
 
     }
 }
