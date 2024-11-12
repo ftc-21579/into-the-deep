@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.common.roadrunner.TankDrive;
 import org.firstinspires.ftc.teamcode.common.roadrunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.common.roadrunner.TwoDeadWheelLocalizer;
@@ -16,7 +17,19 @@ public final class ManualFeedbackTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
+        if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
+            PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+            waitForStart();
+
+            while (opModeIsActive()) {
+                Actions.runBlocking(
+                        drive.actionBuilder(new Pose2d(0, 0, 0))
+                                .lineToX(DISTANCE)
+                                .lineToX(0)
+                                .build());
+            }
+        } else if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
             waitForStart();
