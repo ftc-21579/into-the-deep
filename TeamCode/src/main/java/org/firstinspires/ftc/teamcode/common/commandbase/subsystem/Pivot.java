@@ -19,7 +19,7 @@ public class Pivot extends SubsystemBase {
     private final AbsoluteAnalogEncoder pivotEncoder;
 
     private final PIDFController pivotController;
-    public static double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 90;
+    public static double setpointDEG = 0.0, minAngle = -5.0, maxAngle = 90;
 
     public Pivot(Bot bot) {
         this.bot = bot;
@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
 
     //region Setpoint methods
     public void setSetpointDEG(double setpoint) {
-        setpointDEG = setpoint;
+        setpointDEG = Math.max(minAngle, Math.min(maxAngle, setpoint));
     }
 
     public double getSetpointDEG() {
