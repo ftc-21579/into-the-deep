@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.pathing.Path;
 import com.mineinjava.quail.pathing.PathFollower;
 import com.mineinjava.quail.util.MiniPID;
@@ -15,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
-import org.firstinspires.ftc.teamcode.common.hardware.PinpointLocalizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,17 +30,6 @@ public class MecanumDrivetrain extends SubsystemBase {
     public static boolean fieldCentric = false, headingLock = false;
 
     private static Pose2D pose;
-
-    private final PinpointLocalizer localizer;
-    private PathFollower follower;
-
-    private Path emptyPath = new Path(
-        new ArrayList<>(Arrays.asList(
-                new Pose2d(0, 0, 0),
-                new Pose2d(0, 10, 0)
-        ))
-    );
-
 
     public MecanumDrivetrain(Bot bot) {
         this.bot = bot;
@@ -61,20 +50,6 @@ public class MecanumDrivetrain extends SubsystemBase {
                 GoBildaPinpointDriver.EncoderDirection.REVERSED
         ); // TODO: Set encoder directions
         odo.resetPosAndIMU();
-
-        localizer = new PinpointLocalizer(odo);
-
-        follower = new PathFollower(
-                localizer,
-                60,
-                2,
-                2,
-                10,
-                new MiniPID(0.01, 0, 0),
-                1.0,
-                3.0,
-                0.5
-        );
     }
 
     @Override
@@ -139,6 +114,10 @@ public class MecanumDrivetrain extends SubsystemBase {
         backRight.setPower(normalizedPowers[3]);
     }
 
+    public void drive(RobotMovement movement) {
+        teleopDrive(new Vec2d(movement.translation.x, movement.translation.y), movement.rotation, 1);
+    }
+
     // TODO: Try to implement heading lock
     public void toggleHeadingLock() {
         headingLock = !headingLock;
@@ -167,10 +146,6 @@ public class MecanumDrivetrain extends SubsystemBase {
             }
         }
         return largestAbsolute;
-    }
-
-    public PathFollower getFollower() {
-        return follower;
     }
 
     public Pose2d getOdoPositionDEG() {
