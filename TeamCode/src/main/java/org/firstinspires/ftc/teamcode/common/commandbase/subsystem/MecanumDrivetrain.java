@@ -42,29 +42,29 @@ public class MecanumDrivetrain extends SubsystemBase {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(82.66924, 110.83076);
-        odo.setEncoderResolution(20.371825606031 * 4);
-        odo.setEncoderDirections(
-                GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.REVERSED
-        ); // TODO: Set encoder directions
-        odo.resetPosAndIMU();
+        //this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
+        //odo.setOffsets(82.66924, 110.83076);
+        //odo.setEncoderResolution(20.371825606031 * 4);
+        //odo.setEncoderDirections(
+                //GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                //GoBildaPinpointDriver.EncoderDirection.REVERSED
+        //); // TODO: Set encoder directions
+        //odo.resetPosAndIMU();
     }
 
     @Override
     public void periodic() {
-        pose = odo.getPosition();
-        bot.telem.addData("Pose",
-                String.format(
-                        Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
-                        pose.getX(DistanceUnit.CM),
-                        pose.getY(DistanceUnit.CM),
-                        pose.getHeading(AngleUnit.DEGREES)
-                )
-        );
+        //pose = odo.getPosition();
+        //bot.telem.addData("Pose",
+                //String.format(
+                        //Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
+                        //pose.getX(DistanceUnit.CM),
+                        //pose.getY(DistanceUnit.CM),
+                        //pose.getHeading(AngleUnit.DEGREES)
+                //)
+        //);
 
-        bot.telem.addData("Pinpoint Frequency", odo.getFrequency());
+        //bot.telem.addData("Pinpoint Frequency", odo.getFrequency());
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
