@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToDeposit
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
 @Autonomous(name = "TestAuto", group = "Auto")
@@ -43,6 +44,7 @@ public class TestAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        bot = new Bot(telem, hardwareMap, gamepad1, false);
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(
                 startX,
@@ -50,24 +52,42 @@ public class TestAuto extends LinearOpMode {
                 startHeading
         ));
 
-        //bot = new Bot(telem, hardwareMap, gamepad1);
-
         // make a funny sequential command group for autonomous here
         SequentialCommandGroup mainSequence = new SequentialCommandGroup(
+                new ClawOuttakeCommand(bot.getClaw()),
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 40)),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(90))
                         .splineToConstantHeading(new Vector2d(0, -32), Math.toRadians(90))
                         .waitSeconds(.5)
-                        .splineToLinearHeading(new Pose2d(-46, -38, Math.toRadians(90)), Math.toRadians(90))
+                        .build()
+                ),
+                new AutoSpecimenCommand(bot).withTimeout(4000),
+                new DriveTrajectorySequence(drive, builder -> builder
+                        .splineToLinearHeading(new Pose2d(-46, -37, Math.toRadians(90)), Math.toRadians(90))
                         .waitSeconds(.5)
-                        //.turn(Math.toRadians(-45))
-                        .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
+                        .build()
+                ),
+                new SetPivotAngleCommand(bot.getPivot(), 0).withTimeout(1000),
+                new ClawOuttakeCommand(bot.getClaw()),
+                new ToDepositCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
+                        .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(45))
                         .waitSeconds(.5)
-                        .strafeToLinearHeading(new Vector2d(-56, -38), Math.toRadians(90))
+                        .build()
+                ),
+                new SetPivotAngleCommand(bot.getPivot(), 95).withTimeout(500),
+                new SetExtensionCommand(bot.getExtension(), 60).withTimeout(2000),
+                new WaitCommand(2000),
+                new ClawIntakeCommand(bot.getClaw()),
+                new ToIntakeCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
+                        .strafeToLinearHeading(new Vector2d(-56, -37), Math.toRadians(90))
                         .waitSeconds(.5)
                         .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
                         .build()
                 )
+
         );
 
         waitForStart();
@@ -77,6 +97,8 @@ public class TestAuto extends LinearOpMode {
                 startY,
                 startHeading
         );
+
+        new SetPivotAngleCommand(bot.getPivot(), 0).schedule();
 
         mainSequence.schedule();
 

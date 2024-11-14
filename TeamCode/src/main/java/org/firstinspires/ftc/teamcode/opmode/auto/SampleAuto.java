@@ -54,12 +54,12 @@ public class SampleAuto extends LinearOpMode {
         SequentialCommandGroup mainSequence = new SequentialCommandGroup(
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(-6, -32), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, -32), Math.toRadians(90))
                         .build()
                 ),
                 new AutoSpecimenCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
-                    .splineToLinearHeading(new Pose2d(-48, -48, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(-46, -38, Math.toRadians(90)), Math.toRadians(90))
                     .build()
                 ),
                 new ToIntakeCommand(bot),
@@ -77,7 +77,7 @@ public class SampleAuto extends LinearOpMode {
                 ),
                 new SetExtensionCommand(bot.getExtension(), 60.0),
                 new DriveTrajectorySequence(drive, builder -> builder
-                        .strafeTo(new Vector2d(-56, -56))
+                        .strafeTo(new Vector2d(-52, -52))
                         .build()
                 ),
                 new ClawOuttakeCommand(bot.getClaw()),
@@ -86,7 +86,7 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new ToIntakeCommand(bot),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .strafeToLinearHeading(new Vector2d(-58, -48), Math.toRadians(90))
+                                .strafeToLinearHeading(new Vector2d(-56, -38), Math.toRadians(90))
                                 .build()
                         )
                 ),
@@ -97,7 +97,7 @@ public class SampleAuto extends LinearOpMode {
                 new ToIntakeCommand(bot),
                 new ParallelCommandGroup(
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .strafeToLinearHeading(new Vector2d(-54, -54), Math.toRadians(45))
+                                .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
                                 .build()
                         ),
                         new ToDepositCommand(bot)

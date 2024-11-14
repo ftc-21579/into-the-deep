@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristP
 @Config
 public class AutoSpecimenCommand extends SequentialCommandGroup {
 
-    public static double wristTwistAngle = 0, pivotAngle = 100.0, extensionHeight = 3.0;
+    public static double wristTwistAngle = 0, pivotAngle = 100.0, extensionHeight = 4.0;
 
     public AutoSpecimenCommand(Bot bot) {
         addCommands(
