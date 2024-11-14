@@ -59,6 +59,10 @@ public class Pivot extends SubsystemBase {
         setpointDEG = Math.max(minAngle, Math.min(maxAngle, setpoint));
     }
 
+    public void setSetpointIGNORE(double setpoint) {
+        setpointDEG = setpoint;
+    }
+
     public double getSetpointDEG() {
         return setpointDEG;
     }

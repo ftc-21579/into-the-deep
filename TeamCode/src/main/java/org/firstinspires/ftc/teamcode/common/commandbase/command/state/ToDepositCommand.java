@@ -20,6 +20,7 @@ public class ToDepositCommand extends SequentialCommandGroup {
     public ToDepositCommand(Bot bot) {
         addCommands(
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(wrist_twist, wrist_angle)),
+                new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetPivotAngleCommand(bot.getPivot(), 85.0)

@@ -120,12 +120,12 @@ public class Bot extends Robot {
      */
     public void setTargetElement(GameElement element) {
         targetElement = element;
+        telem.addData("element", targetElement);
 
-        switch (element) {
-            case SAMPLE:
-                gamepad.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
-            case SPECIMEN:
-                gamepad.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
+        if (targetElement == GameElement.SAMPLE) {
+            gamepad.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
+        } else if (targetElement == GameElement.SPECIMEN) {
+            gamepad.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
         }
     }
 

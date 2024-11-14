@@ -26,6 +26,7 @@ public class SetExtensionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(extension.getPositionCM() - distance) < Config.extension_tolerance;
+        //return Math.abs(extension.getPositionCM() - distance) < Config.extension_tolerance;
+        return true;
     }
 }

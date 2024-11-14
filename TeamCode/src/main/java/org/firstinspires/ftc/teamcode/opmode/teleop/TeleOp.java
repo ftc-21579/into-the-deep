@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSampleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoScoreCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
@@ -92,11 +93,11 @@ public class TeleOp extends CommandOpMode {
 
         Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
                 .whenPressed(
-                        new ManualPivotDownCommand(pivot)
+                        new ManualPivotDownCommand(bot, pivot)
                 );
         Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(
-                        new ManualPivotUpCommand(pivot)
+                        new ManualPivotUpCommand(bot, pivot)
                 );
 
         register(pivot);
@@ -150,13 +151,7 @@ public class TeleOp extends CommandOpMode {
 
         Button autoScoreButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
                 .whenPressed(
-                        new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(GameElement.SAMPLE, new AutoSampleCommand(bot));
-                                    put(GameElement.SPECIMEN, new AutoSpecimenCommand(bot));
-                                }},
-                                () -> bot.getTargetElement()
-                        )
+                       new AutoScoreCommand(bot)
                 );
 
         Button toggleElementButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))

@@ -1,25 +1,24 @@
-package org.firstinspires.ftc.teamcode.common.commandbase.command.state;
+package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 
-public class ToggleElementCommand extends CommandBase {
-
+public class AutoScoreCommand extends CommandBase {
 
     private Bot bot;
-    public ToggleElementCommand(Bot bot) {
+
+    public AutoScoreCommand(Bot bot) {
         this.bot = bot;
     }
 
     @Override
     public void initialize() {
         if (bot.getTargetElement() == GameElement.SAMPLE) {
-            bot.setTargetElement(GameElement.SPECIMEN);
+            new AutoSampleCommand(bot).schedule();
         } else {
-            bot.setTargetElement(GameElement.SAMPLE);
+            new AutoSpecimenCommand(bot).schedule();
         }
     }
 
