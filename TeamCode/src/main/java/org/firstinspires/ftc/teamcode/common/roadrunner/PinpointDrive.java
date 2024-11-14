@@ -110,7 +110,7 @@ public class PinpointDrive extends MecanumDrive {
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
-        public double xOffset = 3.2546944882;
+        public double xOffset = -3.2546944882;
         public double yOffset = 4.36341574803;
 
 
@@ -125,7 +125,7 @@ public class PinpointDrive extends MecanumDrive {
         To get this value from inPerTick, first convert the value to millimeters (multiply by 25.4)
         and then take its inverse (one over the value)
          */
-        public double encoderResolution = 20.371825606031 * 4;
+        public double encoderResolution = 8192 / (Math.PI * 35);
 
 
         /*

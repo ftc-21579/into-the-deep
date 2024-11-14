@@ -40,12 +40,13 @@ public class StraightAuto extends LinearOpMode {
 
     public static double startX = -12, startY = -63, startHeading = Math.toRadians(-90);
 
-    Pose2d beginPose = new Pose2d(0, 0, 0);
+    //Pose2d beginPose = new Pose2d(0, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        bot = new Bot(telem, hardwareMap, gamepad1);
+        Pose2d beginPose = new Pose2d(0, 0, 0);
+        //Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        //bot = new Bot(telem, hardwareMap, gamepad1);
 
         PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
 

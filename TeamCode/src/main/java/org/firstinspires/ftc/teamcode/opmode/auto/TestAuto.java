@@ -42,7 +42,7 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        bot = new Bot(telem, hardwareMap, gamepad1);
+
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(
                 startX,
@@ -50,20 +50,22 @@ public class TestAuto extends LinearOpMode {
                 startHeading
         ));
 
+        //bot = new Bot(telem, hardwareMap, gamepad1);
+
         // make a funny sequential command group for autonomous here
         SequentialCommandGroup mainSequence = new SequentialCommandGroup(
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(-6, -32), Math.toRadians(90))
-                        .waitSeconds(5)
-                        .splineToLinearHeading(new Pose2d(-48, -48, Math.toRadians(90)), Math.toRadians(90))
-                        .waitSeconds(3)
-                        .turn(Math.toRadians(-45))
-                        .strafeTo(new Vector2d(-56, -56))
-                        .waitSeconds(3)
-                        .strafeToLinearHeading(new Vector2d(-58, -48), Math.toRadians(90))
-                        .waitSeconds(3)
-                        .strafeToLinearHeading(new Vector2d(-56, -56), Math.toRadians(45))
+                        .splineToConstantHeading(new Vector2d(0, -32), Math.toRadians(90))
+                        .waitSeconds(.5)
+                        .splineToLinearHeading(new Pose2d(-46, -38, Math.toRadians(90)), Math.toRadians(90))
+                        .waitSeconds(.5)
+                        //.turn(Math.toRadians(-45))
+                        .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
+                        .waitSeconds(.5)
+                        .strafeToLinearHeading(new Vector2d(-56, -38), Math.toRadians(90))
+                        .waitSeconds(.5)
+                        .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
                         .build()
                 )
         );
