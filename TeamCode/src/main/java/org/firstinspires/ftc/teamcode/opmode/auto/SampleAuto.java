@@ -42,7 +42,7 @@ public class SampleAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        bot = new Bot(telem, hardwareMap, gamepad1);
+        bot = new Bot(telem, hardwareMap, gamepad1, false);
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(
                 startX,

@@ -60,7 +60,7 @@ public class TeleOp extends CommandOpMode {
         driverGamepad = new GamepadEx(gamepad1);
         gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
-        bot = new Bot(telem, hardwareMap, gamepad1);
+        bot = new Bot(telem, hardwareMap, gamepad1, true);
 
         //region Drivetrain
         drivetrain = bot.getDrivetrain();

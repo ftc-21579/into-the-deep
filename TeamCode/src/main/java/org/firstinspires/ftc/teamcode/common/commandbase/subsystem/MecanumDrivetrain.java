@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.mineinjava.quail.RobotMovement;
-import com.mineinjava.quail.pathing.Path;
-import com.mineinjava.quail.pathing.PathFollower;
-import com.mineinjava.quail.util.MiniPID;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,10 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -42,29 +35,6 @@ public class MecanumDrivetrain extends SubsystemBase {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //this.odo = bot.hMap.get(GoBildaPinpointDriver.class, "odo");
-        //odo.setOffsets(82.66924, 110.83076);
-        //odo.setEncoderResolution(20.371825606031 * 4);
-        //odo.setEncoderDirections(
-                //GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                //GoBildaPinpointDriver.EncoderDirection.REVERSED
-        //); // TODO: Set encoder directions
-        //odo.resetPosAndIMU();
-    }
-
-    @Override
-    public void periodic() {
-        //pose = odo.getPosition();
-        //bot.telem.addData("Pose",
-                //String.format(
-                        //Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
-                        //pose.getX(DistanceUnit.CM),
-                        //pose.getY(DistanceUnit.CM),
-                        //pose.getHeading(AngleUnit.DEGREES)
-                //)
-        //);
-
-        //bot.telem.addData("Pinpoint Frequency", odo.getFrequency());
     }
 
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
