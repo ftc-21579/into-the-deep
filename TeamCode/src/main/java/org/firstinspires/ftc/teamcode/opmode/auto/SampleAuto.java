@@ -43,6 +43,11 @@ public class SampleAuto extends LinearOpMode {
 
         bot = new Bot(telem, hardwareMap, gamepad1, false);
 
+        CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
+        CommandScheduler.getInstance().registerSubsystem(bot.getExtension());
+        CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
+        CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
+
         drive = new PinpointDrive(hardwareMap, new Pose2d(
                 startX,
                 startY,
