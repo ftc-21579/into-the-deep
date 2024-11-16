@@ -80,8 +80,6 @@ public class TeleOp extends CommandOpMode {
         register(drivetrain);
         drivetrain.setDefaultCommand(driveCommand);
 
-        new SetPivotAngleCommand(pivot, 10).schedule();
-        new SetWristPositionCommand(wrist, new Vec2d(0, 135)).schedule();
         //endregion
 
         //region Claw
@@ -167,6 +165,9 @@ public class TeleOp extends CommandOpMode {
                 );
 
         //endregion
+
+        new SetPivotAngleCommand(pivot, 10).schedule();
+        new SetWristPositionCommand(wrist, new Vec2d(0, 135)).schedule();
 
     }
 }
