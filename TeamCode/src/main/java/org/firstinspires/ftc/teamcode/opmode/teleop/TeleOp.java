@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -20,10 +21,13 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDri
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
@@ -58,7 +62,7 @@ public class TeleOp extends CommandOpMode {
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
-        gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
+        gamepad1.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
         bot = new Bot(telem, hardwareMap, gamepad1, true);
 
@@ -75,6 +79,9 @@ public class TeleOp extends CommandOpMode {
 
         register(drivetrain);
         drivetrain.setDefaultCommand(driveCommand);
+
+        new SetPivotAngleCommand(pivot, 10);
+        new SetWristPositionCommand(wrist, new Vec2d(0, 135));
         //endregion
 
         //region Claw

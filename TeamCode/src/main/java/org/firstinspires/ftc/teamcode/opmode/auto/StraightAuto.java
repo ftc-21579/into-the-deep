@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWri
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
+@Disabled
 @Autonomous(name = "StraightAuto", group = "Auto")
 public class StraightAuto extends LinearOpMode {
 

@@ -89,7 +89,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private double clampTwistDegrees(double degrees) {
-        return Math.max(-90.0, Math.min(90.0, degrees));
+        return Math.max(-180.0, Math.min(90.0, degrees));
     }
 
     // Update servo positions based on current twist and angle targets
