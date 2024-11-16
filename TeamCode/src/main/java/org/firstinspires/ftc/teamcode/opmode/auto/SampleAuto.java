@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -101,7 +103,8 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(2000),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new ToIntakeCommand(bot).withTimeout(1000)//,
+                new ToIntakeCommand(bot).withTimeout(1000),
+                new InstantCommand(() -> telem.addData("Sequence", "Finished"))
                 //new DriveTrajectorySequence(drive, builder -> builder
                 //        .splineToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45), Math.toRadians(90))
                 //        .build()
@@ -126,7 +129,13 @@ public class SampleAuto extends LinearOpMode {
             CommandScheduler.getInstance().run();
         }
 
+        //bot.getPivot().setSetpointDEG(10);
+
         CommandScheduler.getInstance().cancelAll();
+        CommandScheduler.getInstance().unregisterSubsystem(bot.getClaw());
+        CommandScheduler.getInstance().unregisterSubsystem(bot.getExtension());
+        CommandScheduler.getInstance().unregisterSubsystem(bot.getPivot());
+        CommandScheduler.getInstance().unregisterSubsystem(bot.getWrist());
 
     }
 
