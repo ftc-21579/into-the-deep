@@ -26,14 +26,14 @@ public class Bot extends Robot {
     public BotState state = BotState.INTAKE;
     private GameElement targetElement = GameElement.SAMPLE;
 
-    private final MecanumDrivetrain drivetrain;
+    private MecanumDrivetrain drivetrain;
     private final Claw claw;
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
     //private final Vision vision;
 
-    public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad) {
+    public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
         this.telem = telem;
         this.hMap = hMap;
         this.gamepad = gamepad;
@@ -53,7 +53,9 @@ public class Bot extends Robot {
         //vision = new Vision(this);
         claw = new Claw(this);
         wrist = new Wrist(this);
-        drivetrain = new MecanumDrivetrain(this);
+        if (enableDrive) {
+            drivetrain = new MecanumDrivetrain(this);
+        }
         pivot = new Pivot(this);
         extension = new Extension(this);
     }
@@ -120,12 +122,12 @@ public class Bot extends Robot {
      */
     public void setTargetElement(GameElement element) {
         targetElement = element;
+        telem.addData("element", targetElement);
 
-        switch (element) {
-            case SAMPLE:
-                gamepad.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
-            case SPECIMEN:
-                gamepad.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
+        if (targetElement == GameElement.SAMPLE) {
+            gamepad.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
+        } else if (targetElement == GameElement.SPECIMEN) {
+            gamepad.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
         }
     }
 

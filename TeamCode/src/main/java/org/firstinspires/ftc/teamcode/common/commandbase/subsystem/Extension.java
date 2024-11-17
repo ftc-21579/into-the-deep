@@ -37,9 +37,11 @@ public class Extension extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double target = bot.getPivot().getPosition() * -0.009 + setpointCM;
+
         double power = extensionController.calculate(
                 extensionMotor.getCurrentPosition(),
-                setpointCM * ticksperCM
+                target * ticksperCM
         );
 
         extensionMotor.setPower(power);

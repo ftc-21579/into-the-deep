@@ -15,11 +15,12 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 public class ToDepositCommand extends SequentialCommandGroup {
     // Create a SequentialCommandGroup or FunctionalCommand or ParallelCommandGroup to transition to the deposit state
 
-    public static double wrist_twist = 0.0, wrist_angle = 90;
+    public static double wrist_twist = -180.0, wrist_angle = 90;
 
     public ToDepositCommand(Bot bot) {
         addCommands(
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(wrist_twist, wrist_angle)),
+                new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetPivotAngleCommand(bot.getPivot(), 85.0)

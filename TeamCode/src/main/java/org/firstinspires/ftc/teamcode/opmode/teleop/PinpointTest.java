@@ -22,6 +22,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -59,7 +60,7 @@ For support, contact tech@gobilda.com
  */
 
 @TeleOp(name="Pinpoint Test", group="Linear OpMode")
-//@Disabled
+@Disabled
 
 public class PinpointTest extends LinearOpMode {
 
