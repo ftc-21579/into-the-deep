@@ -28,6 +28,7 @@ public class MeepMeepTesting {
                 .strafeToLinearHeading(new Vector2d(-58, -48), Math.toRadians(90))
                 .waitSeconds(.5)
                 .strafeToLinearHeading(new Vector2d(-56, -56), Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(48, -48, Math.toRadians(90)), Math.toRadians(0))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)

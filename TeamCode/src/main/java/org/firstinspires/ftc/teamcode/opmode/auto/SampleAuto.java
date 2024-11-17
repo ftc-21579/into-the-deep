@@ -93,6 +93,7 @@ public class SampleAuto extends LinearOpMode {
                 ),
                 new SetPivotAngleCommand(bot.getPivot(), 0).withTimeout(1000),
                 new ClawOuttakeCommand(bot.getClaw()),
+                new WaitCommand(500),
                 new ToDepositCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .strafeToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45))
@@ -103,8 +104,8 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(2000),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new ToIntakeCommand(bot).withTimeout(1000),
-                new InstantCommand(() -> telem.addData("Sequence", "Finished"))
+                new ToIntakeCommand(bot).withTimeout(1000)
+                //new InstantCommand(() -> telem.addData("Sequence", "Finished"))
                 //new DriveTrajectorySequence(drive, builder -> builder
                 //        .splineToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45), Math.toRadians(90))
                 //        .build()
