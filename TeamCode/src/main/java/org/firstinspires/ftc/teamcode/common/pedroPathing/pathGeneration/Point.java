@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
 
 /**
  * This is the Point class. This class handles storing information about the location of points in

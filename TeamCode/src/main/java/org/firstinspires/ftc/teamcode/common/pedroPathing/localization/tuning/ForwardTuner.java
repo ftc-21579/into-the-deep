@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.PoseUpdater;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.DashboardPoseTracker;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.util.DashboardPoseTracker;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.util.Drawing;
 
 /**
  * This is the ForwardTuner OpMode. This tracks the forward movement of the robot and displays the

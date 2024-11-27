@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Localizer;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Vector;
 

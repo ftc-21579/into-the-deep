@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Encoder;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Matrix;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Vector;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.NanoTimer;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.util.NanoTimer;
 
 /**
  * This is the ThreeWheelLocalizer class. This class extends the Localizer superclass and is a
