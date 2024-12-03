@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
@@ -31,6 +32,7 @@ public class Bot extends Robot {
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
+    private final Ascent ascent;
     //private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
@@ -58,6 +60,7 @@ public class Bot extends Robot {
         }
         pivot = new Pivot(this);
         extension = new Extension(this);
+        ascent = new Ascent(this);
     }
 
     /**
@@ -102,6 +105,12 @@ public class Bot extends Robot {
      * @return the pivot subsystem of the robot
      */
     public Pivot getPivot() { return pivot; }
+
+    /**
+     * Get the Pivot subsystem of the robot
+     * @return the pivot subsystem of the robot
+     */
+    public Ascent getAscent() { return ascent; }
 
     /**
      * Get the state of the robot
