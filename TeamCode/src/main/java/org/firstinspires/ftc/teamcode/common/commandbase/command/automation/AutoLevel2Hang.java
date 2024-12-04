@@ -15,10 +15,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.WinchArm
 public class AutoLevel2Hang extends SequentialCommandGroup {
     public AutoLevel2Hang(Bot bot) {
         addCommands(
-                new ReleaseArmsCommand(bot.getAscent()),
+                //new ReleaseArmsCommand(bot.getAscent()),
                 new WaitCommand(1000),
-                new EngagePTOCommand(bot.getAscent()),
-                new WinchArmsCommand(bot.getAscent()),
+                //new EngagePTOCommand(bot.getAscent()),
+                //new WinchArmsCommand(bot.getAscent()),
                 new WaitCommand(1000),
                 new LockArmsCommand(bot.getAscent())
         );

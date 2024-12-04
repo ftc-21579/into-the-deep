@@ -23,6 +23,8 @@ public class Bot extends Robot {
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
+    public boolean enableDrive = false;
+    public boolean enableAscent;
 
     public BotState state = BotState.INTAKE;
     private GameElement targetElement = GameElement.SAMPLE;
@@ -32,7 +34,7 @@ public class Bot extends Robot {
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
-    private final Ascent ascent;
+    private Ascent ascent;
     //private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
@@ -60,6 +62,9 @@ public class Bot extends Robot {
         }
         pivot = new Pivot(this);
         extension = new Extension(this);
+        //if (enableAscent) {
+            //ascent = new Ascent(this);
+        //}
         ascent = new Ascent(this);
     }
 
@@ -151,4 +156,12 @@ public class Bot extends Robot {
      * @return the vision subsystem object
      */
     //public Vision getVision() { return vision; }
+
+    public void disableDrive() {
+        enableDrive = false;
+    }
+
+    public void enableDrive() {
+        enableDrive = true;
+    }
 }

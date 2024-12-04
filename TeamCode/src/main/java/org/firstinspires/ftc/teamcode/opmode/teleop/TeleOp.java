@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Auto
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoScoreCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.DisableDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
@@ -52,6 +53,8 @@ public class TeleOp extends CommandOpMode {
     private Ascent ascent;
     private MecanumDrivetrain drivetrain;
 
+    private boolean enableDrive = false;
+
     private GamepadEx driverGamepad;
 
     private MultipleTelemetry telem;
@@ -66,7 +69,7 @@ public class TeleOp extends CommandOpMode {
         driverGamepad = new GamepadEx(gamepad1);
         gamepad1.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
-        bot = new Bot(telem, hardwareMap, gamepad1, true);
+        bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
 
         //region Drivetrain
         drivetrain = bot.getDrivetrain();
@@ -151,6 +154,7 @@ public class TeleOp extends CommandOpMode {
 
         Button autoAscent = (new GamepadButton(driverGamepad, GamepadKeys.Button.START))
                 .whenPressed(
+                        //new DisableDriveCommand(bot)
                         new AutoLevel2Hang(bot)
                 );
 

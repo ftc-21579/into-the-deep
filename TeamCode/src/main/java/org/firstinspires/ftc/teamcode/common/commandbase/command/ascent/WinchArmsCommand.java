@@ -14,7 +14,7 @@ public class WinchArmsCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        ascent.winchArms();
+        ascent.setSetpointCM(Ascent.hang);
     }
 
     @Override
