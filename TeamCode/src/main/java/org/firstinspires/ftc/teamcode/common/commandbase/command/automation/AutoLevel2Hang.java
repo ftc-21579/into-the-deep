@@ -10,16 +10,18 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.EngagePT
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.LockArmsCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.ReleaseArmsCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.WinchArmsCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleDriveModeCommand;
 
 @Config
 public class AutoLevel2Hang extends SequentialCommandGroup {
     public AutoLevel2Hang(Bot bot) {
         addCommands(
-                //new ReleaseArmsCommand(bot.getAscent()),
-                new WaitCommand(1000),
-                //new EngagePTOCommand(bot.getAscent()),
-                //new WinchArmsCommand(bot.getAscent()),
-                new WaitCommand(1000),
+                new ToggleDriveModeCommand(bot.getDrivetrain()),
+                new ReleaseArmsCommand(bot.getAscent()),
+                new WaitCommand(2000),
+                new EngagePTOCommand(bot.getAscent()),
+                new WinchArmsCommand(bot.getDrivetrain()).withTimeout(2000),
+                new WaitCommand(2000),
                 new LockArmsCommand(bot.getAscent())
         );
     }

@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -19,10 +21,17 @@ public class MecanumDrivetrain extends SubsystemBase {
     private final Bot bot;
 
     private final DcMotorEx frontLeft, frontRight, backLeft, backRight;
+    private final PIDFController ascentController;
     private GoBildaPinpointDriver odo;
     public static boolean fieldCentric = false, headingLock = false;
 
     private static Pose2D pose;
+
+    private boolean isEncoderMode = false;
+
+    private static final double TICKS_PER_CM = 537.7 / 11.2;
+    private double setPointCM = 0.0;
+    private static final double hangCM = 10.0;
 
     public MecanumDrivetrain(Bot bot) {
         this.bot = bot;
@@ -35,21 +44,85 @@ public class MecanumDrivetrain extends SubsystemBase {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        ascentController = new PIDFController(
+                org.firstinspires.ftc.teamcode.common.Config.ascent_kP,
+                org.firstinspires.ftc.teamcode.common.Config.ascent_kI,
+                org.firstinspires.ftc.teamcode.common.Config.ascent_kD,
+                org.firstinspires.ftc.teamcode.common.Config.ascent_kF
+        );
+
     }
 
+    @Override
+    public void periodic() {
+        if (isEncoderMode) {
+            double targetTicks = setPointCM * TICKS_PER_CM;
+
+            double leftPower = ascentController.calculate(backLeft.getCurrentPosition(), targetTicks);
+            double rightPower = ascentController.calculate(backRight.getCurrentPosition(), targetTicks);
+
+            backLeft.setPower(leftPower);
+            backRight.setPower(rightPower);
+            frontLeft.setPower(leftPower);
+            frontRight.setPower(rightPower);
+
+            // Debugging telemetry
+            bot.telem.addData("Target Position (ticks)", targetTicks);
+            bot.telem.addData("Back Left Position", backLeft.getCurrentPosition());
+            bot.telem.addData("Back Right Position", backRight.getCurrentPosition());
+            bot.telem.addData("Left Power", leftPower);
+            bot.telem.addData("Right Power", rightPower);
+        }
+        double targetTicks = setPointCM * TICKS_PER_CM;
+
+        double leftPower = ascentController.calculate(backLeft.getCurrentPosition(), targetTicks);
+        double rightPower = ascentController.calculate(backRight.getCurrentPosition(), targetTicks);
+        bot.telem.addData("Target Position (ticks)", targetTicks);
+        bot.telem.addData("Back Left Position", backLeft.getCurrentPosition());
+        bot.telem.addData("Back Right Position", backRight.getCurrentPosition());
+        bot.telem.addData("Left Power", leftPower);
+        bot.telem.addData("Right Power", rightPower);
+    }
+
+
     public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
-        double x = leftStick.x * multiplier;
-        double y = -leftStick.y * multiplier;
+        if (!isEncoderMode) {
+            double x = leftStick.x * multiplier;
+            double y = -leftStick.y * multiplier;
 
-        rx *= 0.8;
+            rx *= 0.8;
 
-        if (!fieldCentric) {
-            y *= 1.1; // counteract imperfect strafe
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            if (!fieldCentric) {
+                y *= 1.1; // counteract imperfect strafe
+                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+                double frontLeftPower = (y + x + rx) / denominator;
+                double frontRightPower = (y - x - rx) / denominator;
+                double backLeftPower = (y - x + rx) / denominator;
+                double backRightPower = (y + x - rx) / denominator;
+
+                double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
+                double[] normalizedPowers = normalizeWheelSpeeds(powers);
+
+                frontLeft.setPower(normalizedPowers[0]);
+                frontRight.setPower(normalizedPowers[1]);
+                backLeft.setPower(normalizedPowers[2]);
+                backRight.setPower(normalizedPowers[3]);
+
+                return;
+            }
+
+            double botHeading = bot.getImu().getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+            rotX *= 1.1; // counteract imperfect strafe
+
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double frontLeftPower = (rotY + rotX + rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
+            double frontRightPower = (rotY - rotX - rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
 
             double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
             double[] normalizedPowers = normalizeWheelSpeeds(powers);
@@ -58,31 +131,34 @@ public class MecanumDrivetrain extends SubsystemBase {
             frontRight.setPower(normalizedPowers[1]);
             backLeft.setPower(normalizedPowers[2]);
             backRight.setPower(normalizedPowers[3]);
-
-            return;
         }
-
-        double botHeading = bot.getImu().getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-        rotX *= 1.1; // counteract imperfect strafe
-
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
-
-        double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
-        double[] normalizedPowers = normalizeWheelSpeeds(powers);
-
-        frontLeft.setPower(normalizedPowers[0]);
-        frontRight.setPower(normalizedPowers[1]);
-        backLeft.setPower(normalizedPowers[2]);
-        backRight.setPower(normalizedPowers[3]);
     }
+
+    public void resetEncoders() {
+        // Set all motors to STOP_AND_RESET_ENCODER mode
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        // After resetting, set them back to RUN_USING_ENCODER
+        backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+
+    public void winchArms() {
+        resetEncoders();
+        setPointCM = hangCM;
+    }
+
+    public void toggleDriveMode() {
+        resetEncoders();
+        isEncoderMode = !isEncoderMode;
+    }
+
 
     public void drive(RobotMovement movement) {
         teleopDrive(new Vec2d(movement.translation.x, movement.translation.y), movement.rotation, 1);

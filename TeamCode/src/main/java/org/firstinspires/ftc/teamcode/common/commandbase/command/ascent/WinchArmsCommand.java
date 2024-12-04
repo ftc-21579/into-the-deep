@@ -3,18 +3,19 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.ascent;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
 public class WinchArmsCommand extends CommandBase {
-    private final Ascent ascent;
+    private final MecanumDrivetrain drivetrain;
 
-    public WinchArmsCommand(Ascent ascent) {
-        this.ascent = ascent;
-        addRequirements(this.ascent);
+    public WinchArmsCommand(MecanumDrivetrain drivetrain) {
+        this.drivetrain = drivetrain;
+        addRequirements(this.drivetrain);
     }
 
     @Override
     public void initialize() {
-        ascent.setSetpointCM(Ascent.hang);
+        drivetrain.winchArms();
     }
 
     @Override
