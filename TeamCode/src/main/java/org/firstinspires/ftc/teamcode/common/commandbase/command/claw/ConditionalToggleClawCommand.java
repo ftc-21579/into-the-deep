@@ -10,6 +10,7 @@ import com.mineinjava.quail.util.geometry.Vec2d;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
@@ -21,19 +22,41 @@ public class ConditionalToggleClawCommand extends CommandBase {
     private final Command chamberIntakeSequence;
     private final Command rungIntakeSequence;
     private final Command depositSequence;
+    private final Command chamberIntakeSuccessSequence;
+    private final Command rungIntakeSuccessSequence;
+    private final Command intakeFailureSequence;
 
     public ConditionalToggleClawCommand(Bot bot) {
         this.bot = bot;
+
+        chamberIntakeSuccessSequence = new SequentialCommandGroup(
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 45)),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new WaitCommand(500),
+                new ToggleStateCommand(bot)
+        );
+
+        rungIntakeSuccessSequence = new SequentialCommandGroup(
+                new ToggleStateCommand(bot)
+        );
+
+        intakeFailureSequence = new SequentialCommandGroup(
+                new ToggleClawCommand(bot.getClaw()),
+                new ManualPivotUpCommand(bot, bot.getPivot())
+        );
 
         chamberIntakeSequence = new SequentialCommandGroup(
                 new ManualPivotDownCommand(bot, bot.getPivot()),
                 new WaitCommand(500),
                 new ToggleClawCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 45)),
-                new SetExtensionCommand(bot.getExtension(), 0.0),
-                new WaitCommand(500),
-                new ToggleStateCommand(bot)
+                new InstantCommand(() -> {
+                    if (bot.getClaw().isGrabbing()) {
+                        chamberIntakeSuccessSequence.schedule();
+                    } else {
+                        intakeFailureSequence.schedule();
+                    }
+                })
         );
 
         rungIntakeSequence = new SequentialCommandGroup(
@@ -41,7 +64,14 @@ public class ConditionalToggleClawCommand extends CommandBase {
                 new WaitCommand(500),
                 new ToggleClawCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new ToggleStateCommand(bot)
+                new InstantCommand(() -> {
+                    if (bot.getClaw().isGrabbing()) {
+                        rungIntakeSuccessSequence.schedule();
+                    } else {
+                        intakeFailureSequence.schedule();
+                    }
+                })
+
         );
 
         depositSequence = new SequentialCommandGroup(
