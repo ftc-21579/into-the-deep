@@ -90,7 +90,16 @@ public class MecanumDrivetrain extends SubsystemBase {
             double x = leftStick.x * multiplier;
             double y = -leftStick.y * multiplier;
 
-            rx *= 0.8;
+            double extensionPosition = bot.getExtension().getPositionCM();
+
+            double extensionThreshold = 20;
+            double rotationSpeedMultiplier = 1.0;
+
+            if (extensionPosition > extensionThreshold) {
+                rotationSpeedMultiplier = 0.5;
+            }
+
+            rx *= rotationSpeedMultiplier;
 
             if (!fieldCentric) {
                 y *= 1.1; // counteract imperfect strafe
