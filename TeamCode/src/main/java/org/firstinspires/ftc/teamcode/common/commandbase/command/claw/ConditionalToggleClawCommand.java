@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -24,13 +25,17 @@ public class ConditionalToggleClawCommand extends CommandBase {
 
         intakeSequence = new SequentialCommandGroup(
                 new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(500),
                 new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(500),
                 new ToggleStateCommand(bot)
         );
 
         depositSequence = new SequentialCommandGroup(
             new ToggleClawCommand(bot.getClaw()),
+            new WaitCommand(500),
             new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 230)),
+            new WaitCommand(500),
             new ToggleStateCommand(bot)
         );
 
