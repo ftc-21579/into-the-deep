@@ -201,6 +201,10 @@ public class MecanumDrivetrain extends SubsystemBase {
         return largestAbsolute;
     }
 
+    public double getHeadingDEG() {
+        return pose.getHeading(AngleUnit.DEGREES);
+    }
+
     public Pose2d getOdoPositionDEG() {
         return new Pose2d(
                 pose.getX(DistanceUnit.CM),
