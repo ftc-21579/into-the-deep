@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoLevel2Hang;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoScoreCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ConditionalToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
@@ -82,7 +83,7 @@ public class TeleOp extends CommandOpMode {
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
                 .whenPressed(
-                        new ToggleClawCommand(claw)
+                        new ConditionalToggleClawCommand(bot)
                 );
 
         register(claw);
