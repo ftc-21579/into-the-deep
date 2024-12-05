@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.state;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -23,7 +24,9 @@ public class ToDepositCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
-                new SetPivotAngleCommand(bot.getPivot(), 85.0)
+                new SetPivotAngleCommand(bot.getPivot(), 85.0),
+                new WaitCommand(1000),
+                new SetExtensionCommand(bot.getExtension(), 16.0)
         );
     }
 }
