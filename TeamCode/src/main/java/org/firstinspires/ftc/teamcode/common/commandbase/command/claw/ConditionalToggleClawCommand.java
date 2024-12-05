@@ -88,9 +88,7 @@ public class ConditionalToggleClawCommand extends CommandBase {
     @Override
     public void initialize() {
         if (bot.getState() == BotState.INTAKE) {
-            double heading = bot.getDrivetrain().getHeadingDEG();
-
-            double normalizedHeading = normalizeHeading(heading);
+            double normalizedHeading = bot.getDrivetrain().getHeadingDEG();
 
             if ((normalizedHeading >= -45 && normalizedHeading <= 45) || (normalizedHeading >= 135 && normalizedHeading <= 225)) {
                 chamberIntakeSequence.schedule();
@@ -105,15 +103,5 @@ public class ConditionalToggleClawCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         return true;
-    }
-
-    private double normalizeHeading(double heading) {
-        while (heading > 180) {
-            heading -= 360;
-        }
-        while (heading < -180) {
-            heading += 360;
-        }
-        return heading;
     }
 }

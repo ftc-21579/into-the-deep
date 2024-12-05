@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -25,7 +26,7 @@ public class MecanumDrivetrain extends SubsystemBase {
     private GoBildaPinpointDriver odo;
     public static boolean fieldCentric = false, headingLock = false;
 
-    private static Pose2D pose;
+    public static Pose2D pose;
 
     private boolean isEncoderMode = false;
 
@@ -50,6 +51,13 @@ public class MecanumDrivetrain extends SubsystemBase {
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kD,
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kF
         );
+
+
+        odo = bot.hMap.get(GoBildaPinpointDriver.class,"odo");
+        odo.setOffsets(PinpointDrive.PARAMS.xOffset, PinpointDrive.PARAMS.yOffset);
+        odo.setEncoderResolution(PinpointDrive.PARAMS.encoderResolution);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        odo.setPosition(pose);
 
     }
 
@@ -82,6 +90,8 @@ public class MecanumDrivetrain extends SubsystemBase {
         bot.telem.addData("Back Right Position", backRight.getCurrentPosition());
         bot.telem.addData("Left Power", leftPower);
         bot.telem.addData("Right Power", rightPower);
+
+        pose = odo.getPosition();
     }
 
 
@@ -120,7 +130,7 @@ public class MecanumDrivetrain extends SubsystemBase {
                 return;
             }
 
-            double botHeading = bot.getImu().getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double botHeading = pose.getHeading(AngleUnit.RADIANS);
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -202,7 +212,8 @@ public class MecanumDrivetrain extends SubsystemBase {
     }
 
     public double getHeadingDEG() {
-        return pose.getHeading(AngleUnit.DEGREES);
+        double heading = pose.getHeading(AngleUnit.DEGREES);
+        return (heading + 360) % 360;
     }
 
     public Pose2d getOdoPositionDEG() {

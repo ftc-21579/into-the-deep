@@ -15,6 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
@@ -25,6 +28,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotA
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToDepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
 @Autonomous(name = "SampleAuto", group = "Auto")
@@ -129,6 +133,14 @@ public class SampleAuto extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()){
             CommandScheduler.getInstance().run();
         }
+
+        MecanumDrivetrain.pose = new Pose2D(
+                DistanceUnit.INCH,
+                drive.pose.position.x,
+                drive.pose.position.y,
+                AngleUnit.RADIANS,
+                drive.pose.heading.real
+        );
 
         //bot.getPivot().setSetpointDEG(10);
 
