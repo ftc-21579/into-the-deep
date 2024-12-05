@@ -25,7 +25,7 @@ public class Bot extends Robot {
     public final Gamepad gamepad;
     public boolean enableDrive;
 
-    public BotState state = BotState.INTAKE;
+    public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
 
     private MecanumDrivetrain drivetrain;

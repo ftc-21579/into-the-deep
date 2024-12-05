@@ -135,13 +135,11 @@ public class MecanumDrivetrain extends SubsystemBase {
     }
 
     public void resetEncoders() {
-        // Set all motors to STOP_AND_RESET_ENCODER mode
         backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        // After resetting, set them back to RUN_USING_ENCODER
         backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);

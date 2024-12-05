@@ -144,7 +144,6 @@ public class TeleOp extends CommandOpMode {
 
         Button autoAscent = (new GamepadButton(driverGamepad, GamepadKeys.Button.START))
                 .whenPressed(
-                        //new DisableDriveCommand(bot)
                         new AutoLevel2Hang(bot)
                 );
 
@@ -172,9 +171,5 @@ public class TeleOp extends CommandOpMode {
                 );
 
         //endregion
-
-        new SetPivotAngleCommand(pivot, 10).schedule();
-        new SetWristPositionCommand(wrist, new Vec2d(0, 135)).schedule();
-
     }
 }
