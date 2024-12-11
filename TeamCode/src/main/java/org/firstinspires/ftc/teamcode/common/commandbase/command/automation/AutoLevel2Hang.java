@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleDri
 public class AutoLevel2Hang extends SequentialCommandGroup {
     public AutoLevel2Hang(Bot bot) {
         addCommands(
-                new ToggleDriveModeCommand(bot.getDrivetrain()),
+                new ToggleDriveModeCommand(bot.getDrivetrain(), true),
                 new ReleaseArmsCommand(bot.getAscent()),
                 new WaitCommand(1000),
                 new EngagePTOCommand(bot.getAscent()),
@@ -24,8 +24,7 @@ public class AutoLevel2Hang extends SequentialCommandGroup {
                 new WinchArmsCommand(bot.getDrivetrain()),
                 new WaitCommand(3000),
                 new LockArmsCommand(bot.getAscent(), bot.getDrivetrain()),
-                new WinchArmsCommand(bot.getDrivetrain()),
-                new WaitCommand(100000)
+                new WinchArmsCommand(bot.getDrivetrain())
                 //new ToggleDriveModeCommand(bot.getDrivetrain())
         );
     }

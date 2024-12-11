@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.mineinjava.quail.RobotMovement;
@@ -14,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.hardware.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
 @Config
@@ -23,7 +24,7 @@ public class MecanumDrivetrain extends SubsystemBase {
 
     private final DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private final PIDFController ascentController;
-    private GoBildaPinpointDriver odo;
+    private GoBildaPinpointDriverRR odo;
     public static boolean fieldCentric = false, headingLock = false;
 
     public static Pose2D pose;
@@ -36,6 +37,17 @@ public class MecanumDrivetrain extends SubsystemBase {
 
     public MecanumDrivetrain(Bot bot) {
         this.bot = bot;
+
+        odo = bot.hMap.get(GoBildaPinpointDriverRR.class,"odo");
+        odo.setOffsets(PinpointDrive.PARAMS.xOffset, PinpointDrive.PARAMS.yOffset);
+        odo.setEncoderResolution(PinpointDrive.PARAMS.encoderResolution);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+        if (pose == null) {
+            pose = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.RADIANS, 0);
+        }
+
+        odo.setPosition(pose);
 
         frontLeft = bot.hMap.get(DcMotorEx.class, "frontLeft");
         frontRight = bot.hMap.get(DcMotorEx.class, "frontRight");
@@ -51,14 +63,6 @@ public class MecanumDrivetrain extends SubsystemBase {
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kD,
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kF
         );
-
-
-        odo = bot.hMap.get(GoBildaPinpointDriver.class,"odo");
-        odo.setOffsets(PinpointDrive.PARAMS.xOffset, PinpointDrive.PARAMS.yOffset);
-        odo.setEncoderResolution(PinpointDrive.PARAMS.encoderResolution);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
-        odo.setPosition(pose);
-
     }
 
     @Override
@@ -88,6 +92,10 @@ public class MecanumDrivetrain extends SubsystemBase {
         bot.telem.addData("Right Power", rightPower);
 
         pose = odo.getPosition();
+        bot.telem.addData("Pose",
+                "X: " + pose.getX(DistanceUnit.MM) +
+                        ", Y: " + pose.getY(DistanceUnit.MM) +
+                        ", Heading: " + pose.getHeading(AngleUnit.DEGREES));
     }
 
 
@@ -167,9 +175,9 @@ public class MecanumDrivetrain extends SubsystemBase {
         setPointCM = hangCM;
     }
 
-    public void toggleDriveMode() {
+    public void toggleDriveMode(boolean mode) {
         resetEncoders();
-        isEncoderMode = !isEncoderMode;
+        isEncoderMode = mode;
     }
 
 
