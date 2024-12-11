@@ -21,10 +21,12 @@ public class AutoLevel2Hang extends SequentialCommandGroup {
                 new WaitCommand(1000),
                 new EngagePTOCommand(bot.getAscent()),
                 new WaitCommand(1000),
-                new WinchArmsCommand(bot.getDrivetrain()).withTimeout(2000),
-                new WaitCommand(2000),
-                new LockArmsCommand(bot.getAscent()),
-                new ToggleDriveModeCommand(bot.getDrivetrain())
+                new WinchArmsCommand(bot.getDrivetrain()),
+                new WaitCommand(3000),
+                new LockArmsCommand(bot.getAscent(), bot.getDrivetrain()),
+                new WinchArmsCommand(bot.getDrivetrain()),
+                new WaitCommand(100000)
+                //new ToggleDriveModeCommand(bot.getDrivetrain())
         );
     }
 }

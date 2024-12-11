@@ -26,7 +26,7 @@ public class ToDepositCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetPivotAngleCommand(bot.getPivot(), 85.0),
                 new WaitCommand(1000),
-                new SetExtensionCommand(bot.getExtension(), 16.0)
+                new SetExtensionCommand(bot.getExtension(), 55.0)
         );
     }
 }

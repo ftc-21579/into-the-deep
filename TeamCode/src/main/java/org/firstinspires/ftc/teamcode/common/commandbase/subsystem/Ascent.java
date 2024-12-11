@@ -12,7 +12,7 @@ public class Ascent extends SubsystemBase {
 
     private final Servo leftPTO, rightPTO;
 
-    public static double engaged = 0.0, release = 0.2, locked = 0.28;
+    public static double engaged = 0.0, release = 0.2, locked = 0.35;
 
     public Ascent(Bot bot) {
         this.bot = bot;

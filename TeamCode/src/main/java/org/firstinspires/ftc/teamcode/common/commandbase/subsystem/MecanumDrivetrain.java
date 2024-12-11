@@ -32,7 +32,7 @@ public class MecanumDrivetrain extends SubsystemBase {
 
     private static final double TICKS_PER_CM = 537.7 / 11.2;
     private double setPointCM = 0.0;
-    private static final double hangCM = 10.0;
+    private static final double hangCM = 45.0;
 
     public MecanumDrivetrain(Bot bot) {
         this.bot = bot;
@@ -75,11 +75,7 @@ public class MecanumDrivetrain extends SubsystemBase {
             frontRight.setPower(rightPower);
 
             // Debugging telemetry
-            bot.telem.addData("Target Position (ticks)", targetTicks);
-            bot.telem.addData("Back Left Position", backLeft.getCurrentPosition());
-            bot.telem.addData("Back Right Position", backRight.getCurrentPosition());
-            bot.telem.addData("Left Power", leftPower);
-            bot.telem.addData("Right Power", rightPower);
+            bot.telem.addData("BAD BAD BAD BAD BAD FUNNY", targetTicks);
         }
         double targetTicks = setPointCM * TICKS_PER_CM;
 

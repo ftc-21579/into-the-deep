@@ -30,11 +30,16 @@ public class Claw extends SubsystemBase {
 
     }
 
+    public void periodic() {
+        bot.telem.addData("Claw Position: ", claw.getPosition());
+    }
+
     public boolean isGrabbing() {
         double feedbackVoltage = clawFeedback.getVoltage();
         double positionDegrees = mapVoltageToDegrees(feedbackVoltage);
 
-        return positionDegrees > 5.0;
+        //return positionDegrees > 5.0;
+        return true;
     }
 
     private double mapVoltageToDegrees(double voltage) {
@@ -43,7 +48,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void intake() {
-        claw.setPosition(1.0);
+        claw.setPosition(0.5);
         state = ClawState.OPEN;
         bot.telem.addData("Claw State", state);
     }
