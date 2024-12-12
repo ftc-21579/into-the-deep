@@ -5,11 +5,11 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
-public class LockArmsCommand extends CommandBase {
+public class LockLeftArmCommand extends CommandBase {
     private final Ascent ascent;
     private final MecanumDrivetrain drivetrain;
 
-    public LockArmsCommand(Ascent ascent, MecanumDrivetrain drivetrain) {
+    public LockLeftArmCommand(Ascent ascent, MecanumDrivetrain drivetrain) {
         this.ascent = ascent;
         this.drivetrain = drivetrain;
         addRequirements(this.ascent);
@@ -18,8 +18,7 @@ public class LockArmsCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        ascent.lockArms();
-        //drivetrain.winchArms();
+        ascent.lockLeftArm();
     }
 
     @Override

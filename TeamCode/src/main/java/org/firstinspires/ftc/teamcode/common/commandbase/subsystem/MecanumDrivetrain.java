@@ -31,7 +31,7 @@ public class MecanumDrivetrain extends SubsystemBase {
 
     private boolean isEncoderMode = false;
 
-    private static final double TICKS_PER_CM = 537.7 / 11.2;
+    private static final double TICKS_PER_CM = 384.5 / 11.2;
     private double setPointCM = 0.0;
     private static final double hangCM = 45.0;
 

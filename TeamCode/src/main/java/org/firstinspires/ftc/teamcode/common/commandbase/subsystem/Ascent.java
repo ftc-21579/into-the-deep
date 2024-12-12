@@ -37,4 +37,12 @@ public class Ascent extends SubsystemBase {
         leftPTO.setPosition(locked);
         rightPTO.setPosition(locked);
     }
+
+    public void lockLeftArm() {
+        leftPTO.setPosition(locked);
+    }
+
+    public void lockRightArm() {
+        rightPTO.setPosition(locked);
+    }
 }

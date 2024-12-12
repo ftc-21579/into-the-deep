@@ -54,7 +54,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void outtake() {
-        claw.setPosition(0.0);
+        claw.setPosition(0.05);
         state = ClawState.CLOSED;
         bot.telem.addData("Claw State", state);
     }

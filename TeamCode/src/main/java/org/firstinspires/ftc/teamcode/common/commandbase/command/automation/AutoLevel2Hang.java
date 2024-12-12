@@ -8,6 +8,8 @@ import com.mineinjava.quail.util.geometry.Vec2d;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.EngagePTOCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.LockArmsCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.LockLeftArmCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.LockRightArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.ReleaseArmsCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.WinchArmsCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleDriveModeCommand;
@@ -23,8 +25,11 @@ public class AutoLevel2Hang extends SequentialCommandGroup {
                 new WaitCommand(1000),
                 new WinchArmsCommand(bot.getDrivetrain()),
                 new WaitCommand(3000),
-                new LockArmsCommand(bot.getAscent(), bot.getDrivetrain()),
-                new WinchArmsCommand(bot.getDrivetrain())
+                new LockLeftArmCommand(bot.getAscent(), bot.getDrivetrain()),
+                new WaitCommand(1000),
+                new LockRightArmCommand(bot.getAscent(), bot.getDrivetrain())
+                //new LockArmsCommand(bot.getAscent(), bot.getDrivetrain())
+                //new WinchArmsCommand(bot.getDrivetrain())
                 //new ToggleDriveModeCommand(bot.getDrivetrain())
         );
     }
