@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 
 @com.acmerobotics.dashboard.config.Config
 public class Extension extends SubsystemBase {
@@ -16,8 +18,15 @@ public class Extension extends SubsystemBase {
     private DcMotor extensionMotor;
 
     private final PIDFController extensionController;
-    public static double setpointCM = 0.0, ticksperCM = 21.65;
-    public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 35;
+    public static double setpointCM = 0.0, depositTarget = 55.0, lowTarget = 20.0, highTarget = 55.0, ticksperCM = 21.65;
+    public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 45;
+
+    public enum DepositTarget {
+        LOW,
+        HIGH
+    }
+
+    public DepositTarget state = DepositTarget.HIGH;
 
     public Extension(Bot bot) {
         this.bot = bot;
@@ -56,6 +65,24 @@ public class Extension extends SubsystemBase {
 
     public double getSetpointCM() {
         return setpointCM;
+    }
+
+    public void setDepositTarget(double setpoint) {
+        depositTarget = setpoint;
+    }
+
+    public double getDepositTarget() {
+        return depositTarget;
+    }
+
+    public void toggleDepositTarget() {
+        if (state == DepositTarget.HIGH) {
+            setDepositTarget(lowTarget);
+            state = DepositTarget.LOW;
+        } else {
+            setDepositTarget(highTarget);
+            state = DepositTarget.HIGH;
+        }
     }
 
     public void setPower(double power) {

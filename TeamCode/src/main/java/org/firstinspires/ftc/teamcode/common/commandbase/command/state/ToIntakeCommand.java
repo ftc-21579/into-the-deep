@@ -27,7 +27,7 @@ public class ToIntakeCommand extends SequentialCommandGroup {
                 new ClawIntakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.INTAKE)),
-                new SetPivotAngleCommand(bot.getPivot(), 20.0)
+                new SetPivotAngleCommand(bot.getPivot(), 15.0)
         );
     }
 }

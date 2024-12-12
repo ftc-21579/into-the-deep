@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,6 +13,8 @@ public class Claw extends SubsystemBase {
 
     private final Servo claw;
 
+    private final AnalogInput clawFeedback;
+
     public enum ClawState {
         OPEN,
         CLOSED
@@ -20,18 +23,38 @@ public class Claw extends SubsystemBase {
 
     public Claw(Bot bot) {
         this.bot = bot;
+        //this.clawFeedback = clawFeedback;
 
         claw = bot.hMap.get(Servo.class, "claw");
+        clawFeedback = bot.hMap.get(AnalogInput.class, "clawFeedback");
+
+    }
+
+    public void periodic() {
+        bot.telem.addData("Claw Position: ", claw.getPosition());
+    }
+
+    public boolean isGrabbing() {
+        double feedbackVoltage = clawFeedback.getVoltage();
+        double positionDegrees = mapVoltageToDegrees(feedbackVoltage);
+
+        //return positionDegrees > 5.0;
+        return true;
+    }
+
+    private double mapVoltageToDegrees(double voltage) {
+        double maxVoltage = 3.3;
+        return (voltage / maxVoltage) * 360;
     }
 
     public void intake() {
-        claw.setPosition(1.0);
+        claw.setPosition(0.5);
         state = ClawState.OPEN;
         bot.telem.addData("Claw State", state);
     }
 
     public void outtake() {
-        claw.setPosition(0.0);
+        claw.setPosition(0.05);
         state = ClawState.CLOSED;
         bot.telem.addData("Claw State", state);
     }

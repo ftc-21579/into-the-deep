@@ -24,6 +24,7 @@ public class SetPivotAngleCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(pivot.getPosition() - angle) < Config.pivot_tolerance;
+        //return Math.abs(pivot.getPosition() - angle) < Config.pivot_tolerance;
+        return true;
     }
 }

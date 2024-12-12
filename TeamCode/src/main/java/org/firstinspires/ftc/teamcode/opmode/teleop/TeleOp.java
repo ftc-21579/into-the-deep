@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -13,31 +11,27 @@ import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSampleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoLevel2Hang;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoScoreCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ConditionalToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
-import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
-
-import java.lang.annotation.Inherited;
-import java.util.HashMap;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
@@ -47,7 +41,10 @@ public class TeleOp extends CommandOpMode {
     private Pivot pivot;
     private Extension extension;
     private Wrist wrist;
+    private Ascent ascent;
     private MecanumDrivetrain drivetrain;
+
+    private boolean enableDrive = true;
 
     private GamepadEx driverGamepad;
 
@@ -55,8 +52,7 @@ public class TeleOp extends CommandOpMode {
 
 
     // Gamepad layout
-    // https://www.padcrafter.com/?templates=Gamepad+1%2FDriver+Gamepad&plat=1&col=%23242424%2C%23606A6E%2C%23FFFFFF&rightStick=Yaw%2FRotation&leftStick=Translation&dpadUp=Wrist+Up&dpadRight=Wrist+Clockwise&dpadLeft=Wrist+Counter-Clockwise&dpadDown=Wrist+Down&aButton=Robot+State+Toggle&yButton=Sample%2FSpecimen+Auto+Deposit&xButton=Sample%2FSpecimen+State+Toggle&bButton=Toggle+Claw&rightTrigger=Extension+Out&leftTrigger=Extension+In&leftBumper=Pivot+Down&rightBumper=Pivot+Up&backButton=Red+%3D+Sample%2C+Blue+%3D+Specimen%2C+Green+%3D+Ascent
-    @Override
+    // https://www.padcrafter.com/?templates=Gamepad+1%2FDriver+Gamepad&plat=1&col=%23242424%2C%23606A6E%2C%23FFFFFF&rightStick=Yaw%2FRotation&leftStick=Translation&dpadUp=Wrist+Up&dpadRight=Wrist+Clockwise&dpadLeft=Wrist+Counter-Clockwise&dpadDown=Wrist+Down&aButton=Toggle+Claw&yButton=Sample%2FSpecimen+Auto+Deposit&xButton=Robot+State+Toggle&bButton=Sample%2FSpecimen+State+Toggle&rightTrigger=Extension+Out&leftTrigger=Extension+In&leftBumper=Pivot+Down&rightBumper=Pivot+Up&backButton=Red+%3D+Sample%2C+Blue+%3D+Specimen%2C+Green+%3D+Ascent&startButton=Options+%3D+Ascent    @Override
     public void initialize() {
 
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -64,7 +60,7 @@ public class TeleOp extends CommandOpMode {
         driverGamepad = new GamepadEx(gamepad1);
         gamepad1.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
-        bot = new Bot(telem, hardwareMap, gamepad1, true);
+        bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
 
         //region Drivetrain
         drivetrain = bot.getDrivetrain();
@@ -87,7 +83,7 @@ public class TeleOp extends CommandOpMode {
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
                 .whenPressed(
-                        new ToggleClawCommand(claw)
+                        new ConditionalToggleClawCommand(bot)
                 );
 
         register(claw);
@@ -144,6 +140,17 @@ public class TeleOp extends CommandOpMode {
         extension.setDefaultCommand(extensionCommand);
         //endregion
 
+        // region Ascent
+        ascent = bot.getAscent();
+
+        Button autoAscent = (new GamepadButton(driverGamepad, GamepadKeys.Button.START))
+                .whenPressed(
+                        new AutoLevel2Hang(bot)
+                );
+
+        register(ascent);
+        // endregion
+
         // region State
 
         Button stateButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
@@ -165,9 +172,5 @@ public class TeleOp extends CommandOpMode {
                 );
 
         //endregion
-
-        new SetPivotAngleCommand(pivot, 10).schedule();
-        new SetWristPositionCommand(wrist, new Vec2d(0, 135)).schedule();
-
     }
 }
