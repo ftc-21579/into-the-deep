@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToDepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToSpecimenDepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
@@ -63,7 +64,8 @@ public class SampleAuto extends LinearOpMode {
         // make a funny sequential command group for autonomous here
         SequentialCommandGroup mainSequence = new SequentialCommandGroup(
                 new ClawOuttakeCommand(bot.getClaw()),
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 40)),
+                //new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 40)),
+                new ToSpecimenDepositCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(90))
                         .splineToConstantHeading(new Vector2d(-6, -32), Math.toRadians(90))

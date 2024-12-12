@@ -217,8 +217,7 @@ public class MecanumDrivetrain extends SubsystemBase {
     }
 
     public double getHeadingDEG() {
-        double heading = pose.getHeading(AngleUnit.DEGREES);
-        return (heading + 360) % 360;
+        return pose.getHeading(AngleUnit.DEGREES);
     }
 
     public Pose2d getOdoPositionDEG() {
