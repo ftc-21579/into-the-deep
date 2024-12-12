@@ -68,7 +68,7 @@ public class SampleAuto extends LinearOpMode {
                 new ToSpecimenDepositCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(-6, -32), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(-6, -34), Math.toRadians(90))
                         .waitSeconds(.5)
                         .build()
                 ),
