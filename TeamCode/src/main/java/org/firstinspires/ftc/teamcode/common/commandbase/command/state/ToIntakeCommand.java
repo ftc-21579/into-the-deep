@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.FunctionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -26,6 +27,7 @@ public class ToIntakeCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new ClawIntakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
+                new WaitCommand(500),
                 new InstantCommand(() -> bot.setState(BotState.INTAKE)),
                 new SetPivotAngleCommand(bot.getPivot(), 15.0)
         );

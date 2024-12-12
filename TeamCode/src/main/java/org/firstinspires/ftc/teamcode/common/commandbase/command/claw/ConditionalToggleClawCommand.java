@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristP
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
+import org.firstinspires.ftc.teamcode.common.intothedeep.SpecimenMode;
 
 public class ConditionalToggleClawCommand extends CommandBase {
 
@@ -29,6 +30,8 @@ public class ConditionalToggleClawCommand extends CommandBase {
     private final Command intakeFailureSequence;
     private final Command specimenIntakeSequence;
     private final Command specimenIntakeSuccessSequence;
+    private final Command specimenSubIntakeSequence;
+    private final Command specimenSubDepositSequence;
     private final Command specimenDepositSequence;
 
     public ConditionalToggleClawCommand(Bot bot) {
@@ -49,6 +52,12 @@ public class ConditionalToggleClawCommand extends CommandBase {
                 new ToggleStateCommand(bot)
         );
 
+        specimenSubIntakeSequence = new SequentialCommandGroup(
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 90)),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new InstantCommand(() -> bot.setState(BotState.DEPOSIT))
+        );
+
         intakeFailureSequence = new SequentialCommandGroup(
                 new ToggleClawCommand(bot.getClaw()),
                 new ManualPivotUpCommand(bot, bot.getPivot())
@@ -60,10 +69,18 @@ public class ConditionalToggleClawCommand extends CommandBase {
                 new ToggleClawCommand(bot.getClaw()),
                 new WaitCommand(250),
                 new InstantCommand(() -> {
-                    if (bot.getClaw().isGrabbing()) {
-                        chamberIntakeSuccessSequence.schedule();
+                    if (bot.getTargetElement() == GameElement.SPECIMEN && bot.getSpecimenMode() == SpecimenMode.INTAKE) {
+                        if (bot.getClaw().isGrabbing()) {
+                            specimenSubIntakeSequence.schedule();
+                        } else {
+                            intakeFailureSequence.schedule();
+                        }
                     } else {
-                        intakeFailureSequence.schedule();
+                        if (bot.getClaw().isGrabbing()) {
+                            chamberIntakeSuccessSequence.schedule();
+                        } else {
+                            intakeFailureSequence.schedule();
+                        }
                     }
                 })
         );
@@ -74,10 +91,18 @@ public class ConditionalToggleClawCommand extends CommandBase {
                 new ToggleClawCommand(bot.getClaw()),
                 new WaitCommand(250),
                 new InstantCommand(() -> {
-                    if (bot.getClaw().isGrabbing()) {
-                        rungIntakeSuccessSequence.schedule();
+                    if (bot.getTargetElement() == GameElement.SPECIMEN && bot.getSpecimenMode() == SpecimenMode.INTAKE) {
+                        if (bot.getClaw().isGrabbing()) {
+                            specimenSubIntakeSequence.schedule();
+                        } else {
+                            intakeFailureSequence.schedule();
+                        }
                     } else {
-                        intakeFailureSequence.schedule();
+                        if (bot.getClaw().isGrabbing()) {
+                            rungIntakeSuccessSequence.schedule();
+                        } else {
+                            intakeFailureSequence.schedule();
+                        }
                     }
                 })
 
@@ -103,6 +128,12 @@ public class ConditionalToggleClawCommand extends CommandBase {
                         intakeFailureSequence.schedule();
                     }
                 })
+        );
+
+        specimenSubDepositSequence = new SequentialCommandGroup(
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(250),
+                new ToggleStateCommand(bot)
         );
 
         specimenDepositSequence = new SequentialCommandGroup(
@@ -131,10 +162,24 @@ public class ConditionalToggleClawCommand extends CommandBase {
                 depositSequence.schedule();
             }
         } else {
-            if (bot.getState() == BotState.INTAKE) {
-                specimenIntakeSequence.schedule();
+            if (bot.getSpecimenMode() == SpecimenMode.DEPOSIT) {
+                if (bot.getState() == BotState.INTAKE) {
+                    specimenIntakeSequence.schedule();
+                } else {
+                    specimenDepositSequence.schedule();
+                }
             } else {
-                specimenDepositSequence.schedule();
+                if (bot.getState() == BotState.INTAKE) {
+                    double normalizedHeading = bot.getDrivetrain().getHeadingDEG();
+
+                    if ((normalizedHeading >= -45 && normalizedHeading <= 45) || (normalizedHeading >= 135 && normalizedHeading <= 225)) {
+                        chamberIntakeSequence.schedule();
+                    } else {
+                        rungIntakeSequence.schedule();
+                    }
+                } else {
+                    specimenSubDepositSequence.schedule();
+                }
             }
         }
     }

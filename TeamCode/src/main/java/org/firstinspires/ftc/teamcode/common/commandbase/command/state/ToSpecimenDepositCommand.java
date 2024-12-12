@@ -25,7 +25,7 @@ public class ToSpecimenDepositCommand extends SequentialCommandGroup {
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new SetPivotAngleCommand(bot.getPivot(), 95.0),
-                new WaitCommand(250),
+                new WaitCommand(500),
                 new SetExtensionCommand(bot.getExtension(), 20.0)
         );
     }

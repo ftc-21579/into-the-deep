@@ -72,7 +72,7 @@ public class SampleAuto extends LinearOpMode {
                         .waitSeconds(.5)
                         .build()
                 ),
-                new AutoSpecimenCommand(bot).withTimeout(4000),
+                new AutoSpecimenCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .splineToLinearHeading(new Pose2d(-48, -35, Math.toRadians(90)), Math.toRadians(90))
                         .waitSeconds(.5)
@@ -91,7 +91,7 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(2000),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new ToIntakeCommand(bot).withTimeout(1000),
+                new ToIntakeCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .strafeToLinearHeading(new Vector2d(-58, -35), Math.toRadians(90))
                         .waitSeconds(.5)
@@ -110,7 +110,7 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(2000),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(500),
-                new ToIntakeCommand(bot).withTimeout(1000)
+                new ToIntakeCommand(bot)
                 //new InstantCommand(() -> telem.addData("Sequence", "Finished"))
                 //new DriveTrajectorySequence(drive, builder -> builder
                 //        .splineToLinearHeading(new Vector2d(-52, -52), Math.toRadians(45), Math.toRadians(90))
