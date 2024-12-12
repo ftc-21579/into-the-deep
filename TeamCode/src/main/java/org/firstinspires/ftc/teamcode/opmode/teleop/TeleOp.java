@@ -163,8 +163,7 @@ public class TeleOp extends CommandOpMode {
 
         Button autoScoreButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
                 .whenPressed(
-                       //new AutoScoreCommand(bot)
-                        new ToggleClawCommand(bot.getClaw())
+                       new AutoScoreCommand(bot)
                 );
 
         Button toggleElementButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))
