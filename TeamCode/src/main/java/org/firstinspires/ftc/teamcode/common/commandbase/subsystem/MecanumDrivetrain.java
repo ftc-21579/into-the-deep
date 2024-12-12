@@ -93,9 +93,9 @@ public class MecanumDrivetrain extends SubsystemBase {
 
         pose = odo.getPosition();
         bot.telem.addData("Pose",
-                "X: " + pose.getX(DistanceUnit.MM) +
-                        ", Y: " + pose.getY(DistanceUnit.MM) +
-                        ", Heading: " + pose.getHeading(AngleUnit.DEGREES));
+                "X: " + odo.getPosition().getX(DistanceUnit.MM) +
+                        ", Y: " + odo.getPosition().getY(DistanceUnit.MM) +
+                        ", Heading: " + odo.getPosition().getHeading(AngleUnit.DEGREES));
     }
 
 
