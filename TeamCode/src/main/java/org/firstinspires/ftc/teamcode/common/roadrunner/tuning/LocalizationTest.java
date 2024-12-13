@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.common.roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
-@Disabled
 @TeleOp(name = "LocalizationTest", group = "Tuning")
 public class LocalizationTest extends LinearOpMode {
     @Override

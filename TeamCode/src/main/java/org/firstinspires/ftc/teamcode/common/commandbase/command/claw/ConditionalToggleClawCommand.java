@@ -39,6 +39,8 @@ public class ConditionalToggleClawCommand extends CommandBase {
         this.bot = bot;
 
         chamberIntakeSuccessSequence = new SequentialCommandGroup(
+                new ManualPivotUpCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 90)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new WaitCommand(250),
@@ -54,6 +56,8 @@ public class ConditionalToggleClawCommand extends CommandBase {
         );
 
         specimenSubIntakeSequence = new SequentialCommandGroup(
+                new ManualPivotUpCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 90)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT))
@@ -133,6 +137,8 @@ public class ConditionalToggleClawCommand extends CommandBase {
 
         specimenSubDepositSequence = new SequentialCommandGroup(
                 new ClawIntakeCommand(bot.getClaw()),
+                new WaitCommand(250),
+                new ManualPivotUpCommand(bot, bot.getPivot()),
                 new WaitCommand(250),
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(0,230)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
