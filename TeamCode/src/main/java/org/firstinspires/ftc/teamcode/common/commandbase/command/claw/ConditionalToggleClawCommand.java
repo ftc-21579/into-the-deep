@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.Manua
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
@@ -38,7 +39,7 @@ public class ConditionalToggleClawCommand extends CommandBase {
         this.bot = bot;
 
         chamberIntakeSuccessSequence = new SequentialCommandGroup(
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 45)),
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 90)),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
                 new WaitCommand(250),
                 new ToggleStateCommand(bot)
@@ -131,9 +132,12 @@ public class ConditionalToggleClawCommand extends CommandBase {
         );
 
         specimenSubDepositSequence = new SequentialCommandGroup(
-                new ToggleClawCommand(bot.getClaw()),
+                new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
-                new ToggleStateCommand(bot)
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(0,230)),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new InstantCommand(() -> bot.setState(BotState.INTAKE)),
+                new SetPivotAngleCommand(bot.getPivot(), 15.0)
         );
 
         specimenDepositSequence = new SequentialCommandGroup(
