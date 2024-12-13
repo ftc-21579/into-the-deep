@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeC
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToSpecimenDepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
+import org.firstinspires.ftc.teamcode.opmode.auto.command.SpecimenSampleIntakeCommand;
 
 import java.util.Set;
 
@@ -77,7 +78,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new WaitCommand(500),
                 new ToggleClawCommand(bot.getClaw()),
                 new ParallelCommandGroup(
-                        new ToIntakeCommand(bot),
+                        new SpecimenSampleIntakeCommand(bot, 10, new Vec2d(0, 0)),
                         new DriveTrajectorySequence(drive, builder -> builder
                                 .splineToLinearHeading(new Pose2d(40, -38, Math.toRadians(45)), Math.toRadians(45))
                                 .afterTime(0.5, () -> new SetExtensionCommand(bot.getExtension(), 10).withTimeout(100).schedule())
