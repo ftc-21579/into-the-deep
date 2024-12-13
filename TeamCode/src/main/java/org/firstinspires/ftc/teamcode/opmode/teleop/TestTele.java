@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import java.util.List;
 
 @TeleOp(name="Test Tele", group="TeleOp")
+@Disabled
 public class TestTele extends LinearOpMode {
 
 

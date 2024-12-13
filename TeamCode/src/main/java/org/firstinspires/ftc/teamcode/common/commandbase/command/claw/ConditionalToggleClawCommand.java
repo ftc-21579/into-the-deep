@@ -157,7 +157,7 @@ public class ConditionalToggleClawCommand extends CommandBase {
             if (bot.getState() == BotState.INTAKE) {
                 double normalizedHeading = bot.getDrivetrain().getHeadingDEG();
 
-                if ((normalizedHeading >= -45 && normalizedHeading <= 45) || (normalizedHeading >= 135 && normalizedHeading <= 225)) {
+                if ((normalizedHeading >= -30 && normalizedHeading <= 30) || (normalizedHeading >= 150 && normalizedHeading <= 210)) {
                     chamberIntakeSequence.schedule();
                 } else {
                     rungIntakeSequence.schedule();
