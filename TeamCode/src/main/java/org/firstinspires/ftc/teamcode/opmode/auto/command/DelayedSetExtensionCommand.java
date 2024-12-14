@@ -9,14 +9,12 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 
-public class SpecimenSampleIntakeCommand extends SequentialCommandGroup {
+public class DelayedSetExtensionCommand extends SequentialCommandGroup {
 
-    public SpecimenSampleIntakeCommand(Bot bot, double ext, Vec2d wrist) {
+    public DelayedSetExtensionCommand (Bot bot, double ext, long delay) {
         addCommands(
-                new ToIntakeCommand(bot),
-                new WaitCommand(500),
-                new SetExtensionCommand(bot.getExtension(), ext),
-                new SetWristPositionCommand(bot.getWrist(), wrist)
+                new WaitCommand(delay),
+                new SetExtensionCommand(bot.getExtension(), ext)
         );
     }
 }

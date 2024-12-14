@@ -24,12 +24,15 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClaw
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.DriveTrajectorySequence;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToDepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToSpecimenDepositCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToSpecimenIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
+import org.firstinspires.ftc.teamcode.opmode.auto.command.DelayedSetExtensionCommand;
 import org.firstinspires.ftc.teamcode.opmode.auto.command.SpecimenSampleIntakeCommand;
 
 import java.util.Set;
@@ -70,59 +73,148 @@ public class SpecimenAuto extends LinearOpMode {
                         new ToSpecimenDepositCommand(bot),
                         new DriveTrajectorySequence(drive, builder -> builder
                                 .setTangent(Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(6, -33), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(6, -34), Math.toRadians(90))
                                 .build()
                         )
                 ),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
-                new WaitCommand(500),
+                new WaitCommand(250),
                 new ToggleClawCommand(bot.getClaw()),
                 new ParallelCommandGroup(
-                        new SpecimenSampleIntakeCommand(bot, 10, new Vec2d(0, 0)),
+                        new SpecimenSampleIntakeCommand(bot, 9, new Vec2d(45, 230)),
                         new DriveTrajectorySequence(drive, builder -> builder
                                 .splineToLinearHeading(new Pose2d(40, -38, Math.toRadians(45)), Math.toRadians(45))
-                                .afterTime(0.5, () -> new SetExtensionCommand(bot.getExtension(), 10).withTimeout(100).schedule())
                                 .build()
                         )
                 ),
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(45, 230)),
                 new ManualPivotDownCommand(bot, bot.getPivot()),
                 new WaitCommand(250),
                 new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ManualPivotUpCommand(bot, bot.getPivot()),
+                        new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 135)),
+                        new SetExtensionCommand(bot.getExtension(), 40),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .turn(Math.toRadians(-110))
+                                .build()
+                        )
+                ),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new SetExtensionCommand(bot.getExtension(), 25),
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(45, 230)),
                 new DriveTrajectorySequence(drive, builder -> builder
-                        //.splineToSplineHeading(new Pose2d(36, -36, Math.toRadians(45)), Math.toRadians(45))
-                        //.waitSeconds(.5)
-                        .turn(Math.toRadians(-90))
-                        .waitSeconds(.5)
-                        .turn(Math.toRadians(70))
-                        .waitSeconds(.5)
-                        .turn(Math.toRadians(-70))
-                        .waitSeconds(.5)
-                        .turn(Math.toRadians(65))
-                        .waitSeconds(.5)
-                        .turn(Math.toRadians(-65))
-                        .waitSeconds(.5)
+                        .turn(Math.toRadians(92))
+                        .build()
+                ),
+                new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ManualPivotUpCommand(bot, bot.getPivot()),
+                        new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 135)),
+                        new DelayedSetExtensionCommand(bot, 40, 500),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .turn(Math.toRadians(-92))
+                                .build()
+                        )
+                ),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new SetExtensionCommand(bot.getExtension(), 45),
+                new SetWristPositionCommand(bot.getWrist(), new Vec2d(60, 230)),
+                new DriveTrajectorySequence(drive, builder -> builder
+                        .turn(Math.toRadians(79))
+                        .build()
+                ),
+                new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ManualPivotUpCommand(bot, bot.getPivot()),
+                        new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 135)),
+                        new SetExtensionCommand(bot.getExtension(), 40),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .turn(Math.toRadians(-80))
+                                .build()
+                        )
+                ),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ToSpecimenIntakeCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
                         .setTangent(Math.toRadians(180))
                         .splineToSplineHeading(new Pose2d(24, -48, Math.toRadians(0)), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(36, -60, Math.toRadians(0)), Math.toRadians(0))
-                        .waitSeconds(.5)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(2, -32), Math.toRadians(90))
-                        .waitSeconds(.5)
+                        .build()
+                ),
+                new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ToSpecimenDepositCommand(bot),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .setReversed(true)
+                                .splineTo(new Vector2d(2, -34), Math.toRadians(90))
+                                .build()
+                        )
+                ),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ToSpecimenIntakeCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
                         .setReversed(false)
-                        .splineTo(new Vector2d(36, -60), Math.toRadians(0))
-                        .waitSeconds(.5)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(-2, -32), Math.toRadians(90))
-                        .waitSeconds(.5)
+                        .splineTo(new Vector2d(38, -60), Math.toRadians(0))
+                        .build()
+                ),
+                new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ToSpecimenDepositCommand(bot),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .setReversed(true)
+                                .splineTo(new Vector2d(2, -34), Math.toRadians(90))
+                                .build()
+                        )
+                ),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ToSpecimenIntakeCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
                         .setReversed(false)
-                        .splineTo(new Vector2d(36, -60), Math.toRadians(0))
-                        .waitSeconds(.5)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(-6, -32), Math.toRadians(90))
-                        .waitSeconds(.5)
+                        .splineTo(new Vector2d(38, -60), Math.toRadians(0))
+                        .build()
+                ),
+                new ManualPivotDownCommand(bot, bot.getPivot()),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new ToSpecimenDepositCommand(bot),
+                        new DriveTrajectorySequence(drive, builder -> builder
+                                .setReversed(true)
+                                .splineTo(new Vector2d(2, -34), Math.toRadians(90))
+                                .build()
+                        )
+                ),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
+                new WaitCommand(250),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(100),
+                new ToSpecimenIntakeCommand(bot),
+                new DriveTrajectorySequence(drive, builder -> builder
                         .setReversed(false)
-                        .splineTo(new Vector2d(36, -60), Math.toRadians(0))
+                        .splineTo(new Vector2d(38, -60), Math.toRadians(0))
                         .build()
                 )
         );
