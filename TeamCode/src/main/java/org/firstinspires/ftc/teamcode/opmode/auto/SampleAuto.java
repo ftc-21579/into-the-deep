@@ -49,7 +49,7 @@ public class SampleAuto extends LinearOpMode {
 
     public static double extension1Length = 20, extension2Length = 20;
 
-    public static double startX = -12, startY = -63, startHeading = Math.toRadians(-90);
+    public static double startX = -12, startY = -62, startHeading = Math.toRadians(-90);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -85,7 +85,7 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new SpecimenSampleIntakeCommand(bot, 10, new Vec2d(0, 230)),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .splineToLinearHeading(new Pose2d(-46, -42, Math.toRadians(90)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(-46, -39, Math.toRadians(90)), Math.toRadians(90))
                                 .build()
                         )
                 ),
@@ -96,7 +96,7 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new AutoToDepositCommand(bot, 95, 60),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .strafeToLinearHeading(new Vector2d(-50, -56), Math.toRadians(45))
+                                .strafeToLinearHeading(new Vector2d(-52, -54), Math.toRadians(45))
                                 .build()
                         )
                 ),
@@ -106,10 +106,11 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new AutoToIntakeCommand(bot, 12.0, new Vec2d(0, 230)),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .splineToLinearHeading(new Pose2d(-57, -41, Math.toRadians(90)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(-57, -40, Math.toRadians(90)), Math.toRadians(90))
                                 .build()
                         )
                 ),
+                new WaitCommand(500),
                 new ManualPivotDownCommand(bot, bot.getPivot()),
                 new WaitCommand(250),
                 new ToggleClawCommand(bot.getClaw()),
@@ -117,7 +118,7 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new AutoToDepositCommand(bot, 95, 60),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .strafeToLinearHeading(new Vector2d(-50, -56), Math.toRadians(45))
+                                .strafeToLinearHeading(new Vector2d(-52, -54), Math.toRadians(45))
                                 .build()
                         )
                 ),
@@ -127,10 +128,11 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new AutoToIntakeCommand(bot, 20.0, new Vec2d(-30, 230)),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .splineToLinearHeading(new Pose2d(-57, -42, Math.toRadians(120)), Math.toRadians(120))
+                                .splineToLinearHeading(new Pose2d(-57, -41, Math.toRadians(120)), Math.toRadians(120))
                                 .build()
                         )
                 ),
+                new WaitCommand(500),
                 new ManualPivotDownCommand(bot, bot.getPivot()),
                 new WaitCommand(250),
                 new ToggleClawCommand(bot.getClaw()),
@@ -138,7 +140,7 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new AutoToDepositCommand(bot, 95, 60),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .strafeToLinearHeading(new Vector2d(-50, -56), Math.toRadians(45))
+                                .strafeToLinearHeading(new Vector2d(-52, -54), Math.toRadians(45))
                                 .build()
                         )
                 ),

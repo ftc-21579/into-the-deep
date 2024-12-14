@@ -73,7 +73,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new ToSpecimenDepositCommand(bot),
                         new DriveTrajectorySequence(drive, builder -> builder
                                 .setTangent(Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(6, -34), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(6, -36), Math.toRadians(90))
                                 .build()
                         )
                 ),
@@ -83,7 +83,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new SpecimenSampleIntakeCommand(bot, 9, new Vec2d(45, 230)),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .splineToLinearHeading(new Pose2d(40, -38, Math.toRadians(45)), Math.toRadians(45))
+                                .splineToLinearHeading(new Pose2d(38, -38, Math.toRadians(45)), Math.toRadians(45))
                                 .build()
                         )
                 ),
@@ -123,10 +123,10 @@ public class SpecimenAuto extends LinearOpMode {
                 ),
                 new ToggleClawCommand(bot.getClaw()),
                 new WaitCommand(100),
-                new SetExtensionCommand(bot.getExtension(), 45),
+                new SetExtensionCommand(bot.getExtension(), 46),
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(60, 230)),
                 new DriveTrajectorySequence(drive, builder -> builder
-                        .turn(Math.toRadians(79))
+                        .turn(Math.toRadians(82))
                         .build()
                 ),
                 new ManualPivotDownCommand(bot, bot.getPivot()),
@@ -138,7 +138,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetWristPositionCommand(bot.getWrist(), new Vec2d(0, 135)),
                         new SetExtensionCommand(bot.getExtension(), 40),
                         new DriveTrajectorySequence(drive, builder -> builder
-                                .turn(Math.toRadians(-80))
+                                .turn(Math.toRadians(-81))
                                 .build()
                         )
                 ),
@@ -192,7 +192,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ToSpecimenIntakeCommand(bot),
                 new DriveTrajectorySequence(drive, builder -> builder
                         .setReversed(false)
-                        .splineTo(new Vector2d(38, -60), Math.toRadians(0))
+                        .splineTo(new Vector2d(38, -61), Math.toRadians(0))
                         .build()
                 ),
                 new ManualPivotDownCommand(bot, bot.getPivot()),
