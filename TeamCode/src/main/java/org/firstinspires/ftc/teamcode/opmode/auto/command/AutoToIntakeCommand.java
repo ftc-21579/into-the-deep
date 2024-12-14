@@ -16,20 +16,23 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristP
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
 @Config
-public class ToIntakeCommand extends SequentialCommandGroup {
+public class AutoToIntakeCommand extends SequentialCommandGroup {
     // Create a SequentialCommandGroup or FunctionalCommand or ParallelCommandGroup to transition to the intake state
 
     public static double wrist_twist = 0, wrist_angle = 230;
 
-    public ToIntakeCommand(Bot bot) {
+    public AutoToIntakeCommand(Bot bot, double ext, Vec2d wrist) {
         addCommands(
                 new SetWristPositionCommand(bot.getWrist(), new Vec2d(wrist_twist, wrist_angle)),
                 new InstantCommand(() -> bot.setState(BotState.DEPOSIT)),
                 new ClawIntakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0.0),
-                new WaitCommand(750),
+                new WaitCommand(500),
+                new SetWristPositionCommand(bot.getWrist(),wrist),
                 new InstantCommand(() -> bot.setState(BotState.INTAKE)),
-                new SetPivotAngleCommand(bot.getPivot(), 15.0)
+                new SetPivotAngleCommand(bot.getPivot(), 15.0),
+                new WaitCommand(500),
+                new SetExtensionCommand(bot.getExtension(), ext)
         );
     }
 }
