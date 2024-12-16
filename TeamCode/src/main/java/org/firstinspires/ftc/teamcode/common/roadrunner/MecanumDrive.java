@@ -75,12 +75,12 @@ public class MecanumDrive {
         // drive model parameters
         public double inPerTick = 1; // Note: you can probably leave this at 1
         public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 11.58720453030407;
+        public double trackWidthTicks = 12.66542868263617;
 
 
         // feedforward parameters (in tick units)
-        public double kS = 1.3299420337967929;
-        public double kV = 0.210611134945979;
+        public double kS = 1.324036197492327;
+        public double kV = 0.1493433966467172;
         public double kA = 0.01;
 
 
@@ -91,8 +91,8 @@ public class MecanumDrive {
 
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI; // shared with path
-        public double maxAngAccel = Math.PI;
+        public double maxAngVel = 6.0; // shared with path
+        public double maxAngAccel = 6.0;
 
 
         // path controller gains

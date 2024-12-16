@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
+import org.firstinspires.ftc.teamcode.common.intothedeep.SpecimenMode;
 
 public class Bot extends Robot {
     private final IMU imu;
@@ -27,6 +28,7 @@ public class Bot extends Robot {
 
     public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
+    private SpecimenMode specimenMode = SpecimenMode.INTAKE;
 
     private MecanumDrivetrain drivetrain;
     private final Claw claw;
@@ -146,6 +148,10 @@ public class Bot extends Robot {
      * @return GameElement - the target element of the robot
      */
     public GameElement getTargetElement() { return targetElement; }
+
+    public SpecimenMode getSpecimenMode() { return specimenMode; }
+
+    public void setSpecimenMode(SpecimenMode specimenMode) { this.specimenMode = specimenMode; }
 
     /**
      * Get the Vision subsystem of the robot

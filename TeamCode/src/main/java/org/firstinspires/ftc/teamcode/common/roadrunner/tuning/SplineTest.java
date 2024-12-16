@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.common.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.common.roadrunner.TankDrive;
 
-@Disabled
 @TeleOp(name = "SplineTest", group = "Tuning")
 public final class SplineTest extends LinearOpMode {
     @Override

@@ -21,19 +21,10 @@ public class AutoSpecimenCommand extends SequentialCommandGroup {
 
     public AutoSpecimenCommand(Bot bot) {
         addCommands(
-                new SetPivotAngleCommand(bot.getPivot(), 10).withTimeout(200),
-                new SetWristPositionCommand(bot.getWrist(), new Vec2d(-180, 120)),
-                new SetExtensionCommand(bot.getExtension(), extensionHeight).withTimeout(200),
-                new WaitCommand(1000),
-                new SetPivotSussyWussy(bot.getPivot(), pivotAngle),
+                new SetExtensionCommand(bot.getExtension(), 0.0),
                 new WaitCommand(500),
-                //new SetExtensionCommand(bot.getExtension(), extensionHeight),
-                //new WaitCommand(1000),
-                //new SetWristPositionCommand(bot.getWrist(), new Vec2d(wristTwistAngle, 225)),
-                //new SetPivotAngleCommand(bot.getPivot(), pivotAngle).withTimeout(100),
-                //new WaitCommand(500),
-                new ClawOuttakeCommand(bot.getClaw()),
-                new WaitCommand(500),
+                new ToggleClawCommand(bot.getClaw()),
+                new WaitCommand(250),
                 new ToIntakeCommand(bot)
         );
     }

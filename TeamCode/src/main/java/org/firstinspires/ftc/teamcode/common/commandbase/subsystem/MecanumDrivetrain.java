@@ -91,6 +91,7 @@ public class MecanumDrivetrain extends SubsystemBase {
         bot.telem.addData("Left Power", leftPower);
         bot.telem.addData("Right Power", rightPower);
 
+        odo.update();
         pose = odo.getPosition();
         bot.telem.addData("Pose",
                 "X: " + pose.getX(DistanceUnit.MM) +
@@ -216,8 +217,7 @@ public class MecanumDrivetrain extends SubsystemBase {
     }
 
     public double getHeadingDEG() {
-        double heading = pose.getHeading(AngleUnit.DEGREES);
-        return (heading + 360) % 360;
+        return pose.getHeading(AngleUnit.DEGREES);
     }
 
     public Pose2d getOdoPositionDEG() {
