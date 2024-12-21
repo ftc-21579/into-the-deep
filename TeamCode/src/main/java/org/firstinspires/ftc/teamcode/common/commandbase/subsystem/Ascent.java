@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +12,10 @@ public class Ascent extends SubsystemBase {
     private final Servo leftPTO, rightPTO;
 
     public static double engaged = 0.0, release = 0.2, locked = 0.35;
+
+    public enum PTOState {
+        ENGAGED, LOCKED
+    }
 
     public Ascent(Bot bot) {
         this.bot = bot;
@@ -35,14 +38,6 @@ public class Ascent extends SubsystemBase {
 
     public void lockArms() {
         leftPTO.setPosition(locked);
-        rightPTO.setPosition(locked);
-    }
-
-    public void lockLeftArm() {
-        leftPTO.setPosition(locked);
-    }
-
-    public void lockRightArm() {
         rightPTO.setPosition(locked);
     }
 }

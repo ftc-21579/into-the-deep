@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.state;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 
 public class ToggleElementCommand extends CommandBase {
+    private final Bot bot;
 
-
-    private Bot bot;
     public ToggleElementCommand(Bot bot) {
         this.bot = bot;
     }

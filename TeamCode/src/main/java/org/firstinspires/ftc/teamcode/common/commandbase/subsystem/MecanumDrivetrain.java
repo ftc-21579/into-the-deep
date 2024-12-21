@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -16,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.roadrunner.PinpointDrive;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -39,8 +37,8 @@ public class MecanumDrivetrain extends SubsystemBase {
         this.bot = bot;
 
         odo = bot.hMap.get(GoBildaPinpointDriverRR.class,"odo");
-        odo.setOffsets(PinpointDrive.PARAMS.xOffset, PinpointDrive.PARAMS.yOffset);
-        odo.setEncoderResolution(PinpointDrive.PARAMS.encoderResolution);
+        odo.setOffsets(-3.2546944882, 4.36341574803);
+        odo.setEncoderResolution(8192 / (Math.PI * 35));
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         if (pose == null) {
@@ -79,17 +77,8 @@ public class MecanumDrivetrain extends SubsystemBase {
             frontRight.setPower(rightPower);
 
             // Debugging telemetry
-            bot.telem.addData("BAD BAD BAD BAD BAD FUNNY", targetTicks);
+            //bot.telem.addData("BAD BAD BAD BAD BAD FUNNY", targetTicks);
         }
-        double targetTicks = setPointCM * TICKS_PER_CM;
-
-        double leftPower = ascentController.calculate(backLeft.getCurrentPosition(), targetTicks);
-        double rightPower = ascentController.calculate(backRight.getCurrentPosition(), targetTicks);
-        bot.telem.addData("Target Position (ticks)", targetTicks);
-        bot.telem.addData("Back Left Position", backLeft.getCurrentPosition());
-        bot.telem.addData("Back Right Position", backRight.getCurrentPosition());
-        bot.telem.addData("Left Power", leftPower);
-        bot.telem.addData("Right Power", rightPower);
 
         odo.update();
         pose = odo.getPosition();

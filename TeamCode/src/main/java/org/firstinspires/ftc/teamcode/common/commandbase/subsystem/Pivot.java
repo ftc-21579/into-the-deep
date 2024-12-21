@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
@@ -36,7 +35,6 @@ public class Pivot extends SubsystemBase {
                 Config.pivot_kD,
                 Config.pivot_kF
         );
-        //pivotController.setTolerance(Config.pivot_tolerance);
     }
 
     @Override
@@ -53,42 +51,36 @@ public class Pivot extends SubsystemBase {
         bot.telem.update();
     }
 
-
-    //region Setpoint methods
+    /**
+     * Set the setpoint of the pivot in degrees
+     * @param setpoint the setpoint in degrees
+     */
     public void setSetpointDEG(double setpoint) {
         setpointDEG = Math.max(minAngle, Math.min(maxAngle, setpoint));
     }
 
+    /**
+     * Set the setpoint of the pivot in degrees, ignoring safety limits
+     * USE WITH EXTREME CAUTION, AUTOMATIONS ONLY
+     * @param setpoint
+     */
     public void setSetpointIGNORE(double setpoint) {
         setpointDEG = setpoint;
     }
 
+    /**
+     * Get the setpoint of the pivot in degrees
+     * @return the setpoint in degrees
+     */
     public double getSetpointDEG() {
         return setpointDEG;
     }
 
-    public void setSetpointRAD(double setpoint) {
-        setpointDEG = Math.toDegrees(setpoint);
-    }
-
-    public double getSetpointRAD() {
-        return Math.toRadians(setpointDEG);
-    }
-    //endregion
-
-    //region manual methods
-    public void setPower(double power) {
-        pivotMotor.setPower(power);
-    }
-
-    public double getPower() {
-        return pivotMotor.getPower();
-    }
-
+    /**
+     * Get the current position of the pivot in degrees
+     * @return the position in degrees
+     */
     public double getPosition() {
         return Math.toDegrees(pivotEncoder.getCurrentPosition());
     }
-    //endregion
-
-
 }

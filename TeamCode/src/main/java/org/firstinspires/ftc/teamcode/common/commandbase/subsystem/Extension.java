@@ -1,32 +1,22 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 
 @com.acmerobotics.dashboard.config.Config
 public class Extension extends SubsystemBase {
 
     private final Bot bot;
 
-    private DcMotor extensionMotor;
+    private final DcMotor extensionMotor;
 
     private final PIDFController extensionController;
     public static double setpointCM = 0.0, depositTarget = 55.0, lowTarget = 20.0, highTarget = 55.0, ticksperCM = 21.65;
     public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 45;
-
-    public enum DepositTarget {
-        LOW,
-        HIGH
-    }
-
-    public DepositTarget state = DepositTarget.HIGH;
 
     public Extension(Bot bot) {
         this.bot = bot;
@@ -59,44 +49,34 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("Ext Target", setpointCM * ticksperCM);
     }
 
+    /**
+     * Set the setpoint for the extension in centimeters
+     * @param setpoint the setpoint in centimeters
+     */
     public void setSetpointCM(double setpoint) {
         setpointCM = setpoint;
     }
 
+    /**
+     * Get the setpoint for the extension in centimeters
+     * @return the current setpoint of the extension in centimeters
+     */
     public double getSetpointCM() {
         return setpointCM;
     }
 
-    public void setDepositTarget(double setpoint) {
-        depositTarget = setpoint;
-    }
-
-    public double getDepositTarget() {
-        return depositTarget;
-    }
-
-    public void toggleDepositTarget() {
-        if (state == DepositTarget.HIGH) {
-            setDepositTarget(lowTarget);
-            state = DepositTarget.LOW;
-        } else {
-            setDepositTarget(highTarget);
-            state = DepositTarget.HIGH;
-        }
-    }
-
-    public void setPower(double power) {
-        extensionMotor.setPower(power);
-    }
-
-    public double getPower() {
-        return extensionMotor.getPower();
-    }
-
+    /**
+     * Get the current position of the extension in centimeters
+     * @return the current position of the extension in centimeters
+     */
     public int getPositionCM() {
         return extensionMotor.getCurrentPosition();
     }
 
+    /**
+     * Get the maximum extension of the extension in centimeters
+     * @return the maximum extension of the extension in centimeters
+     */
     public double getMaxExtension() {
         switch (bot.getState()) {
             case INTAKE:
@@ -107,6 +87,10 @@ public class Extension extends SubsystemBase {
         return intakeMaxExtension;
     }
 
+    /**
+     * Get the minimum extension of the extension in centimeters
+     * @return the minimum extension of the extension in centimeters
+     */
     public double getMinExtension() {
         return minExtension;
     }
