@@ -3,34 +3,32 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoLevel2Hang;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoScoreCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ConditionalToggleClawCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ToggleClawCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoHangCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotDownCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotUpCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleStateCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleScoringTargetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
+import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
@@ -83,7 +81,11 @@ public class TeleOp extends CommandOpMode {
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
                 .whenPressed(
-                        new ConditionalToggleClawCommand(bot)
+                        new ConditionalCommand(
+                                new DepositCommand(bot),
+                                new IntakeCommand(bot),
+                                () -> bot.getState() == BotState.DEPOSIT
+                        )
                 );
 
         register(claw);
@@ -94,11 +96,11 @@ public class TeleOp extends CommandOpMode {
 
         Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
                 .whenPressed(
-                        new ManualPivotDownCommand(bot, pivot)
+                        new ManualPivotCommand(pivot, Direction.DOWN)
                 );
         Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(
-                        new ManualPivotUpCommand(bot, pivot)
+                        new ManualPivotCommand(pivot, Direction.UP)
                 );
 
         register(pivot);
@@ -145,25 +147,17 @@ public class TeleOp extends CommandOpMode {
 
         Button autoAscent = (new GamepadButton(driverGamepad, GamepadKeys.Button.START))
                 .whenPressed(
-                        new AutoLevel2Hang(bot)
+                        new AutoHangCommand(bot)
                 );
 
         register(ascent);
         // endregion
 
-        // region State
-
-        Button stateButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
-                .whenPressed(
-                        new ToggleStateCommand(bot)
-                );
-        //endregion
-
         //region Automation
 
-        Button autoScoreButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
+        Button toggleTargetButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.Y))
                 .whenPressed(
-                       new AutoScoreCommand(bot)
+                       new ToggleScoringTargetCommand(bot)
                 );
 
         Button toggleElementButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.X))
