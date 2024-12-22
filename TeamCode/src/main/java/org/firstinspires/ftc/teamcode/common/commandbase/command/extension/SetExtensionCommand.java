@@ -16,15 +16,13 @@ public class SetExtensionCommand extends CommandBase {
     public SetExtensionCommand(Extension e, double setpointcm) {
         extension = e;
         this.setpoint = setpointcm;
+        extension.setSetpointCM(setpoint);
         addRequirements(extension);
     }
 
     @Override
     public void initialize() {
-        if (setpoint > extension.getMinExtension()
-                && setpoint < extension.getMaxExtension()) {
-            extension.setSetpointCM(setpoint);
-        }
+        extension.setSetpointCM(setpoint);
     }
 
     @Override

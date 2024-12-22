@@ -47,12 +47,12 @@ public class Claw extends SubsystemBase {
     }
 
     public void intake() {
-        claw.setPosition(0.5);
+        claw.setPosition(0.05);
         state = ClawState.OPEN;
     }
 
     public void outtake() {
-        claw.setPosition(0.05);
+        claw.setPosition(0.5);
         state = ClawState.CLOSED;
     }
 
