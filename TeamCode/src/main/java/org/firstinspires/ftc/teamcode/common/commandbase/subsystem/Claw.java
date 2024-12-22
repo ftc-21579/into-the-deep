@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -10,15 +9,11 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 public class Claw extends SubsystemBase {
 
     private final Bot bot;
-
     private final Servo claw;
-
     private final AnalogInput clawFeedback;
+    public static double grabbedAngle = 265.0;
 
-    public enum ClawState {
-        OPEN,
-        CLOSED
-    }
+    public enum ClawState { OPEN, CLOSED }
     private ClawState state = ClawState.OPEN;
 
     public Claw(Bot bot) {
@@ -38,7 +33,7 @@ public class Claw extends SubsystemBase {
         double feedbackVoltage = clawFeedback.getVoltage();
         double positionDegrees = mapVoltageToDegrees(feedbackVoltage);
 
-        return positionDegrees > 265.0;
+        return positionDegrees > grabbedAngle;
     }
 
     public double getAnalogDegrees() {
@@ -52,15 +47,13 @@ public class Claw extends SubsystemBase {
     }
 
     public void intake() {
-        claw.setPosition(0.5);
+        claw.setPosition(0.05);
         state = ClawState.OPEN;
-        bot.telem.addData("Claw State", state);
     }
 
     public void outtake() {
-        claw.setPosition(0.05);
+        claw.setPosition(0.5);
         state = ClawState.CLOSED;
-        bot.telem.addData("Claw State", state);
     }
 
     public void toggle() {

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -17,18 +16,17 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
-import org.firstinspires.ftc.teamcode.common.intothedeep.SpecimenMode;
+import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
 public class Bot extends Robot {
     private final IMU imu;
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
-    public boolean enableDrive;
 
     public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
-    private SpecimenMode specimenMode = SpecimenMode.INTAKE;
+    private TargetMode targetMode = TargetMode.HIGH_BASKET;
 
     private MecanumDrivetrain drivetrain;
     private final Claw claw;
@@ -36,7 +34,6 @@ public class Bot extends Robot {
     private final Wrist wrist;
     private final Pivot pivot;
     private final Ascent ascent;
-    //private final Vision vision;
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
         this.telem = telem;
@@ -55,7 +52,6 @@ public class Bot extends Robot {
         );
 
         /* Subsystems */
-        //vision = new Vision(this);
         claw = new Claw(this);
         wrist = new Wrist(this);
         if (enableDrive) {
@@ -149,21 +145,15 @@ public class Bot extends Robot {
      */
     public GameElement getTargetElement() { return targetElement; }
 
-    public SpecimenMode getSpecimenMode() { return specimenMode; }
-
-    public void setSpecimenMode(SpecimenMode specimenMode) { this.specimenMode = specimenMode; }
+    /**
+     * Get the target mode of the robot
+     * @return TargetMode - the target mode of the robot
+     */
+    public TargetMode getTargetMode() { return targetMode; }
 
     /**
-     * Get the Vision subsystem of the robot
-     * @return the vision subsystem object
+     * Set the target mode of the robot
+     * @param targetMode - the target mode to set the robot to
      */
-    //public Vision getVision() { return vision; }
-
-    public void disableDrive() {
-        enableDrive = false;
-    }
-
-    public void enableDrive() {
-        enableDrive = true;
-    }
+    public void setTargetMode(TargetMode targetMode) { this.targetMode = targetMode; }
 }
