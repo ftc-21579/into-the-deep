@@ -81,10 +81,10 @@ public class PinpointLocalizer extends Localizer {
         //TODO: Tune urself if needed
 //        odo.setYawScalar(1.0);
 
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderResolution(8192 / (Math.PI * 35));
         //odo.setEncoderResolution(13.26291192);
 
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         resetPinpoint();
 
