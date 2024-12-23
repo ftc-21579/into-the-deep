@@ -22,8 +22,13 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Bot b) {
-        double h = b.getDrivetrain().getHeadingDEG();
-        boolean facingChamber = (h >= -45 && h <= 45) || (h >= 135 && h <= 225);
+        boolean facingChamber;
+        if (b.getDrivetrain() != null) {
+            double h = b.getDrivetrain().getHeadingDEG();
+            facingChamber = (h >= -45 && h <= 45) || (h >= 135 && h <= 225);
+        } else {
+            facingChamber = false;
+        }
 
         addCommands(
                 new ManualPivotCommand(b.getPivot(), Direction.DOWN),
