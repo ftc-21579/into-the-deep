@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Depo
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Point;
@@ -33,7 +35,7 @@ import org.firstinspires.ftc.teamcode.common.pedroPathing.util.Drawing;
 @Autonomous(name="Sample Auto")
 public class SampleAuto extends LinearOpMode {
 
-    private final Pose startingPose = new Pose(9, 89.5, 180);
+    private final Pose startingPose = new Pose(9, 89.5, Math.toRadians(180));
     private final Point basketPosition = new Point(16, 128, Point.CARTESIAN);
     private final double basketHeading = -45;
 
@@ -61,6 +63,7 @@ public class SampleAuto extends LinearOpMode {
                     bot.setTargetElement(GameElement.SPECIMEN);
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
                 }),
+                new ClawIntakeCommand(bot.getClaw()),
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
@@ -72,13 +75,13 @@ public class SampleAuto extends LinearOpMode {
                                 .setConstantHeadingInterpolation(Math.toRadians(180))
                                 .build()
                         ),
-                        new ClawIntakeCommand(bot.getClaw()),
-                        new SetPivotAngleCommand(bot.getPivot(), 95)
+                        new SetPivotAngleCommand(bot.getPivot(), 95),
+                        new SetExtensionCommand(bot.getExtension(), 16.0)
                 ),
                 new DepositCommand(bot),
                 new InstantCommand(() -> {
                     bot.setTargetElement(GameElement.SAMPLE);
-                    bot.setTargetMode(TargetMode.HIGH_BASKET);
+                    bot.setTargetMode(TargetMode.LOW_BASKET);
                 }),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -99,7 +102,7 @@ public class SampleAuto extends LinearOpMode {
                                         basketPosition
                                 )
                         )
-                        .setLinearHeadingInterpolation(Math.toRadians(0), basketHeading)
+                        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(basketHeading))
                         .build()
                 ),
                 new DepositCommand(bot),
@@ -137,7 +140,12 @@ public class SampleAuto extends LinearOpMode {
 
             bot.getFollower().update();
 
+            f.poseUpdater.update();
+            tracker.update();
+
             CommandScheduler.getInstance().run();
+
+            f.telemetryDebug(telemetry);
 
             telemetry.addData("Status", "Running");
             telemetry.update();
