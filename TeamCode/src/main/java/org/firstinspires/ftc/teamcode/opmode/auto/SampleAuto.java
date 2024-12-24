@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.mineinjava.quail.util.geometry.Vec2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -18,14 +17,14 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntake
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Point;
@@ -36,8 +35,14 @@ import org.firstinspires.ftc.teamcode.common.pedroPathing.util.Drawing;
 public class SampleAuto extends LinearOpMode {
 
     private final Pose startingPose = new Pose(9, 89.5, Math.toRadians(180));
-    private final Point basketPosition = new Point(16, 128, Point.CARTESIAN);
-    private final double basketHeading = -45;
+    private final Pose basketPose = new Pose(16, 128, Math.toRadians(-45));
+    private final Pose chamberPose = new Pose(38, 78, Math.toRadians(180));
+
+    private final Pose pickup1Pose = new Pose(46, 121, Math.toRadians(0));
+    private final Pose pickup2Pose = new Pose(46, 132, Math.toRadians(6));
+    private final Pose pickup3Pose = new Pose(46, 132, Math.toRadians(90));
+
+    private final Pose parkPose = new Pose(64, 97, Math.toRadians(90));
 
     @Override
     public void runOpMode() {
@@ -68,11 +73,11 @@ public class SampleAuto extends LinearOpMode {
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
                                         new BezierLine(
-                                                new Point(9, 89.5, Point.CARTESIAN),
-                                                new Point(38, 78, Point.CARTESIAN)
+                                                new Point(startingPose),
+                                                new Point(chamberPose)
                                         )
                                 )
-                                .setConstantHeadingInterpolation(Math.toRadians(180))
+                                .setConstantHeadingInterpolation(chamberPose.getHeading())
                                 .build()
                         ),
                         new SetPivotAngleCommand(bot.getPivot(), 95),
@@ -81,14 +86,14 @@ public class SampleAuto extends LinearOpMode {
                 new DepositCommand(bot),
                 new InstantCommand(() -> {
                     bot.setTargetElement(GameElement.SAMPLE);
-                    bot.setTargetMode(TargetMode.LOW_BASKET);
+                    bot.setTargetMode(TargetMode.HIGH_BASKET);
                 }),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierCurve(
-                                        new Point(38, 78, Point.CARTESIAN),
+                                        new Point(chamberPose),
                                         new Point(0, 121, Point.CARTESIAN),
-                                        new Point(46, 121, Point.CARTESIAN)
+                                        new Point(pickup1Pose)
                                 )
                         )
                         .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
@@ -98,33 +103,84 @@ public class SampleAuto extends LinearOpMode {
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
-                                        new Point(46, 121, Point.CARTESIAN),
-                                        basketPosition
+                                        new Point(pickup1Pose),
+                                        new Point(basketPose)
                                 )
                         )
-                        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(basketHeading))
+                        .setLinearHeadingInterpolation(Math.toRadians(0), basketPose.getHeading())
                         .build()
                 ),
                 new DepositCommand(bot),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
-                                        new Point(16, 128, Point.CARTESIAN),
-                                        new Point(16, 128, Point.CARTESIAN)
+                                        new Point(basketPose),
+                                        new Point(basketPose)
                                 )
                         )
-                        .setLinearHeadingInterpolation(Math.toRadians(basketHeading), Math.toRadians(6))
+                        .setLinearHeadingInterpolation(basketPose.getHeading(), Math.toRadians(6))
                         .build()
                 ),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
-                                        new Point(16, 128, Point.CARTESIAN),
-                                        new Point(46, 132, Point.CARTESIAN)
+                                        new Point(basketPose),
+                                        new Point(pickup2Pose)
                                 )
                         )
+                        .setConstantHeadingInterpolation(pickup2Pose.getHeading())
                         .build()
-                )
+                ),
+                new IntakeCommand(bot),
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierLine(
+                                        new Point(pickup2Pose),
+                                        new Point(basketPose)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(pickup2Pose.getHeading(), basketPose.getHeading())
+                        .build()
+                ),
+                new DepositCommand(bot),
+                // potentially do in parallel?
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierLine(
+                                        new Point(basketPose),
+                                        new Point(pickup3Pose)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(basketPose.getHeading(), pickup3Pose.getHeading())
+                        .build()
+                ),
+                new SetExtensionCommand(bot.getExtension(), 20),
+                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
+                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
+                new IntakeCommand(bot),
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierLine(
+                                        new Point(pickup3Pose),
+                                        new Point(basketPose)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(pickup3Pose.getHeading(), basketPose.getHeading())
+                        .build()
+                ),
+                new DepositCommand(bot),
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        new Point(basketPose),
+                                        new Point(64, 128, Point.CARTESIAN),
+                                        new Point(parkPose)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(basketPose.getHeading(), parkPose.getHeading())
+                        .build()
+                ),
+                new SetPivotAngleCommand(bot.getPivot(), 95)
         );
 
         // dashboard pose stuff
