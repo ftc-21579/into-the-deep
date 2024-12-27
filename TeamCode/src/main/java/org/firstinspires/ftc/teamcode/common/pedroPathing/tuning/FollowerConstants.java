@@ -75,7 +75,7 @@ public class FollowerConstants {
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
             0.018,
             0,
-            0.0001,
+            0.0002,
             0.6,
             0);
 
@@ -116,7 +116,7 @@ public class FollowerConstants {
     // When the robot is at the end of its current Path or PathChain and the velocity goes below
     // this value, then end the Path. This is in inches/second.
     // This can be custom set for each Path.
-    public static double pathEndVelocityConstraint = 0.1;
+    public static double pathEndVelocityConstraint = 4;
 
     // When the robot is at the end of its current Path or PathChain and the translational error
     // goes below this value, then end the Path. This is in inches.
@@ -131,7 +131,7 @@ public class FollowerConstants {
     // When the t-value of the closest point to the robot on the Path is greater than this value,
     // then the Path is considered at its end.
     // This can be custom set for each Path.
-    public static double pathEndTValueConstraint = 0.995;
+    public static double pathEndTValueConstraint = 0.95;
 
     // When the Path is considered at its end parametrically, then the Follower has this many
     // milliseconds to further correct by default.
