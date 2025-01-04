@@ -73,7 +73,7 @@ public class Follower {
 
     private DriveVectorScaler driveVectorScaler;
 
-    public PoseUpdater poseUpdater;
+    private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
 
     private Pose closestPose;
@@ -719,11 +719,13 @@ public class Follower {
         double forwardVelocityGoal = MathFunctions.getSign(forwardDistanceToGoal) * Math.sqrt(Math.abs(-2 * currentPath.getZeroPowerAccelerationMultiplier() * forwardZeroPowerAcceleration * forwardDistanceToGoal));
         double forwardVelocityZeroPowerDecay = forwardVelocity - MathFunctions.getSign(forwardDistanceToGoal) * Math.sqrt(Math.abs(Math.pow(forwardVelocity, 2) + 2 * forwardZeroPowerAcceleration * forwardDistanceToGoal));
 
+        /*
         if (forwardDistanceToGoal < 0) {
             if (forwardZeroPowerAcceleration < 0) forwardZeroPowerAcceleration *= -1;
         } else if (forwardDistanceToGoal > 0) {
             if (forwardZeroPowerAcceleration > 0) forwardZeroPowerAcceleration *= -1;
         }
+        */
 
         Vector lateralHeadingVector = new Vector(1.0, poseUpdater.getPose().getHeading() - Math.PI / 2);
         double lateralVelocity = MathFunctions.dotProduct(lateralHeadingVector, velocity);
@@ -731,18 +733,20 @@ public class Follower {
         double lateralVelocityGoal = MathFunctions.getSign(lateralDistanceToGoal) * Math.sqrt(Math.abs(-2 * currentPath.getZeroPowerAccelerationMultiplier() * lateralZeroPowerAcceleration * lateralDistanceToGoal));
         double lateralVelocityZeroPowerDecay = lateralVelocity - MathFunctions.getSign(lateralDistanceToGoal) * Math.sqrt(Math.abs(Math.pow(lateralVelocity, 2) + 2 * lateralZeroPowerAcceleration * lateralDistanceToGoal));
 
+        /*
         if (lateralDistanceToGoal < 0) {
             if (lateralZeroPowerAcceleration < 0) lateralZeroPowerAcceleration *= -1;
         } else if (lateralDistanceToGoal > 0) {
             if (lateralZeroPowerAcceleration > 0) lateralZeroPowerAcceleration *= -1;
         }
+        */
 
         Vector forwardVelocityError = new Vector(forwardVelocityGoal - forwardVelocityZeroPowerDecay - forwardVelocity, forwardHeadingVector.getTheta());
         Vector lateralVelocityError = new Vector(lateralVelocityGoal - lateralVelocityZeroPowerDecay - lateralVelocity, lateralHeadingVector.getTheta());
         Vector velocityErrorVector = MathFunctions.addVectors(forwardVelocityError, lateralVelocityError);
 
         previousRawDriveError = rawDriveError;
-        rawDriveError = velocityErrorVector.getMagnitude() * MathFunctions.getSign(MathFunctions.dotProduct(velocityErrorVector, currentPath.getClosestPointTangentVector()));
+        rawDriveError = velocityErrorVector.getMagnitude() * MathFunctions.getSign(MathFunctions.dotProduct(velocityErrorVector, currentPath.getClosestPointTangentVector()));// * (currentPath.isReversed() ? -1 : 1);
 
         double projection = 2 * driveErrors[1] - driveErrors[0];
 

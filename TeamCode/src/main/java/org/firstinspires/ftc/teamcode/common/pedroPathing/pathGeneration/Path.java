@@ -170,6 +170,14 @@ public class Path {
     }
 
     /**
+     * Returns if the path is being followed in reverse
+     * @return
+     */
+    public boolean isReversed() {
+        return followTangentReversed;
+    }
+
+    /**
      * This sets the heading interpolation to tangential.
      */
     public void setTangentHeadingInterpolation() {

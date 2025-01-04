@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Depo
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
@@ -53,6 +55,8 @@ public class TeleOp extends CommandOpMode {
     // https://www.padcrafter.com/?templates=Gamepad+1%2FDriver+Gamepad&plat=1&col=%23242424%2C%23606A6E%2C%23FFFFFF&rightStick=Yaw%2FRotation&leftStick=Translation&dpadUp=Wrist+Up&dpadRight=Wrist+Clockwise&dpadLeft=Wrist+Counter-Clockwise&dpadDown=Wrist+Down&aButton=Toggle+Claw&yButton=Sample%2FSpecimen+Auto+Deposit&xButton=Robot+State+Toggle&bButton=Sample%2FSpecimen+State+Toggle&rightTrigger=Extension+Out&leftTrigger=Extension+In&leftBumper=Pivot+Down&rightBumper=Pivot+Up&backButton=Red+%3D+Sample%2C+Blue+%3D+Specimen%2C+Green+%3D+Ascent&startButton=Options+%3D+Ascent    @Override
     public void initialize() {
 
+        CommandScheduler.getInstance().reset();
+
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
@@ -65,9 +69,9 @@ public class TeleOp extends CommandOpMode {
 
         TeleOpDriveCommand driveCommand = new TeleOpDriveCommand(
                 drivetrain,
-                () -> -driverGamepad.getRightX(),
-                () -> driverGamepad.getLeftY(),
-                () -> -driverGamepad.getLeftX(),
+                () -> driverGamepad.getRightX(),
+                () -> -driverGamepad.getLeftY(),
+                () -> driverGamepad.getLeftX(),
                 () -> 0.8
         );
 
@@ -166,5 +170,11 @@ public class TeleOp extends CommandOpMode {
                 );
 
         //endregion
+
+
+        schedule(
+                new SetExtensionCommand(bot.getExtension(), 0)
+        );
     }
+
 }

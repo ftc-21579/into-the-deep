@@ -43,16 +43,16 @@ public class TestAuto extends LinearOpMode {
 
         SequentialCommandGroup auto = new SequentialCommandGroup(
                 new FollowPathCommand(f, f.pathBuilder() // follow a path
-                        .addPath(new BezierLine(new Point(0, 0), new Point(0, 0)))
+                        .addPath(new BezierLine(new Point(40, 0), new Point(0, 0)))
                         .build()
                 ),
                 new InstantCommand(() -> {}) // execute something AFTER the path, for parallel actions use a parallel command group
         );
 
         // dashboard pose stuff
-        DashboardPoseTracker tracker = new DashboardPoseTracker(f.poseUpdater);
-        Drawing.drawRobot(f.poseUpdater.getPose(), "#4CBB17");
-        Drawing.sendPacket();
+        //DashboardPoseTracker tracker = new DashboardPoseTracker(f.poseUpdater);
+        //Drawing.drawRobot(f.poseUpdater.getPose(), "#4CBB17");
+        //Drawing.sendPacket();
 
         waitForStart();
 
