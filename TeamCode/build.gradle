@@ -42,5 +42,4 @@ dependencies {
     implementation 'com.github.mineinjava:quail:v1.0.0-RC-1' // quail (Pathing/PID/Math Utils)
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
 }

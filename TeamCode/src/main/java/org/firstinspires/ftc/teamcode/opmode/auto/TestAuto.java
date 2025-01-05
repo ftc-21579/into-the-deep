@@ -5,18 +5,16 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.util.DashboardPoseTracker;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.util.Drawing;
 
 @Autonomous(name="TestPPAuto")
 public class TestAuto extends LinearOpMode {
@@ -36,7 +34,7 @@ public class TestAuto extends LinearOpMode {
         CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
         CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
 
-        Follower f = bot.getFollower();
+        Follower f = new Follower(hardwareMap);
 
         f.setStartingPose(startingPose);
         f.setMaxPower(0.75);
@@ -60,7 +58,7 @@ public class TestAuto extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            bot.getFollower().update();
+            f.update();
 
             CommandScheduler.getInstance().run();
 

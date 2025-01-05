@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.follower.Follower;
 
 public class Bot extends Robot {
     private final IMU imu;
@@ -35,7 +34,7 @@ public class Bot extends Robot {
     private final Wrist wrist;
     private final Pivot pivot;
     private final Ascent ascent;
-    private Follower follower;
+
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
         this.telem = telem;
@@ -62,8 +61,6 @@ public class Bot extends Robot {
         pivot = new Pivot(this);
         extension = new Extension(this);
         ascent = new Ascent(this);
-
-        follower = new Follower(hMap);
     }
 
     /**
@@ -77,12 +74,6 @@ public class Bot extends Robot {
      * @return the mecanum subsystem of the robot
      */
     public MecanumDrivetrain getDrivetrain() { return drivetrain; }
-
-    /**
-     * Get the Follower object for the robot
-     * @return the Follower object
-     */
-    public Follower getFollower() { return follower; }
 
     /**
      * Set the pose estimate of the robot

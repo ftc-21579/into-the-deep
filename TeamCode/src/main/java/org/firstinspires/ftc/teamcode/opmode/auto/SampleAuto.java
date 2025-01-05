@@ -8,6 +8,12 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -26,21 +32,16 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.util.DashboardPoseTracker;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
 @Config
 @Autonomous(name="Sample Auto")
 public class SampleAuto extends LinearOpMode {
 
-    public static Pose startingPose = new Pose(9, 87, Math.toRadians(180));
+    public static Pose startingPose = new Pose(9, 87, Math.toRadians(0));
     public static Pose basketPose = new Pose(20, 124, Math.toRadians(-45));
-    public static Pose chamberPose = new Pose(30, 74, Math.toRadians(180));
+    public static Pose chamberPose = new Pose(30, 74, Math.toRadians(0));
 
     public static Pose pickup1Pose = new Pose(35, 116, Math.toRadians(0));
     public static Pose pickup2Pose = new Pose(35, 131, Math.toRadians(6));
@@ -64,7 +65,8 @@ public class SampleAuto extends LinearOpMode {
         CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
         CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
 
-        Follower f = bot.getFollower();
+        Constants.setConstants(FConstants.class, LConstants.class);
+        Follower f = new Follower(hardwareMap);
 
         f.setPose(startingPose);
         f.setMaxPower(0.75);
@@ -109,7 +111,8 @@ public class SampleAuto extends LinearOpMode {
                                         new Point(24, 116)
                                 )
                         )
-                        .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
+                        .setConstantHeadingInterpolation(0)
+                        //.setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                         .addPath(
                                 new BezierLine(
                                         new Point(24, 121),
@@ -238,9 +241,9 @@ public class SampleAuto extends LinearOpMode {
             //Drawing.sendPacket();
 
             CommandScheduler.getInstance().run();
-            bot.getFollower().update();
+            f.update();
 
-            bot.getFollower().telemetryDebug(telem);
+            f.telemetryDebug(telem);
 
             //telem.addData("loop", timer.milliseconds() - lastLoop);
             lastLoop = timer.milliseconds();
