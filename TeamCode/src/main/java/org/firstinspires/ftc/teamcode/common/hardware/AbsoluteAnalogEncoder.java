@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.mineinjava.quail.util.geometry.Angle;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+
+import org.firstinspires.ftc.teamcode.common.util.Angle;
 
 /* Credit 16379 for this code */
 @Config

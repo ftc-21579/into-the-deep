@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.mineinjava.quail.util.geometry.Vec2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 
@@ -29,7 +29,7 @@ public class TeleOpDriveCommand extends CommandBase {
     @Override
     public void execute() {
         drivetrain.teleopDrive(
-                new Vec2d(rot.getAsDouble(), leftStickY.getAsDouble()),
+                new Vector2d(rot.getAsDouble(), leftStickY.getAsDouble()),
                 leftStickX.getAsDouble(),
                 multiplier.getAsDouble()
         );
