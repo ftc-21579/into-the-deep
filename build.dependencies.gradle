@@ -17,15 +17,14 @@ dependencies {
     implementation 'org.firstinspires.ftc:FtcCommon:10.1.1'
     implementation 'org.firstinspires.ftc:Vision:10.1.1'
 
-    implementation 'com.pedropathing:pedro:1.0.4'
+    implementation 'com.pedropathing:pedro:1.0.5' // Path Follower
 
     implementation 'org.ftclib.ftclib:core:2.1.1' // FTC Lib (commands)
-    //implementation 'com.github.mineinjava:quail:v1.0.0-RC-1' // quail (Pathing/PID/Math Utils)
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0' // Required
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // FTC Dashboard
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21' // Useful for random kotlin intermingling
 }
 

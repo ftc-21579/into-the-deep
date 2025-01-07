@@ -8,6 +8,8 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -17,7 +19,6 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -30,7 +31,6 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
@@ -40,28 +40,40 @@ import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
 @Config
 @Autonomous(name="Sample Auto")
+//@Autonomous(name="Sample Auto", preselectTeleOp="TeleOp")
 public class SampleAuto extends LinearOpMode {
 
+    // Scoring Poses
     public static Pose startingPose = new Pose(9, 87, Math.toRadians(0));
     public static Pose basketPose = new Pose(18, 121, Math.toRadians(-45));
     public static Pose chamberPose = new Pose(36, 75, Math.toRadians(0));
+    public static Pose parkPose = new Pose(60, 94, Math.toRadians(90));
+    public static Pose parkControl = new Pose(64, 128);
 
+    // Pickup 1
     public static Pose pickup1Pose = new Pose(36, 117, Math.toRadians(0));
-    public static Pose pickup2Pose = new Pose(37, 127, Math.toRadians(0));
-    public static Pose pickup3Pose = new Pose(46, 124, Math.toRadians(90));
+    public static Pose pickup1Intermediate = new Pose(24, 116, Math.toRadians(0));
+    public static Pose pickup1Control1 = new Pose(10, 96);
+    public static Pose pickup1Control2 = new Pose(10, 116);
 
-    private final Pose parkPose = new Pose(60, 94, Math.toRadians(90));
+    // Pickup 2
+    public static Pose pickup2Pose = new Pose(36, 127, Math.toRadians(0));
+    public static Pose pickup2Intermidiate = new Pose(30, 126);
+
+    // Pickup 3
+    public static Pose pickup3Pose = new Pose(46, 124, Math.toRadians(90));
+    //public static Pose pickup3ToBasketControl = new Pose()
+
 
     @Override
     public void runOpMode() {
         CommandScheduler.getInstance().reset();
 
-        ElapsedTime timer = new ElapsedTime();
-        double lastLoop = timer.milliseconds();
-
         Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         Bot bot = new Bot(telem, hardwareMap, gamepad1, false);
+
+        GamepadEx controller = new GamepadEx(gamepad1);
 
         CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
         CommandScheduler.getInstance().registerSubsystem(bot.getExtension());
@@ -74,7 +86,24 @@ public class SampleAuto extends LinearOpMode {
         f.setPose(startingPose);
         f.setMaxPower(0.75);
 
+        GameElement preload = GameElement.SPECIMEN;
+
+        // Allow changing of preload for conditional (coming soon)
+        while (opModeInInit()) {
+            if (controller.wasJustPressed(GamepadKeys.Button.A)) {
+                preload = (preload == GameElement.SPECIMEN ? GameElement.SAMPLE : GameElement.SPECIMEN);
+            }
+
+            telem.addLine("Change preloaded element by pressing X");
+            telem.addData("Preloaded Element", preload);
+            telem.addData("Current Auto", (preload == GameElement.SPECIMEN ? "1+3" : "0+4"));
+            telem.update();
+
+        }
+
         SequentialCommandGroup auto = new SequentialCommandGroup(
+                // start future conditional wrapping
+                // Chamber Setup/Drive
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
@@ -84,15 +113,13 @@ public class SampleAuto extends LinearOpMode {
                                         )
                                 )
                                 .setConstantHeadingInterpolation(chamberPose.getHeading())
-                                //.setPathEndTValueConstraint(0.85)
-                                //.setPathEndVelocityConstraint(6)
                                 .build()
                         ),
                         new SequentialCommandGroup(
                                 new ClawIntakeCommand(bot.getClaw()),
-                                new SetPivotAngleCommand(bot.getPivot(), 50),
-                                new SetExtensionCommand(bot.getExtension(), 30),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 270))
+                                new SetPivotAngleCommand(bot.getPivot(), 38),
+                                new SetExtensionCommand(bot.getExtension(), 40),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 80))
                         )
                 ),
                 new InstantCommand(() -> {
@@ -100,7 +127,8 @@ public class SampleAuto extends LinearOpMode {
                     bot.setTargetElement(GameElement.SPECIMEN);
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
                 }),
-                new WaitCommand(1000),
+                //new WaitCommand(500),
+                // Chamber Score
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 //new SetPivotAngleCommand(bot.getPivot(), 35),
@@ -109,31 +137,33 @@ public class SampleAuto extends LinearOpMode {
                                 new SetExtensionCommand(bot.getExtension(), 0),
                                 new WaitCommand(500),
                                 new SetPivotAngleCommand(bot.getPivot(), 15),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 230))
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 270))
                         ),
-                        new WaitCommand(1500)
+                        new WaitCommand(500)
                 ),
+                // End future conditional wrapping
                 new InstantCommand(() -> {
                     bot.setTargetElement(GameElement.SAMPLE);
                     bot.setTargetMode(TargetMode.HIGH_BASKET);
                 }),
+                // Pickup 1
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierCurve(
                                         new Point(chamberPose),
-                                        new Point(10, 96, Point.CARTESIAN),
-                                        new Point(10, 114),
-                                        new Point(24, 114)
+                                        new Point(pickup1Control1),
+                                        new Point(pickup1Control2),
+                                        new Point(pickup1Intermediate)
                                 )
                         )
-                        .setConstantHeadingInterpolation(0)
+                        .setConstantHeadingInterpolation(pickup1Pose.getHeading())
                         .addPath(
                                 new BezierLine(
-                                        new Point(24, 116),
+                                        new Point(pickup1Intermediate),
                                         new Point(pickup1Pose)
                                 )
                         )
-                        .setConstantHeadingInterpolation(0)
+                        .setConstantHeadingInterpolation(pickup1Pose.getHeading())
                         .build()
                 ),
                 new WaitCommand(100),
@@ -150,17 +180,18 @@ public class SampleAuto extends LinearOpMode {
                 ),
                 new DepositCommand(bot),
                 new WaitCommand(500),
+                // Pickup 2
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
                                         new Point(basketPose),
-                                        new Point(30, 126, Point.CARTESIAN)
+                                        new Point(pickup2Intermidiate)
                                 )
                         )
                         .setLinearHeadingInterpolation(basketPose.getHeading(), pickup2Pose.getHeading(), 0.5)
                         .addPath(
                                 new BezierLine(
-                                        new Point(30, 126, Point.CARTESIAN),
+                                        new Point(pickup2Intermidiate),
                                         new Point(pickup2Pose)
                                 )
                         )
@@ -179,9 +210,9 @@ public class SampleAuto extends LinearOpMode {
                         .setLinearHeadingInterpolation(pickup2Pose.getHeading(), basketPose.getHeading())
                         .build()
                 ),
-                //new WaitCommand(500),
                 new DepositCommand(bot),
                 new WaitCommand(500),
+                // Pickup 3
                 // potentially do in parallel?
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -198,7 +229,7 @@ public class SampleAuto extends LinearOpMode {
                 new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
                 new WaitCommand(500),
                 new IntakeCommand(bot),
-                new WaitCommand(500),
+                new WaitCommand(200),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -206,16 +237,17 @@ public class SampleAuto extends LinearOpMode {
                                         new Point(basketPose)
                                 )
                         )
-                        .setLinearHeadingInterpolation(pickup3Pose.getHeading(), basketPose.getHeading(), 0.5)
+                        .setLinearHeadingInterpolation(pickup3Pose.getHeading(), basketPose.getHeading(), 0.3)
                         .build()
                 ),
                 new DepositCommand(bot),
                 new WaitCommand(500),
+                // Park
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierCurve(
                                         new Point(basketPose),
-                                        new Point(64, 128, Point.CARTESIAN),
+                                        new Point(parkControl),
                                         new Point(parkPose)
                                 )
                         )
@@ -226,48 +258,16 @@ public class SampleAuto extends LinearOpMode {
                 new SetPivotAngleCommand(bot.getPivot(), 105, true)
         );
 
-
-
-        /**
-        SequentialCommandGroup auto = new SequentialCommandGroup(
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                        new BezierLine(
-                                new Point(0, 0),
-                                new Point(48, 0)
-                        )
-                        )
-                        .build()
-                )
-        );
-         */
-
-        // dashboard pose stuff
-        //DashboardPoseTracker tracker = new DashboardPoseTracker(f.poseUpdater);
-        //Drawing.drawRobot(f.poseUpdater.getPose(), "#4CBB17");
-        //Drawing.sendPacket();
-
+        // Wait for start and then schedule the auto command sequence
         waitForStart();
-
         CommandScheduler.getInstance().schedule(auto);
 
+        // Opmode loop
         while (opModeIsActive()) {
-
-            //f.poseUpdater.update();
-            //tracker.update();
-            //Drawing.drawPoseHistory(tracker, "#4Cbb17");
-            //Drawing.drawRobot(f.poseUpdater.getPose(), "#4CBB17");
-            //Drawing.sendPacket();
-
             CommandScheduler.getInstance().run();
             f.update();
 
             f.telemetryDebug(telem);
-
-            //telem.addData("loop", timer.milliseconds() - lastLoop);
-            lastLoop = timer.milliseconds();
-            //telem.addData("Status", "Running");
-            //telem.update();
         }
     }
 }
