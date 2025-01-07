@@ -105,6 +105,7 @@ public class SampleAuto extends LinearOpMode {
 
         }
 
+        GameElement finalPreload = preload;
         SequentialCommandGroup auto = new SequentialCommandGroup(
                 // start future conditional wrapping
                 new ConditionalCommand(
@@ -176,7 +177,7 @@ public class SampleAuto extends LinearOpMode {
                         new DepositCommand(bot),
                         new WaitCommand(500)
                         ),
-                        preload == GameElement.SPECIMEN
+                        () -> finalPreload == GameElement.SPECIMEN
                 ),
                 // End future conditional wrapping
                 new InstantCommand(() -> {
