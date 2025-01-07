@@ -64,7 +64,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // low basket
                                                 new SetExtensionCommand(b.getExtension(), 20),
                                                 // high basket
-                                                new SetExtensionCommand(b.getExtension(), 55),
+                                                new SetExtensionCommand(b.getExtension(), 58),
                                                 () -> b.getTargetMode() == TargetMode.LOW_BASKET
                                         ),
                                         new SetBotStateCommand(b, BotState.DEPOSIT)

@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -19,6 +20,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -46,6 +48,7 @@ public class SampleAuto extends LinearOpMode {
     // Scoring Poses
     public static Pose startingPose = new Pose(9, 87, Math.toRadians(0));
     public static Pose basketPose = new Pose(18, 121, Math.toRadians(-45));
+    public static Pose samplePreloadBasketControl = new Pose(34, 114);
     public static Pose chamberPose = new Pose(36, 75, Math.toRadians(0));
     public static Pose parkPose = new Pose(60, 94, Math.toRadians(90));
     public static Pose parkControl = new Pose(64, 128);
@@ -74,6 +77,7 @@ public class SampleAuto extends LinearOpMode {
         Bot bot = new Bot(telem, hardwareMap, gamepad1, false);
 
         GamepadEx controller = new GamepadEx(gamepad1);
+        VoltageSensor vs = hardwareMap.voltageSensor.iterator().next();
 
         CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
         CommandScheduler.getInstance().registerSubsystem(bot.getExtension());
@@ -103,43 +107,76 @@ public class SampleAuto extends LinearOpMode {
 
         SequentialCommandGroup auto = new SequentialCommandGroup(
                 // start future conditional wrapping
-                // Chamber Setup/Drive
-                new ParallelCommandGroup(
-                        new FollowPathCommand(f, f.pathBuilder()
-                                .addPath(
-                                        new BezierLine(
-                                                new Point(startingPose),
-                                                new Point(chamberPose)
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                        // Chamber Setup/Drive
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(f, f.pathBuilder()
+                                        .addPath(
+                                                new BezierLine(
+                                                        new Point(startingPose),
+                                                        new Point(chamberPose)
+                                                )
                                         )
+                                        .setConstantHeadingInterpolation(chamberPose.getHeading())
+                                        .build()
+                                ),
+                                new SequentialCommandGroup(
+                                        new ClawIntakeCommand(bot.getClaw()),
+                                        new SetPivotAngleCommand(bot.getPivot(), 38),
+                                        new SetExtensionCommand(bot.getExtension(), 40),
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 80))
                                 )
-                                .setConstantHeadingInterpolation(chamberPose.getHeading())
-                                .build()
                         ),
-                        new SequentialCommandGroup(
-                                new ClawIntakeCommand(bot.getClaw()),
-                                new SetPivotAngleCommand(bot.getPivot(), 38),
-                                new SetExtensionCommand(bot.getExtension(), 40),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 80))
+                        new InstantCommand(() -> {
+                                bot.setState(BotState.DEPOSIT);
+                                bot.setTargetElement(GameElement.SPECIMEN);
+                                bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
+                        }),
+                        //new WaitCommand(500),
+                        // Chamber Score
+                        new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                        //new SetPivotAngleCommand(bot.getPivot(), 35),
+                                        //new WaitCommand(500),
+                                        new ClawOuttakeCommand(bot.getClaw()),
+                                        new SetExtensionCommand(bot.getExtension(), 0),
+                                        new WaitCommand(500),
+                                        new SetPivotAngleCommand(bot.getPivot(), 15),
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 270))
+                                ),
+                                new WaitCommand(500)
                         )
-                ),
-                new InstantCommand(() -> {
-                    bot.setState(BotState.DEPOSIT);
-                    bot.setTargetElement(GameElement.SPECIMEN);
-                    bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
-                }),
-                //new WaitCommand(500),
-                // Chamber Score
-                new ParallelCommandGroup(
-                        new SequentialCommandGroup(
-                                //new SetPivotAngleCommand(bot.getPivot(), 35),
-                                //new WaitCommand(500),
-                                new ClawOuttakeCommand(bot.getClaw()),
-                                new SetExtensionCommand(bot.getExtension(), 0),
-                                new WaitCommand(500),
-                                new SetPivotAngleCommand(bot.getPivot(), 15),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 270))
                         ),
+                        // Sample Drive
+                        new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(f, f.pathBuilder()
+                                        .addPath(
+                                                new BezierCurve(
+                                                        new Point(startingPose),
+                                                        new Point(samplePreloadBasketControl),
+                                                        new Point(basketPose)
+                                                )
+                                        )
+                                        .setLinearHeadingInterpolation(startingPose.getHeading(), basketPose.getHeading())
+                                        .build()
+                                ),
+                                new SequentialCommandGroup(
+                                        new SetPivotAngleCommand(bot.getPivot(), 85),
+                                        new SetExtensionCommand(bot.getExtension(), 60),
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 90))
+                                )
+                        ),
+                        new InstantCommand(() -> {
+                                bot.setState(BotState.DEPOSIT);
+                                bot.setTargetElement(GameElement.SAMPLE);
+                                bot.setTargetMode(TargetMode.HIGH_BASKET);
+                        }),
+                        new DepositCommand(bot),
                         new WaitCommand(500)
+                        ),
+                        preload == GameElement.SPECIMEN
                 ),
                 // End future conditional wrapping
                 new InstantCommand(() -> {
@@ -265,6 +302,7 @@ public class SampleAuto extends LinearOpMode {
         // Opmode loop
         while (opModeIsActive()) {
             CommandScheduler.getInstance().run();
+            f.setMaxPower(0.75 * (13.5 / vs.getVoltage()));
             f.update();
 
             f.telemetryDebug(telem);
