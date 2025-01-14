@@ -17,7 +17,7 @@ dependencies {
     implementation 'org.firstinspires.ftc:FtcCommon:10.1.1'
     implementation 'org.firstinspires.ftc:Vision:10.1.1'
 
-    implementation 'com.pedropathing:pedro:1.0.5' // Path Follower
+    implementation 'com.pedropathing:pedro:1.0.6' // Path Follower
 
     implementation 'org.ftclib.ftclib:core:2.1.1' // FTC Lib (commands)
 

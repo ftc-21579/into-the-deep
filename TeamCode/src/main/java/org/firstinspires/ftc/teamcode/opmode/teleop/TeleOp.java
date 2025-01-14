@@ -5,10 +5,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -19,11 +21,13 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDri
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleScoringTargetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
@@ -69,9 +73,9 @@ public class TeleOp extends CommandOpMode {
 
         TeleOpDriveCommand driveCommand = new TeleOpDriveCommand(
                 drivetrain,
-                () -> driverGamepad.getRightX(),
-                () -> -driverGamepad.getLeftY(),
-                () -> driverGamepad.getLeftX(),
+                () -> -driverGamepad.getRightX(),
+                () -> driverGamepad.getLeftY(),
+                () -> -driverGamepad.getLeftX(),
                 () -> 0.8
         );
 
@@ -173,7 +177,12 @@ public class TeleOp extends CommandOpMode {
 
 
         schedule(
-                new SetExtensionCommand(bot.getExtension(), 0)
+                new SequentialCommandGroup(
+                        new SetExtensionCommand(bot.getExtension(), 0),
+                        new SetPivotAngleCommand(bot.getPivot(), 15),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 230)),
+                        new IntakeCommand(bot)
+                )
         );
     }
 

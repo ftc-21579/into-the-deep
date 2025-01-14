@@ -50,7 +50,7 @@ public class SampleAuto extends LinearOpMode {
     public static Pose basketPose = new Pose(18, 121, Math.toRadians(-45));
     public static Pose samplePreloadBasketControl = new Pose(34, 114);
     public static Pose chamberPose = new Pose(36, 75, Math.toRadians(0));
-    public static Pose parkPose = new Pose(60, 94, Math.toRadians(90));
+    public static Pose parkPose = new Pose(60, 92, Math.toRadians(90));
     public static Pose parkControl = new Pose(64, 128);
 
     // Pickup 1
@@ -60,7 +60,7 @@ public class SampleAuto extends LinearOpMode {
     public static Pose pickup1Control2 = new Pose(10, 116);
 
     // Pickup 2
-    public static Pose pickup2Pose = new Pose(36, 127, Math.toRadians(0));
+    public static Pose pickup2Pose = new Pose(36, 126, Math.toRadians(0));
     public static Pose pickup2Intermidiate = new Pose(30, 126);
 
     // Pickup 3
@@ -94,8 +94,12 @@ public class SampleAuto extends LinearOpMode {
 
         // Allow changing of preload for conditional (coming soon)
         while (opModeInInit()) {
-            if (controller.wasJustPressed(GamepadKeys.Button.A)) {
-                preload = (preload == GameElement.SPECIMEN ? GameElement.SAMPLE : GameElement.SPECIMEN);
+            if (gamepad1.a) {
+                if (preload == GameElement.SPECIMEN) {
+                    preload = GameElement.SAMPLE;
+                } else {
+                    preload = GameElement.SPECIMEN;
+                }
             }
 
             telem.addLine("Change preloaded element by pressing X");
@@ -124,7 +128,7 @@ public class SampleAuto extends LinearOpMode {
                                 ),
                                 new SequentialCommandGroup(
                                         new ClawIntakeCommand(bot.getClaw()),
-                                        new SetPivotAngleCommand(bot.getPivot(), 38),
+                                        new SetPivotAngleCommand(bot.getPivot(), 38 * (vs.getVoltage() / 13.5)),
                                         new SetExtensionCommand(bot.getExtension(), 40),
                                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 80))
                                 )
@@ -164,6 +168,7 @@ public class SampleAuto extends LinearOpMode {
                                         .build()
                                 ),
                                 new SequentialCommandGroup(
+                                        new ClawIntakeCommand(bot.getClaw()),
                                         new SetPivotAngleCommand(bot.getPivot(), 85),
                                         new SetExtensionCommand(bot.getExtension(), 60),
                                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 90))
@@ -252,22 +257,26 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(500),
                 // Pickup 3
                 // potentially do in parallel?
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(basketPose),
-                                        new Point(pickup3Pose)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(basketPose),
+                                                new Point(pickup3Pose)
+                                        )
                                 )
+                                .setLinearHeadingInterpolation(basketPose.getHeading(), pickup3Pose.getHeading())
+                                .build()
+                        ),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 10),
+                                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
+                                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT)
                         )
-                        .setLinearHeadingInterpolation(basketPose.getHeading(), pickup3Pose.getHeading())
-                        .build()
                 ),
-                new SetExtensionCommand(bot.getExtension(), 10),
-                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
-                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT),
-                new WaitCommand(500),
+                new WaitCommand(100),
                 new IntakeCommand(bot),
-                new WaitCommand(200),
+                //new WaitCommand(200),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -281,6 +290,8 @@ public class SampleAuto extends LinearOpMode {
                 new DepositCommand(bot),
                 new WaitCommand(500),
                 // Park
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 135)),
+                new SetPivotAngleCommand(bot.getPivot(), 95, true),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierCurve(
@@ -291,9 +302,7 @@ public class SampleAuto extends LinearOpMode {
                         )
                         .setLinearHeadingInterpolation(basketPose.getHeading(), parkPose.getHeading())
                         .build()
-                ),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 135)),
-                new SetPivotAngleCommand(bot.getPivot(), 105, true)
+                )
         );
 
         // Wait for start and then schedule the auto command sequence
