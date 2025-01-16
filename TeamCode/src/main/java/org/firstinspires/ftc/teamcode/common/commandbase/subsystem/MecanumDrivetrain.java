@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.mineinjava.quail.RobotMovement;
-import com.mineinjava.quail.util.geometry.Pose2d;
-import com.mineinjava.quail.util.geometry.Vec2d;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -22,7 +21,7 @@ public class MecanumDrivetrain extends SubsystemBase {
 
     private final DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private final PIDFController ascentController;
-    private GoBildaPinpointDriverRR odo;
+    private GoBildaPinpointDriver odo;
     public static boolean fieldCentric = false, headingLock = false;
 
     public static Pose2D pose;
@@ -36,8 +35,8 @@ public class MecanumDrivetrain extends SubsystemBase {
     public MecanumDrivetrain(Bot bot) {
         this.bot = bot;
 
-        odo = bot.hMap.get(GoBildaPinpointDriverRR.class,"odo");
-        odo.setOffsets(-3.2546944882, 4.36341574803);
+        odo = bot.hMap.get(GoBildaPinpointDriver.class,"odo");
+        odo.setOffsets(-82.66924000028, 110.830759999962);
         odo.setEncoderResolution(8192 / (Math.PI * 35));
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
@@ -82,17 +81,17 @@ public class MecanumDrivetrain extends SubsystemBase {
 
         odo.update();
         pose = odo.getPosition();
-        bot.telem.addData("Pose",
-                "X: " + pose.getX(DistanceUnit.MM) +
-                        ", Y: " + pose.getY(DistanceUnit.MM) +
-                        ", Heading: " + pose.getHeading(AngleUnit.DEGREES));
+        //bot.telem.addData("Pose",
+        //        "X: " + pose.getX(DistanceUnit.MM) +
+        //                ", Y: " + pose.getY(DistanceUnit.MM) +
+        //                ", Heading: " + pose.getHeading(AngleUnit.DEGREES));
     }
 
 
-    public void teleopDrive(Vec2d leftStick, double rx, double multiplier) {
+    public void teleopDrive(Vector2d leftStick, double rx, double multiplier) {
         if (!isEncoderMode) {
-            double x = leftStick.x * multiplier;
-            double y = -leftStick.y * multiplier;
+            double x = leftStick.getX() * multiplier;
+            double y = -leftStick.getY() * multiplier;
 
             double extensionPosition = bot.getExtension().getPositionCM();
 
@@ -170,11 +169,6 @@ public class MecanumDrivetrain extends SubsystemBase {
         isEncoderMode = mode;
     }
 
-
-    public void drive(RobotMovement movement) {
-        teleopDrive(new Vec2d(movement.translation.x, movement.translation.y), movement.rotation, 1);
-    }
-
     // TODO: Try to implement heading lock
     public void toggleHeadingLock() {
         headingLock = !headingLock;
@@ -213,7 +207,7 @@ public class MecanumDrivetrain extends SubsystemBase {
         return new Pose2d(
                 pose.getX(DistanceUnit.CM),
                 pose.getY(DistanceUnit.CM),
-                pose.getHeading(AngleUnit.DEGREES)
+                new Rotation2d(pose.getHeading(AngleUnit.DEGREES))
         );
     }
 
@@ -221,17 +215,17 @@ public class MecanumDrivetrain extends SubsystemBase {
         return new Pose2d(
                 pose.getX(DistanceUnit.CM),
                 pose.getY(DistanceUnit.CM),
-                pose.getHeading(AngleUnit.RADIANS)
+                new Rotation2d(pose.getHeading(AngleUnit.RADIANS))
         );
     }
 
     public void setOdoPositionDEG(Pose2d pose) {
         Pose2D pose2D = new Pose2D(
                 DistanceUnit.CM,
-                pose.x,
-                pose.y,
+                pose.getX(),
+                pose.getY(),
                 AngleUnit.DEGREES,
-                pose.heading
+                pose.getHeading()
         );
 
         odo.setPosition(pose2D);

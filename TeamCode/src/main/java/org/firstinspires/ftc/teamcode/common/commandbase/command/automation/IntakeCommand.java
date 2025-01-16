@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.mineinjava.quail.util.geometry.Vec2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
@@ -22,8 +22,13 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Bot b) {
-        double h = b.getDrivetrain().getHeadingDEG();
-        boolean facingChamber = (h >= -45 && h <= 45) || (h >= 135 && h <= 225);
+        boolean facingChamber;
+        if (b.getDrivetrain() != null) {
+            double h = b.getDrivetrain().getHeadingDEG();
+            facingChamber = (h >= -45 && h <= 45) || (h >= 135 && h <= 225);
+        } else {
+            facingChamber = false;
+        }
 
         addCommands(
                 new ManualPivotCommand(b.getPivot(), Direction.DOWN),
@@ -43,7 +48,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 new SequentialCommandGroup(
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new WaitCommand(250),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vec2d(0, 90)),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
                                                         new SetExtensionCommand(b.getExtension(), 0),
                                                         new WaitCommand(250)
                                                 ),
@@ -53,13 +58,13 @@ public class IntakeCommand extends SequentialCommandGroup {
                                         ),
                                         new SetExtensionCommand(b.getExtension(), 0),
                                         new SetPivotAngleCommand(b.getPivot(), 85),
-                                        new SetWristPositionCommand(b.getWrist(), new Vec2d(-180, 90)),
+                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode
                                                 // low basket
                                                 new SetExtensionCommand(b.getExtension(), 20),
                                                 // high basket
-                                                new SetExtensionCommand(b.getExtension(), 55),
+                                                new SetExtensionCommand(b.getExtension(), 60),
                                                 () -> b.getTargetMode() == TargetMode.LOW_BASKET
                                         ),
                                         new SetBotStateCommand(b, BotState.DEPOSIT)
@@ -72,14 +77,14 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 new SequentialCommandGroup(
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new WaitCommand(250),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vec2d(0, 90)),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
                                                         new SetExtensionCommand(b.getExtension(), 0)
                                                 ),
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
                                                         new SetExtensionCommand(b.getExtension(), 0),
                                                         new SetPivotAngleCommand(b.getPivot(), 95),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vec2d(-180, 60)),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
                                                         new WaitCommand(500),
                                                         new SetExtensionCommand(b.getExtension(), 16)
                                                 ),

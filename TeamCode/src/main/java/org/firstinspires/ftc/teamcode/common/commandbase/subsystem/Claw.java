@@ -26,7 +26,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void periodic() {
-        bot.telem.addData("Grabbed??? ", isGrabbing());
+        //bot.telem.addData("Grabbed??? ", isGrabbing());
     }
 
     public boolean isGrabbing() {

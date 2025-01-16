@@ -46,9 +46,9 @@ public class Pivot extends SubsystemBase {
         );
         pivotMotor.setPower(power);
 
-        bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
-        bot.telem.addData("Pivot Target", setpointDEG);
-        bot.telem.update();
+        //bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
+        //bot.telem.addData("Pivot Target", setpointDEG);
+        //bot.telem.update();
     }
 
     /**
