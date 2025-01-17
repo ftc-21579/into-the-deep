@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.state;
 
+import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.highBasketTarget;
+import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.lowBasketTarget;
+
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
@@ -21,9 +25,15 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case SPEC_DEPOSIT:
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.HIGH_BASKET);
+                    if (bot.getState() == BotState.DEPOSIT) {
+                        bot.getExtension().setSetpointCM(highBasketTarget);
+                    }
                     break;
                 case HIGH_BASKET:
                     bot.setTargetMode(TargetMode.LOW_BASKET);
+                    if (bot.getState() == BotState.DEPOSIT) {
+                        bot.getExtension().setSetpointCM(lowBasketTarget);
+                    }
                     break;
             }
         } else {
@@ -32,9 +42,15 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case HIGH_BASKET:
                 case SPEC_DEPOSIT:
                     bot.setTargetMode(TargetMode.SPEC_INTAKE);
+                    if (bot.getState() == BotState.INTAKE) {
+                        bot.getWrist().setAngle(230);
+                    }
                     break;
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
+                    if (bot.getState() == BotState.INTAKE) {
+                        bot.getWrist().setAngle(210);
+                    }
                     break;
             }
         }

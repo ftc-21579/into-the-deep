@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -87,7 +88,7 @@ public class TeleOp extends CommandOpMode {
         //region Claw
         claw = bot.getClaw();
 
-        Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
+        Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_STICK_BUTTON))
                 .whenPressed(
                         new ConditionalCommand(
                                 new DepositCommand(bot),
@@ -102,11 +103,11 @@ public class TeleOp extends CommandOpMode {
         //region Pivot
         pivot = bot.getPivot();
 
-        Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
+        Button pivotDownButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_LEFT))
                 .whenPressed(
                         new ManualPivotCommand(pivot, Direction.DOWN)
                 );
-        Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
+        Button pivotUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_RIGHT))
                 .whenPressed(
                         new ManualPivotCommand(pivot, Direction.UP)
                 );
@@ -125,11 +126,11 @@ public class TeleOp extends CommandOpMode {
                 .whenPressed(
                         new ManualWristAngleCommand(wrist, Direction.DOWN)
                 );
-        Button wristTwistLeftButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_LEFT))
+        Button wristTwistLeftButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_BUMPER))
                 .whenPressed(
                         new ManualWristTwistCommand(wrist, Direction.LEFT)
                 );
-        Button wristTwistRightButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.DPAD_RIGHT))
+        Button wristTwistRightButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_BUMPER))
                 .whenPressed(
                         new ManualWristTwistCommand(wrist, Direction.RIGHT)
                 );
@@ -145,6 +146,15 @@ public class TeleOp extends CommandOpMode {
                 () -> driverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
                 () -> driverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
         );
+
+        Button extensionUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_STICK_BUTTON))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SetExtensionCommand(bot.getExtension(), 30),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
+                );
 
         register(extension);
         extension.setDefaultCommand(extensionCommand);

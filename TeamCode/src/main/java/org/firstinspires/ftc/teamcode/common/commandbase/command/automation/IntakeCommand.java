@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetSusExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
@@ -22,15 +23,7 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Bot b) {
-        boolean facingChamber;
-        if (b.getDrivetrain() != null) {
-            double h = b.getDrivetrain().getHeadingDEG();
-            facingChamber = (h >= -45 && h <= 45) || (h >= 135 && h <= 225);
-        } else {
-            facingChamber = false;
-        }
-
-        addCommands(
+                addCommands(
                 new ManualPivotCommand(b.getPivot(), Direction.DOWN),
                 new WaitCommand(250),
                 new ClawIntakeCommand(b.getClaw()),
@@ -42,21 +35,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // Sequence depending on the element (sample or specimen)
                                 // SAMPLE
                                 new SequentialCommandGroup(
-                                        new ConditionalCommand(
-                                                // Checks if the bot is facing the chamber
-                                                // special case for when the bot is facing the chamber to prevent funny stuff
-                                                new SequentialCommandGroup(
-                                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
-                                                        new WaitCommand(250),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
-                                                        new SetExtensionCommand(b.getExtension(), 0),
-                                                        new WaitCommand(250)
-                                                ),
-                                                // just continue if the bot isn't facing the chamber
-                                                new InstantCommand(() -> {}),
-                                                () -> facingChamber
-                                        ),
-                                        new SetExtensionCommand(b.getExtension(), 0),
+                                                                                new SetSusExtensionCommand(b.getExtension(), 0),
                                         new SetPivotAngleCommand(b.getPivot(), 85),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
                                         new ConditionalCommand(
@@ -64,7 +43,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // low basket
                                                 new SetExtensionCommand(b.getExtension(), 20),
                                                 // high basket
-                                                new SetExtensionCommand(b.getExtension(), 60),
+                                                new SetExtensionCommand(b.getExtension(), 58),
                                                 () -> b.getTargetMode() == TargetMode.LOW_BASKET
                                         ),
                                         new SetBotStateCommand(b, BotState.DEPOSIT)
@@ -76,7 +55,6 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // Intake Shuttling
                                                 new SequentialCommandGroup(
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
-                                                        new WaitCommand(250),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
                                                         new SetExtensionCommand(b.getExtension(), 0)
                                                 ),
@@ -85,8 +63,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                         new SetExtensionCommand(b.getExtension(), 0),
                                                         new SetPivotAngleCommand(b.getPivot(), 95),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
-                                                        new WaitCommand(500),
-                                                        new SetExtensionCommand(b.getExtension(), 16)
+                                                        new WaitCommand(250),
+                                                        new SetExtensionCommand(b.getExtension(), 17)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
                                         ),
