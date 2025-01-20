@@ -98,7 +98,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ClawOuttakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0),
                 new WaitCommand(500),
-                new SetPivotAngleCommand(bot.getPivot(), 15),
+                new SetPivotAngleCommand(bot.getPivot(), 23),
                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 210))
         );
 
@@ -255,7 +255,7 @@ public class SpecimenAuto extends LinearOpMode {
                         .setConstantHeadingInterpolation(score2.getHeading())
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 77 * pivotVConstant),
+                new SetPivotAngleCommand(bot.getPivot(), 87 * pivotVConstant),
                 ScoreBackwardsCommand,
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -279,7 +279,7 @@ public class SpecimenAuto extends LinearOpMode {
                         .setConstantHeadingInterpolation(score3.getHeading())
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 74 * pivotVConstant),
+                new SetPivotAngleCommand(bot.getPivot(), 85 * pivotVConstant),
                 ScoreBackwardsCommand,
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -303,7 +303,7 @@ public class SpecimenAuto extends LinearOpMode {
                         .setConstantHeadingInterpolation(score4.getHeading())
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 74 * pivotVConstant),
+                new SetPivotAngleCommand(bot.getPivot(), 84 * pivotVConstant),
                 ScoreBackwardsCommand,
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -327,7 +327,7 @@ public class SpecimenAuto extends LinearOpMode {
                         .setConstantHeadingInterpolation(score5.getHeading())
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 76 * pivotVConstant),
+                new SetPivotAngleCommand(bot.getPivot(), 86 * pivotVConstant),
                 ScoreBackwardsCommand,
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(

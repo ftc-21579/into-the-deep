@@ -18,7 +18,7 @@ public class Pivot extends SubsystemBase {
     private final AbsoluteAnalogEncoder pivotEncoder;
 
     private final PIDFController pivotController;
-    public double setpointDEG = 0.0, minAngle = -5.0, maxAngle = 90;
+    public double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 100;
 
     public Pivot(Bot bot) {
         this.bot = bot;
@@ -40,15 +40,17 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
 
+        pivotController.setF(Config.pivot_kF * (Math.cos(pivotEncoder.getCurrentPosition() - Math.toRadians(60))));
+
         double power = pivotController.calculate(
                 Math.toDegrees(pivotEncoder.getCurrentPosition()),
                 setpointDEG + 60
         );
         pivotMotor.setPower(power);
 
-        //bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
-        //bot.telem.addData("Pivot Target", setpointDEG);
-        //bot.telem.update();
+        bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
+        bot.telem.addData("Pivot Target", setpointDEG);
+        bot.telem.update();
     }
 
     /**

@@ -35,9 +35,11 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // Sequence depending on the element (sample or specimen)
                                 // SAMPLE
                                 new SequentialCommandGroup(
-                                                                                new SetSusExtensionCommand(b.getExtension(), 0),
-                                        new SetPivotAngleCommand(b.getPivot(), 85),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
+                                        new SetPivotAngleCommand(b.getPivot(), 15),
+                                        new WaitCommand(150),
+                                        new SetSusExtensionCommand(b.getExtension(), 0),
+                                        new SetPivotAngleCommand(b.getPivot(), 95),
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode
                                                 // low basket
@@ -64,7 +66,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                         new SetPivotAngleCommand(b.getPivot(), 95),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
                                                         new WaitCommand(250),
-                                                        new SetExtensionCommand(b.getExtension(), 17)
+                                                        new SetExtensionCommand(b.getExtension(), 16.5)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
                                         ),
