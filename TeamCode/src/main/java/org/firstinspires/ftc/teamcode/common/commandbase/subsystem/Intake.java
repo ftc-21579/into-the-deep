@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -16,6 +18,8 @@ public class Intake extends SubsystemBase {
     private final DigitalChannel colorSensor0, colorSensor1;
     public static double grabbedAngle = 265.0;
 
+    private final CRServo leftActive, rightActive;
+
     public enum ClawState { OPEN, CLOSED }
     private ClawState state = ClawState.OPEN;
     private Color color = Color.NONE;
@@ -29,6 +33,10 @@ public class Intake extends SubsystemBase {
 
         colorSensor0 = bot.hMap.get(DigitalChannel.class, "colorSensor0");
         colorSensor1 = bot.hMap.get(DigitalChannel.class, "colorSensor1");
+
+        leftActive = bot.hMap.get(CRServo.class, "leftActive");
+        rightActive = bot.hMap.get(CRServo.class, "rightActive");
+        rightActive.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public boolean isGrabbing() {
@@ -81,5 +89,29 @@ public class Intake extends SubsystemBase {
             return Color.NONE;
         }
     }
+
+    public void activeIntake() {
+        leftActive.setPower(1.0);
+        rightActive.setPower(1.0);
+    }
+
+    public void activeOuttake() {
+        leftActive.setPower(-1.0);
+        rightActive.setPower(-1.0);
+    }
+
+    public void deactivateActive() {
+        leftActive.setPower(0.0);
+        rightActive.setPower(0.0);
+    }
+
+    public void toggleActive() {
+        if (leftActive.getPower() == 0.0) {
+            activeIntake();
+        } else {
+            deactivateActive();
+        }
+    }
+
 }
 
