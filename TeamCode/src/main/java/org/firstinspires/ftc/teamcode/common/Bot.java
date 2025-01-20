@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
@@ -27,9 +28,11 @@ public class Bot extends Robot {
     public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
     private TargetMode targetMode = TargetMode.HIGH_BASKET;
+    private static Color allianceColor = Color.NONE;
+    private Color gameElementColor = Color.NONE;
 
     private MecanumDrivetrain drivetrain;
-    private final Claw claw;
+    private final Intake claw;
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
@@ -53,7 +56,7 @@ public class Bot extends Robot {
         );
 
         /* Subsystems */
-        claw = new Claw(this);
+        claw = new Intake(this);
         wrist = new Wrist(this);
         if (enableDrive) {
             drivetrain = new MecanumDrivetrain(this);
@@ -86,7 +89,7 @@ public class Bot extends Robot {
      * Get the Claw subsystem of the robot
      * @return the claw subsystem of the robot
      */
-    public Claw getClaw() { return claw; }
+    public Intake getClaw() { return claw; }
 
     /**
      * Get the Extension subsystem of the robot
@@ -157,4 +160,9 @@ public class Bot extends Robot {
      * @param targetMode - the target mode to set the robot to
      */
     public void setTargetMode(TargetMode targetMode) { this.targetMode = targetMode; }
+
+    public void setGameElementColor(Color color) { gameElementColor = color; }
+
+    public void setAllianceColor(Color color) { allianceColor = color; }
+
 }

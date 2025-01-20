@@ -2,31 +2,33 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 
-public class Claw extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
     private final Bot bot;
     private final Servo claw;
     private final AnalogInput clawFeedback;
+    private final DigitalChannel colorSensor0, colorSensor1;
     public static double grabbedAngle = 265.0;
 
     public enum ClawState { OPEN, CLOSED }
     private ClawState state = ClawState.OPEN;
+    private Color color = Color.NONE;
 
-    public Claw(Bot bot) {
+    public Intake(Bot bot) {
         this.bot = bot;
         //this.clawFeedback = clawFeedback;
 
         claw = bot.hMap.get(Servo.class, "claw");
         clawFeedback = bot.hMap.get(AnalogInput.class, "clawFeedback");
 
-    }
-
-    public void periodic() {
-        //bot.telem.addData("Grabbed??? ", isGrabbing());
+        colorSensor0 = bot.hMap.get(DigitalChannel.class, "colorSensor0");
+        colorSensor1 = bot.hMap.get(DigitalChannel.class, "colorSensor1");
     }
 
     public boolean isGrabbing() {
@@ -61,6 +63,22 @@ public class Claw extends SubsystemBase {
             outtake();
         } else {
             intake();
+        }
+    }
+
+    public Color getColor() {
+        if (colorSensor0.getState() && colorSensor1.getState()) {
+            bot.setGameElementColor(Color.YELLOW);
+            return Color.YELLOW;
+        } else if (colorSensor0.getState() && !colorSensor1.getState()) {
+            bot.setGameElementColor(Color.BLUE);
+            return Color.BLUE;
+        } else if (!colorSensor0.getState() && colorSensor1.getState()) {
+            bot.setGameElementColor(Color.RED);
+            return Color.RED;
+        } else {
+            bot.setGameElementColor(Color.NONE);
+            return Color.NONE;
         }
     }
 }

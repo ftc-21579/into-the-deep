@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.common.commandbase.command.claw;
+package org.firstinspires.ftc.teamcode.common.commandbase.command.intake;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Intake;
 
 public class ClawOuttakeCommand extends CommandBase {
-    private final Claw claw;
+    private final Intake claw;
 
-    public ClawOuttakeCommand(Claw claw) {
+    public ClawOuttakeCommand(Intake claw) {
         this.claw = claw;
         addRequirements(this.claw);
     }

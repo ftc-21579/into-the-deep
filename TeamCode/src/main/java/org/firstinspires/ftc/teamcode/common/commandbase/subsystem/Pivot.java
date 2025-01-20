@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
+import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.depositMaxExtension;
+
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -33,14 +35,17 @@ public class Pivot extends SubsystemBase {
                 Config.pivot_kP,
                 Config.pivot_kI,
                 Config.pivot_kD,
-                Config.pivot_kF
+                Config.pivot_min_kF
         );
     }
 
     @Override
     public void periodic() {
-
-        pivotController.setF(Config.pivot_kF * (Math.cos(pivotEncoder.getCurrentPosition() - Math.toRadians(60))));
+        double kFConstant = (Config.pivot_max_kF - Config.pivot_min_kF) / depositMaxExtension;
+        double extensionFF = (kFConstant * (bot.getExtension().getPositionCM()));
+        double pivotFF  = (Math.cos(pivotEncoder.getCurrentPosition() - Math.toRadians(60)));
+        double calculatedKf = ((extensionFF + Config.pivot_min_kF) * pivotFF);
+        pivotController.setF(calculatedKf);
 
         double power = pivotController.calculate(
                 Math.toDegrees(pivotEncoder.getCurrentPosition()),

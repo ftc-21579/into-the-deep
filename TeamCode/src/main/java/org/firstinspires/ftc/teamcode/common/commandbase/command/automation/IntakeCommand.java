@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawIntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.claw.ClawOuttakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetSusExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
@@ -43,9 +43,9 @@ public class IntakeCommand extends SequentialCommandGroup {
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode
                                                 // low basket
-                                                new SetExtensionCommand(b.getExtension(), 20),
+                                                new SetExtensionCommand(b.getExtension(), Extension.lowBasketTarget),
                                                 // high basket
-                                                new SetExtensionCommand(b.getExtension(), 58),
+                                                new SetExtensionCommand(b.getExtension(), Extension.highBasketTarget),
                                                 () -> b.getTargetMode() == TargetMode.LOW_BASKET
                                         ),
                                         new SetBotStateCommand(b, BotState.DEPOSIT)
@@ -66,7 +66,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                         new SetPivotAngleCommand(b.getPivot(), 95),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
                                                         new WaitCommand(250),
-                                                        new SetExtensionCommand(b.getExtension(), 16.5)
+                                                        new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
                                         ),
