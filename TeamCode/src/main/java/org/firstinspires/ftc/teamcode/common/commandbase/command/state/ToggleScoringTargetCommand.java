@@ -43,13 +43,15 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case SPEC_DEPOSIT:
                     bot.setTargetMode(TargetMode.SPEC_INTAKE);
                     if (bot.getState() == BotState.INTAKE) {
-                        bot.getWrist().setAngle(230);
+                        bot.getWrist().setAngle(225);
+                        bot.getPivot().setSetpointDEG(10);
                     }
                     break;
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
                     if (bot.getState() == BotState.INTAKE) {
                         bot.getWrist().setAngle(210);
+                        bot.getPivot().setSetpointDEG(15);
                     }
                     break;
             }
