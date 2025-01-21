@@ -21,8 +21,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Inta
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleElementCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.ToggleScoringTargetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristAngleCommand;
@@ -187,10 +189,11 @@ public class TeleOp extends CommandOpMode {
 
         schedule(
                 new SequentialCommandGroup(
+                        new SetBotStateCommand(bot, BotState.INTAKE),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225)),
+                        new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
-                        new SetPivotAngleCommand(bot.getPivot(), 15),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 230)),
-                        new IntakeCommand(bot)
+                        new SetPivotAngleCommand(bot.getPivot(), 10)
                 )
         );
     }

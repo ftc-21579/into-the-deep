@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.pivot;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 
 public class SetPivotAngleCommand extends CommandBase {
@@ -32,6 +33,6 @@ public class SetPivotAngleCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return (Math.abs(pivot.getPositionDEG() - angleDeg) <= Config.pivot_tolerance);
     }
 }

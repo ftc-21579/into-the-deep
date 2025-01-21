@@ -14,7 +14,7 @@ public class Wrist extends SubsystemBase {
     private final Servo left, right;
 
     private double twistTarget = 0.0;
-    private double angleTarget = 0.5;
+    private double angleTarget = degreesToServoPosition(225);
 
     private final double twistRatio = 18.0 / 52.0;
 
@@ -25,7 +25,6 @@ public class Wrist extends SubsystemBase {
 
         left = bot.hMap.get(Servo.class, "leftWrist");
         right = bot.hMap.get(Servo.class, "rightWrist");
-        right.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetSusExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
@@ -28,7 +27,7 @@ public class DepositCommand extends SequentialCommandGroup {
                                 new WaitCommand(250),
                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 230)),
                                 new WaitCommand(250),
-                                new SetSusExtensionCommand(b.getExtension(), 0)
+                                new SetExtensionCommand(b.getExtension(), 0)
                         ),
                         // SPECIMEN
                         new SequentialCommandGroup(
@@ -49,7 +48,7 @@ public class DepositCommand extends SequentialCommandGroup {
                         ),
                         () -> b.getTargetElement() == GameElement.SAMPLE
                 ),
-                new SetPivotAngleCommand(b.getPivot(), 15),
+                new SetPivotAngleCommand(b.getPivot(), 10),
                 new SetBotStateCommand(b, BotState.INTAKE)
         );
     }

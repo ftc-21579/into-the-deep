@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetSusExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
@@ -36,9 +35,9 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // SAMPLE
                                 new SequentialCommandGroup(
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
-                                        new SetPivotAngleCommand(b.getPivot(), 15),
-                                        new WaitCommand(150),
-                                        new SetSusExtensionCommand(b.getExtension(), 0),
+                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
+                                        new WaitCommand(250),
+                                        new SetExtensionCommand(b.getExtension(), 0),
                                         new SetPivotAngleCommand(b.getPivot(), 95),
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode

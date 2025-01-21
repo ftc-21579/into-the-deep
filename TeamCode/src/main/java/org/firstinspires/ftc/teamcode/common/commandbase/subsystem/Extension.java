@@ -15,8 +15,8 @@ public class Extension extends SubsystemBase {
     private final DcMotor bottomExtensionMotor, topExtensionMotor;
 
     private final PIDFController extensionController;
-    public static double setpointCM = 0.0, highChamberTarget = 17.0, lowBasketTarget = 20.0, highBasketTarget = 61.0, ticksperCM = 10.37339803;
-    public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 45;
+    public static double setpointCM = 0.0, highChamberTarget = 17.0, lowBasketTarget = 20.0, highBasketTarget = 60.0, ticksperCM = 10.37339803;
+    public static double minExtension = 0.0, depositMaxExtension = 60, intakeMaxExtension = 45;
 
     public Extension(Bot bot) {
         this.bot = bot;
@@ -41,7 +41,10 @@ public class Extension extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double target = bot.getPivot().getPosition() * -0.009 + setpointCM;
+        double calculatedkF = Config.extension_kF * (Math.cos(bot.getPivot().getPositionRAD() - Math.toRadians(90)));
+        extensionController.setF(calculatedkF);
+
+        double target = setpointCM;
 
         double power = extensionController.calculate(
                 topExtensionMotor.getCurrentPosition(),
@@ -50,6 +53,10 @@ public class Extension extends SubsystemBase {
 
         topExtensionMotor.setPower(power);
         bottomExtensionMotor.setPower(power);
+
+        bot.telem.addData("Extension Position", getPositionCM());
+        bot.telem.addData("Extension Target", getSetpointCM());
+        bot.telem.addData("Calculated Extension kF", extensionController.getF());
     }
 
     /**
