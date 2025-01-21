@@ -67,7 +67,7 @@ public class SpecimenAuto extends LinearOpMode {
 
         Telemetry telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Bot bot = new Bot(telem, hardwareMap, gamepad1, false);
+        Bot bot = new Bot(telem, hardwareMap, gamepad1, true);
 
         VoltageSensor vs = hardwareMap.voltageSensor.iterator().next();
 
@@ -76,8 +76,9 @@ public class SpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
         CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        Follower f = new Follower(hardwareMap);
+        //Constants.setConstants(FConstants.class, LConstants.class);
+        //Follower f = new Follower(hardwareMap);
+        Follower f = bot.getDrivetrain().getFollower();
 
         f.setPose(startingPose);
         f.setMaxPower(0.75);

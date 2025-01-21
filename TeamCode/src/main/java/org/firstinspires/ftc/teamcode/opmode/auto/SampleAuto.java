@@ -83,8 +83,9 @@ public class SampleAuto extends LinearOpMode {
         CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
         CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        Follower f = new Follower(hardwareMap);
+        //Constants.setConstants(FConstants.class, LConstants.class);
+        //Follower f = new Follower(hardwareMap);
+        Follower f = bot.getDrivetrain().getFollower();
 
         f.setPose(startingPose);
         f.setMaxPower(0.75);
