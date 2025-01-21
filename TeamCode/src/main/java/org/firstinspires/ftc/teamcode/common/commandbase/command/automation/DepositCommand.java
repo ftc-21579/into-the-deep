@@ -25,9 +25,10 @@ public class DepositCommand extends SequentialCommandGroup {
                         new SequentialCommandGroup(
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new WaitCommand(250),
-                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 230)),
+                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
                                 new WaitCommand(250),
-                                new SetExtensionCommand(b.getExtension(), 0)
+                                new SetExtensionCommand(b.getExtension(), 0),
+                                new SetPivotAngleCommand(b.getPivot(), 10)
                         ),
                         // SPECIMEN
                         new SequentialCommandGroup(
@@ -35,20 +36,21 @@ public class DepositCommand extends SequentialCommandGroup {
                                         new SequentialCommandGroup(
                                             new ClawOuttakeCommand(b.getClaw()),
                                             new WaitCommand(250),
-                                            new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 230))
+                                            new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
+                                                new SetPivotAngleCommand(b.getPivot(), 15)
                                         ),
                                         new SequentialCommandGroup(
                                                 new SetExtensionCommand(b.getExtension(), 0),
                                                 new WaitCommand(250),
                                                 new ClawOuttakeCommand(b.getClaw()),
-                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 210))
+                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 210)),
+                                                new SetPivotAngleCommand(b.getPivot(), 10)
                                         ),
                                         () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
                                 )
                         ),
                         () -> b.getTargetElement() == GameElement.SAMPLE
                 ),
-                new SetPivotAngleCommand(b.getPivot(), 10),
                 new SetBotStateCommand(b, BotState.INTAKE)
         );
     }
