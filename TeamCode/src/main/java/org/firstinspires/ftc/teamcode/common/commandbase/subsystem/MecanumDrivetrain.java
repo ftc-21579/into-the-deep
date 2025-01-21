@@ -6,9 +6,7 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Vector2d;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.GoBildaPinpointDriver;
-import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -17,8 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
-import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -27,9 +23,7 @@ public class MecanumDrivetrain extends SubsystemBase {
     private final DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private final PIDFController ascentController;
     private GoBildaPinpointDriver odo;
-    public static boolean robotCentric = false, headingLock = false;
-
-    private static Follower follower;
+    public static boolean fieldCentric = false, headingLock = false;
 
     public static Pose2D pose;
 
@@ -58,15 +52,15 @@ public class MecanumDrivetrain extends SubsystemBase {
         backLeft = bot.hMap.get(DcMotorEx.class, "backLeft");
         backRight = bot.hMap.get(DcMotorEx.class, "backRight");
 
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
         ascentController = new PIDFController(
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kP,
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kI,
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kD,
                 org.firstinspires.ftc.teamcode.common.Config.ascent_kF
         );
-
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(bot.hMap);
     }
 
     @Override
@@ -88,10 +82,73 @@ public class MecanumDrivetrain extends SubsystemBase {
 
         odo.update();
         pose = odo.getPosition();
+        //bot.telem.addData("Pose",
+        //        "X: " + pose.getX(DistanceUnit.MM) +
+        //                ", Y: " + pose.getY(DistanceUnit.MM) +
+        //                ", Heading: " + pose.getHeading(AngleUnit.DEGREES));
     }
 
-    public Follower getFollower() {
-        return follower;
+
+    public void teleopDrive(Vector2d leftStick, double rx, double multiplier) {
+        if (!isEncoderMode) {
+            double x = leftStick.getX() * multiplier;
+            double y = -leftStick.getY() * multiplier;
+
+            double extensionPosition = bot.getExtension().getPositionCM();
+
+            double extensionThreshold = 20;
+            double speedMultiplier = 1.0;
+
+            if (extensionPosition > extensionThreshold) {
+                speedMultiplier = 0.5;
+            }
+
+            if (bot.getState() == BotState.INTAKE) {
+                x *= speedMultiplier;
+                y *= speedMultiplier;
+                rx *= speedMultiplier;
+            }
+
+            if (!fieldCentric) {
+                y *= 1.1; // counteract imperfect strafe
+                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+                double frontLeftPower = (y + x + rx) / denominator;
+                double frontRightPower = (y - x - rx) / denominator;
+                double backLeftPower = (y - x + rx) / denominator;
+                double backRightPower = (y + x - rx) / denominator;
+
+                double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
+                double[] normalizedPowers = normalizeWheelSpeeds(powers);
+
+                frontLeft.setPower(normalizedPowers[0]);
+                frontRight.setPower(normalizedPowers[1]);
+                backLeft.setPower(normalizedPowers[2]);
+                backRight.setPower(normalizedPowers[3]);
+
+                return;
+            }
+
+            double botHeading = pose.getHeading(AngleUnit.RADIANS);
+
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+            rotX *= 1.1; // counteract imperfect strafe
+
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double frontLeftPower = (rotY + rotX + rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
+            double frontRightPower = (rotY - rotX - rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
+
+            double[] powers = {frontLeftPower, frontRightPower, backLeftPower, backRightPower};
+            double[] normalizedPowers = normalizeWheelSpeeds(powers);
+
+            frontLeft.setPower(normalizedPowers[0]);
+            frontRight.setPower(normalizedPowers[1]);
+            backLeft.setPower(normalizedPowers[2]);
+            backRight.setPower(normalizedPowers[3]);
+        }
     }
 
     public void resetEncoders() {
@@ -115,6 +172,15 @@ public class MecanumDrivetrain extends SubsystemBase {
     public void toggleDriveMode(boolean mode) {
         resetEncoders();
         isEncoderMode = mode;
+    }
+
+    // TODO: Try to implement heading lock
+    public void toggleHeadingLock() {
+        headingLock = !headingLock;
+    }
+
+    public void toggleFieldCentric() {
+        fieldCentric = !fieldCentric;
     }
 
     private double[] normalizeWheelSpeeds(double[] speeds) {
