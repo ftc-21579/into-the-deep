@@ -48,7 +48,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(name = "Strafe Velocity Tuner", group = "Automatic Tuners")
 public class StrafeVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();

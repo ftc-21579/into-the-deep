@@ -7,17 +7,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class LConstants {
     static {
-        PinpointConstants.forwardY = -3.3;
-        PinpointConstants.strafeX = 4.4;
-        PinpointConstants.distanceUnit = DistanceUnit.INCH;
+        PinpointConstants.forwardY = 86.5;
+        PinpointConstants.strafeX = 96.0;
+        PinpointConstants.distanceUnit = DistanceUnit.MM;
         PinpointConstants.hardwareMapName = "odo";
         PinpointConstants.useYawScalar = false;
         PinpointConstants.yawScalar = 1.0;
-        PinpointConstants.useCustomEncoderResolution = true;
+        PinpointConstants.useCustomEncoderResolution = false;
         PinpointConstants.encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
         PinpointConstants.customEncoderResolution = 8192 / (Math.PI * 35);
         PinpointConstants.forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        PinpointConstants.strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        PinpointConstants.strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     
     }
 }
