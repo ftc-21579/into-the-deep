@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
@@ -34,11 +35,13 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // Sequence depending on the element (sample or specimen)
                                 // SAMPLE
                                 new SequentialCommandGroup(
-                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
-                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
-                                        new WaitCommand(250),
+                                        //new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 225)),
+                                        //new SetPivotAngleCommand(b.getPivot(), 15),
+                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 45)),
                                         new SetExtensionCommand(b.getExtension(), 0),
+                                        new WaitCommand(350),
                                         new SetPivotAngleCommand(b.getPivot(), 95),
+                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode
                                                 // low basket
@@ -55,16 +58,15 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // Correct sequence based on the current specimen target mode
                                                 // Intake Shuttling
                                                 new SequentialCommandGroup(
-                                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
+                                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new SetExtensionCommand(b.getExtension(), 0)
                                                 ),
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
                                                         new SetExtensionCommand(b.getExtension(), 0),
-                                                        new SetPivotAngleCommand(b.getPivot(), 95),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
-                                                        new WaitCommand(250),
+                                                        new SetPivotAngleCommand(b.getPivot(), 95),
                                                         new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
