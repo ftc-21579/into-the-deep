@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,7 +21,6 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
 public class Bot extends Robot {
-    private final IMU imu;
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
@@ -38,22 +38,15 @@ public class Bot extends Robot {
     private final Pivot pivot;
     private final Ascent ascent;
 
+    private final RevBlinkinLedDriver blinkin;
+
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
         this.telem = telem;
         this.hMap = hMap;
         this.gamepad = gamepad;
 
-        // TODO: Adjust IMU parameters to match hub orientation
-        imu = hMap.get(IMU.class, "imu");
-        imu.initialize(
-            new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                    RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
-                )
-            )
-        );
+        blinkin = hMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         /* Subsystems */
         claw = new Intake(this);
@@ -65,12 +58,6 @@ public class Bot extends Robot {
         extension = new Extension(this);
         ascent = new Ascent(this);
     }
-
-    /**
-     * Get the IMU object for the robot
-     * @return the IMU object
-     */
-    public IMU getImu() { return imu; }
 
     /**
      * Get the MecanumDrivetrain subsystem of the robot
@@ -165,4 +152,7 @@ public class Bot extends Robot {
 
     public void setAllianceColor(Color color) { allianceColor = color; }
 
+    public Gamepad getGamepad() {
+        return gamepad;
+    }
 }

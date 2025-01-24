@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Auto
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleFieldCentricCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
@@ -78,8 +79,13 @@ public class TeleOp extends CommandOpMode {
                 () -> -driverGamepad.getRightX(),
                 () -> driverGamepad.getLeftY(),
                 () -> -driverGamepad.getLeftX(),
-                () -> 0.8
+                () -> 1.0
         );
+
+        Button fieldCentricToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.BACK))
+                .whenPressed(
+                        new ToggleFieldCentricCommand(bot.getDrivetrain())
+                );
 
         register(drivetrain);
         drivetrain.setDefaultCommand(driveCommand);
@@ -151,7 +157,7 @@ public class TeleOp extends CommandOpMode {
         Button extensionUpButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.RIGHT_STICK_BUTTON))
                 .whenPressed(
                         new ConditionalCommand(
-                                new SetExtensionCommand(bot.getExtension(), 30),
+                                new SetExtensionCommand(bot.getExtension(), 35),
                                 new InstantCommand(() -> {}),
                                 () -> bot.getState() == BotState.INTAKE
                         )

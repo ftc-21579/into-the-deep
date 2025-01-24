@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.RumbleControllerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
@@ -77,6 +78,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                         ),
                         // NOT GRABBING
                         new SequentialCommandGroup(
+                                new RumbleControllerCommand(b, 1000),
                                 new ManualPivotCommand(b.getPivot(), Direction.UP),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new SetBotStateCommand(b, BotState.INTAKE)

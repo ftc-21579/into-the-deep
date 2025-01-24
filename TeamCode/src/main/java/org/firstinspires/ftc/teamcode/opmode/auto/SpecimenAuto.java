@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
@@ -24,9 +25,11 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawInta
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
@@ -39,9 +42,9 @@ import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 public class SpecimenAuto extends LinearOpMode {
 
     public static Pose startingPose = new Pose(9, 55, 0);
-    public static Pose parkPose = new Pose(18, 26, 0);
+    public static Pose parkPose = new Pose(18, 26, -135);
 
-    public static Pose score1 = new Pose(38, 83, 0);
+    public static Pose score1 = new Pose(38, 67, 0);
     public static Pose score2 = new Pose(38, 79, Math.toRadians(180));
     public static Pose score3 = new Pose(38, 75, Math.toRadians(180));
     public static Pose score4 = new Pose(38, 71, Math.toRadians(180));
@@ -49,14 +52,14 @@ public class SpecimenAuto extends LinearOpMode {
 
     public static Pose specIntake = new Pose(18, 26, Math.toRadians(180));
 
-    public static Pose intake1 = new Pose(30, 46, Math.toRadians(-58));
+    public static Pose intake1 = new Pose(32, 44, Math.toRadians(-58));
     public static Pose intake1Control = new Pose(9, 55);
     public static Pose intake1Shuttle = new Pose(30, 40, Math.toRadians(-140));
 
-    public static Pose intake2 = new Pose(30, 35, Math.toRadians(-60));
+    public static Pose intake2 = new Pose(33, 33, Math.toRadians(-60));
     public static Pose intake2Shuttle = new Pose(30, 40, Math.toRadians(-140));
 
-    public static Pose intake3 = new Pose(30, 26, Math.toRadians(-54));
+    public static Pose intake3 = new Pose(32, 26, Math.toRadians(-54));
     public static Pose intake3Shuttle = new Pose(19, 26, Math.toRadians(180));
     public static Pose intake3ShuttleControl = new Pose(30, 24);
 
@@ -82,44 +85,29 @@ public class SpecimenAuto extends LinearOpMode {
         f.setPose(startingPose);
         f.setMaxPower(0.75);
 
-        double pivotVConstant = 13.4/vs.getVoltage();
-
-        SequentialCommandGroup ScorePositionCommand = new SequentialCommandGroup(
-                new SetPivotAngleCommand(bot.getPivot(), 38 * pivotVConstant),
+        ParallelCommandGroup ScorePositionCommand = new ParallelCommandGroup(
+                new SetPivotAngleCommand(bot.getPivot(), 35),
                 new SetExtensionCommand(bot.getExtension(), 40),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 80))
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 100))
         );
 
         SequentialCommandGroup ScoreForwardsCommand = new SequentialCommandGroup(
                 new ClawOuttakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(58, 225)),
+                new SetPivotAngleCommand(bot.getPivot(), 15),
                 new WaitCommand(500),
-                new SetPivotAngleCommand(bot.getPivot(), 23),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 210))
+                new SetExtensionCommand(bot.getExtension(), 36)
         );
 
         SequentialCommandGroup IntakeSpecimenCommand = new SequentialCommandGroup(
-                //new SetPivotAngleCommand(bot.getPivot(), 23),
                 new ClawOuttakeCommand(bot.getClaw()),
                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150)),
-                new SetExtensionCommand(bot.getExtension(), 18),
-                new WaitCommand(500),
+                new SetExtensionCommand(bot.getExtension(), 16),
+                new WaitCommand(250),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
-                new SetPivotAngleCommand(bot.getPivot(), 25),
-                new SetExtensionCommand(bot.getExtension(), 0),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
-        );
-
-        SequentialCommandGroup ScoreBackwardsCommand = new SequentialCommandGroup(
-                //new SetPivotAngleCommand(bot.getPivot(), 78),
-                new WaitCommand(250),
-                new SetExtensionCommand(bot.getExtension(), 28),
-                new WaitCommand(250),
-                new ClawOuttakeCommand(bot.getClaw()),
-                new WaitCommand(150),
-                new SetExtensionCommand(bot.getExtension(), 0),
-                new SetPivotAngleCommand(bot.getPivot(), 20)
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 50))
         );
 
         SequentialCommandGroup auto = new SequentialCommandGroup(
@@ -139,7 +127,6 @@ public class SpecimenAuto extends LinearOpMode {
                                 ScorePositionCommand
                         )
                 ),
-                ScoreForwardsCommand,
                 new InstantCommand(() -> {
                     bot.setTargetElement(GameElement.SPECIMEN);
                     bot.setTargetMode(TargetMode.SPEC_INTAKE);
@@ -157,17 +144,13 @@ public class SpecimenAuto extends LinearOpMode {
                                 .setLinearHeadingInterpolation(score1.getHeading(), intake1.getHeading())
                                 .build()
                         ),
-                        new SequentialCommandGroup(
-                                new WaitCommand(1000),
-                                new SetExtensionCommand(bot.getExtension(), 36),
-                                new ManualWristTwistCommand(bot.getWrist(), Direction.LEFT)
-                        )
+                        ScoreForwardsCommand
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 0),
-                new WaitCommand(300),
+                new WaitCommand(100),
+                new SetPivotAngleCommand(bot.getPivot(), 3),
                 new ClawIntakeCommand(bot.getClaw()),
-                new WaitCommand(150),
-                new SetPivotAngleCommand(bot.getPivot(), 20 * pivotVConstant),
+                new WaitCommand(250),
+                new ManualPivotCommand(bot.getPivot(), Direction.UP),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -181,6 +164,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new WaitCommand(150),
                 new ClawOuttakeCommand(bot.getClaw()),
                 new WaitCommand(150),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(60, 225)),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -191,11 +175,12 @@ public class SpecimenAuto extends LinearOpMode {
                         .setLinearHeadingInterpolation(intake1Shuttle.getHeading(), intake2.getHeading())
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 0),
-                new WaitCommand(300),
+                new WaitCommand(100),
+                new SetPivotAngleCommand(bot.getPivot(), 3),
+                new WaitCommand(100),
                 new ClawIntakeCommand(bot.getClaw()),
-                new WaitCommand(150),
-                new SetPivotAngleCommand(bot.getPivot(), 15 * pivotVConstant),
+                new WaitCommand(250),
+                new ManualPivotCommand(bot.getPivot(), Direction.UP),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -208,8 +193,8 @@ public class SpecimenAuto extends LinearOpMode {
                 ),
                 new WaitCommand(150),
                 new ClawOuttakeCommand(bot.getClaw()),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(54, 225)),
                 new SetExtensionCommand(bot.getExtension(), 40),
-                new SetPivotAngleCommand(bot.getPivot(), 20 * pivotVConstant),
                 new WaitCommand(150),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
@@ -221,119 +206,168 @@ public class SpecimenAuto extends LinearOpMode {
                         .setLinearHeadingInterpolation(intake2Shuttle.getHeading(), intake3.getHeading(), 0.5)
                         .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 0),
-                new WaitCommand(500),
+                new SetPivotAngleCommand(bot.getPivot(), 3),
+                new WaitCommand(100),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(150),
-                new SetPivotAngleCommand(bot.getPivot(), 23 * pivotVConstant),
-                new SetExtensionCommand(bot.getExtension(), 5),
-                new ManualWristTwistCommand(bot.getWrist(), Direction.RIGHT),
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierCurve(
-                                        new Point(intake3),
-                                        new Point(intake3ShuttleControl),
-                                        new Point(intake3Shuttle)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierCurve(
+                                                new Point(intake3),
+                                                new Point(intake3ShuttleControl),
+                                                new Point(intake3Shuttle)
+                                        )
                                 )
+                                .setLinearHeadingInterpolation(intake3.getHeading(), intake3Shuttle.getHeading(), 0.6)
+                                .build()
+                        ),
+                        new ManualPivotCommand(bot.getPivot(), Direction.UP),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 5),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                         )
-                        .setLinearHeadingInterpolation(intake3.getHeading(), intake3Shuttle.getHeading(), 0.6)
-                        .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 21),
+                new SetPivotAngleCommand(bot.getPivot(), 20),
                 IntakeSpecimenCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(intake3Shuttle),
-                                        new Point(score2)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(intake3Shuttle),
+                                                new Point(score2)
+                                        )
                                 )
+                                .setConstantHeadingInterpolation(score2.getHeading())
+                                .build()
+                        ),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetPivotAngleCommand(bot.getPivot(), 95),
+                                new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
-                        .setConstantHeadingInterpolation(score2.getHeading())
-                        .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 87 * pivotVConstant),
-                ScoreBackwardsCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(score2),
-                                        new Point(specIntake)
+                new SetExtensionCommand(bot.getExtension(), 0),
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(score2),
+                                                new Point(specIntake)
+                                        )
                                 )
-                        )
-                        .setConstantHeadingInterpolation(specIntake.getHeading())
-                        .build()
+                                .setConstantHeadingInterpolation(specIntake.getHeading())
+                                .build()
+                        ),
+                        new ClawOuttakeCommand(bot.getClaw()),
+                        new SetPivotAngleCommand(bot.getPivot(), 20),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 19),
                 IntakeSpecimenCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(specIntake),
-                                        new Point(score3)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(specIntake),
+                                                new Point(score3)
+                                        )
                                 )
+                                .setConstantHeadingInterpolation(score3.getHeading())
+                                .build()
+                        ),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetPivotAngleCommand(bot.getPivot(), 95),
+                                new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
-                        .setConstantHeadingInterpolation(score3.getHeading())
-                        .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 85 * pivotVConstant),
-                ScoreBackwardsCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(score3),
-                                        new Point(specIntake)
+                new SetExtensionCommand(bot.getExtension(), 0),
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(score3),
+                                                new Point(specIntake)
+                                        )
                                 )
-                        )
-                        .setConstantHeadingInterpolation(specIntake.getHeading())
-                        .build()
+                                .setConstantHeadingInterpolation(specIntake.getHeading())
+                                .build()
+                        ),
+                        new ClawOuttakeCommand(bot.getClaw()),
+                        new SetPivotAngleCommand(bot.getPivot(), 20),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 19),
                 IntakeSpecimenCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(specIntake),
-                                        new Point(score4)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(specIntake),
+                                                new Point(score4)
+                                        )
                                 )
+                                .setConstantHeadingInterpolation(score4.getHeading())
+                                .build()
+                        ),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetPivotAngleCommand(bot.getPivot(), 95),
+                                new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
-                        .setConstantHeadingInterpolation(score4.getHeading())
-                        .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 84 * pivotVConstant),
-                ScoreBackwardsCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(score4),
-                                        new Point(specIntake)
+                new SetExtensionCommand(bot.getExtension(), 0),
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(score4),
+                                                new Point(specIntake)
+                                        )
                                 )
-                        )
-                        .setConstantHeadingInterpolation(specIntake.getHeading())
-                        .build()
+                                .setConstantHeadingInterpolation(specIntake.getHeading())
+                                .build()
+                        ),
+                        new ClawOuttakeCommand(bot.getClaw()),
+                        new SetPivotAngleCommand(bot.getPivot(), 20),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 18),
                 IntakeSpecimenCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(specIntake),
-                                        new Point(score5)
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(specIntake),
+                                                new Point(score5)
+                                        )
                                 )
+                                .setConstantHeadingInterpolation(score5.getHeading())
+                                .build()
+                        ),
+                        new SequentialCommandGroup(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetPivotAngleCommand(bot.getPivot(), 95),
+                                new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
-                        .setConstantHeadingInterpolation(score5.getHeading())
-                        .build()
                 ),
-                new SetPivotAngleCommand(bot.getPivot(), 86 * pivotVConstant),
-                ScoreBackwardsCommand,
-                new FollowPathCommand(f, f.pathBuilder()
-                        .addPath(
-                                new BezierLine(
-                                        new Point(score5),
-                                        new Point(parkPose)
+                new SetExtensionCommand(bot.getExtension(), 0),
+                new ParallelCommandGroup(
+                        new FollowPathCommand(f, f.pathBuilder()
+                                .addPath(
+                                        new BezierLine(
+                                                new Point(score5),
+                                                new Point(parkPose)
+                                        )
                                 )
-                        )
-                        .setLinearHeadingInterpolation(score5.getHeading(), parkPose.getHeading())
-                        .build()
+                                .setLinearHeadingInterpolation(score5.getHeading(), parkPose.getHeading())
+                                .build()
+                        ),
+                        new ClawOuttakeCommand(bot.getClaw()),
+                        new SetPivotAngleCommand(bot.getPivot(), 10),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 235))
                 )
         );
 
