@@ -13,7 +13,7 @@ public class AutoHangCommand extends SequentialCommandGroup {
 
     public AutoHangCommand(Bot b) {
         addCommands(
-                new InstantCommand(() -> b.getDrivetrain().toggleDriveMode(false)),
+                new InstantCommand(() -> b.getDrivetrain().toggleDriveMode(true)),
                 new SetPTOCommand(b.getAscent(), Ascent.PTOState.ENGAGED),
                 new WaitCommand(1000),
                 new WinchArmsCommand(b.getDrivetrain()),

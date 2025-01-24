@@ -11,7 +11,7 @@ public class Ascent extends SubsystemBase {
 
     private final Servo leftPTO, rightPTO;
 
-    public static double engaged = 0.0, release = 0.2, locked = 0.35;
+    public static double engaged = 0.0, locked = 0.2;
 
     public enum PTOState {
         ENGAGED, LOCKED
@@ -29,11 +29,6 @@ public class Ascent extends SubsystemBase {
     public void engagePTO() {
         leftPTO.setPosition(engaged);
         rightPTO.setPosition(engaged);
-    }
-
-    public void releaseArms() {
-        leftPTO.setPosition(release);
-        rightPTO.setPosition(release);
     }
 
     public void lockArms() {

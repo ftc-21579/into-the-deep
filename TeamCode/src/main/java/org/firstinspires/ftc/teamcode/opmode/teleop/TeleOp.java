@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -15,6 +16,7 @@ import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.SetPTOCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoHangCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
@@ -194,7 +196,7 @@ public class TeleOp extends CommandOpMode {
 
 
         schedule(
-                new SequentialCommandGroup(
+                new ParallelCommandGroup(
                         new SetBotStateCommand(bot, BotState.INTAKE),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225)),
                         new ClawOuttakeCommand(bot.getClaw()),
