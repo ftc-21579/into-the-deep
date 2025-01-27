@@ -54,7 +54,7 @@ public class SampleAuto extends LinearOpMode {
     public static Pose parkControl = new Pose(64, 128);
 
     // Pickup 1
-    public static Pose pickup1Pose = new Pose(33, 118, Math.toRadians(0));
+    public static Pose pickup1Pose = new Pose(30, 118, Math.toRadians(0));
     public static Pose pickup1Intermediate = new Pose(24, 116, Math.toRadians(0));
     public static Pose pickup1Control1 = new Pose(10, 96);
     public static Pose pickup1Control2 = new Pose(10, 116);
@@ -212,7 +212,7 @@ public class SampleAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new WaitCommand(500),
-                                new SetExtensionCommand(bot.getExtension(), 10)
+                                new SetExtensionCommand(bot.getExtension(), 15)
                         )
                 ),
                 new WaitCommand(250),
@@ -313,6 +313,7 @@ public class SampleAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
+                                new SetPivotAngleCommand(bot.getPivot(), 97, true),
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 90))
                                 )
                         )

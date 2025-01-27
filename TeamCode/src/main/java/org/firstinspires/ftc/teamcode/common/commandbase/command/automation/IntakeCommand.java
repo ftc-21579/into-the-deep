@@ -66,8 +66,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
                                                         new SetExtensionCommand(b.getExtension(), 0),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 60)),
-                                                        new SetPivotAngleCommand(b.getPivot(), 95),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
+                                                        new SetPivotAngleCommand(b.getPivot(), 105, true),
                                                         new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE

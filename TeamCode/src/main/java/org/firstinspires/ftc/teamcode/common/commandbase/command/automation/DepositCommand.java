@@ -28,7 +28,7 @@ public class DepositCommand extends SequentialCommandGroup {
                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
                                 new WaitCommand(250),
                                 new SetExtensionCommand(b.getExtension(), 0),
-                                new SetPivotAngleCommand(b.getPivot(), 10)
+                                new SetPivotAngleCommand(b.getPivot(), 12.5)
                         ),
                         // SPECIMEN
                         new SequentialCommandGroup(

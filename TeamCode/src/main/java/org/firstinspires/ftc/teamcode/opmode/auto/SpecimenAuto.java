@@ -59,7 +59,7 @@ public class SpecimenAuto extends LinearOpMode {
     public static Pose intake2 = new Pose(33, 33, Math.toRadians(-60));
     public static Pose intake2Shuttle = new Pose(30, 40, Math.toRadians(-140));
 
-    public static Pose intake3 = new Pose(32, 26, Math.toRadians(-54));
+    public static Pose intake3 = new Pose(31.5, 26, Math.toRadians(-54));
     public static Pose intake3Shuttle = new Pose(19, 26, Math.toRadians(180));
     public static Pose intake3ShuttleControl = new Pose(30, 24);
 
@@ -146,7 +146,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         ScoreForwardsCommand
                 ),
-                new WaitCommand(100),
+                new WaitCommand(250),
                 new SetPivotAngleCommand(bot.getPivot(), 3),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
@@ -216,7 +216,7 @@ public class SpecimenAuto extends LinearOpMode {
                                         new BezierCurve(
                                                 new Point(intake3),
                                                 new Point(intake3ShuttleControl),
-                                                new Point(intake3Shuttle)
+                                                new Point(specIntake)
                                         )
                                 )
                                 .setLinearHeadingInterpolation(intake3.getHeading(), intake3Shuttle.getHeading(), 0.6)
@@ -229,6 +229,7 @@ public class SpecimenAuto extends LinearOpMode {
                         )
                 ),
                 new SetPivotAngleCommand(bot.getPivot(), 20),
+                new WaitCommand(150),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
@@ -264,6 +265,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetPivotAngleCommand(bot.getPivot(), 20),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
+                new WaitCommand(150),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
@@ -299,6 +301,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetPivotAngleCommand(bot.getPivot(), 20),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
+                new WaitCommand(150),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
@@ -334,6 +337,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new SetPivotAngleCommand(bot.getPivot(), 20),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
                 ),
+                new WaitCommand(150),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
