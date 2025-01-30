@@ -16,14 +16,19 @@ public class BlinkinCommand extends CommandBase {
 
     public BlinkinCommand(RevBlinkinLedDriver blinkin, Color color) {
         this.blinkin = blinkin;
-        if (color == Color.RED) {
-            pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-        } else if (color == Color.BLUE) {
-            pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-        } else if (color == Color.YELLOW) {
-            pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-        } else {
-            pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+        switch (color) {
+            case RED:
+                pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+                break;
+            case BLUE:
+                pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+                break;
+            case YELLOW:
+                pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+                break;
+            default:
+                pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+                break;
         }
     }
 
