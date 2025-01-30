@@ -17,8 +17,10 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -34,6 +36,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWri
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
@@ -76,7 +79,8 @@ public class SampleAuto extends LinearOpMode {
 
         Bot bot = new Bot(telem, hardwareMap, gamepad1, false);
 
-        GamepadEx controller = new GamepadEx(gamepad1);
+        Gamepad currentController = new Gamepad();
+        Gamepad previousController = new Gamepad();
         VoltageSensor vs = hardwareMap.voltageSensor.iterator().next();
 
         CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
@@ -90,11 +94,14 @@ public class SampleAuto extends LinearOpMode {
         f.setPose(startingPose);
         f.setMaxPower(0.75);
 
+        Color alliance = Color.RED;
         GameElement preload = GameElement.SPECIMEN;
 
         // Allow changing of preload for conditional (coming soon)
         while (opModeInInit()) {
-            if (gamepad1.a) {
+            previousController.copy(currentController);
+            currentController.copy(gamepad1);
+            if (currentController.a && !previousController.a) {
                 if (preload == GameElement.SPECIMEN) {
                     preload = GameElement.SAMPLE;
                 } else {
@@ -102,7 +109,23 @@ public class SampleAuto extends LinearOpMode {
                 }
             }
 
+            if (currentController.b && !previousController.b) {
+                if (alliance == Color.RED) {
+                    alliance = Color.BLUE;
+                } else {
+                    alliance = Color.RED;
+                }
+            }
+
+            if (alliance == Color.RED) {
+                bot.getBlinkin().setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+            } else {
+                bot.getBlinkin().setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            }
+
+            telem.addLine("Change alliance by pressing O");
             telem.addLine("Change preloaded element by pressing X");
+            telem.addData("Alliance", alliance);
             telem.addData("Preloaded Element", preload);
             telem.addData("Current Auto", (preload == GameElement.SPECIMEN ? "1+3" : "0+4"));
             telem.update();
@@ -110,6 +133,7 @@ public class SampleAuto extends LinearOpMode {
         }
 
         GameElement finalPreload = preload;
+        bot.setAllianceColor(alliance);
         SequentialCommandGroup auto = new SequentialCommandGroup(
                 // start future conditional wrapping
                 new ConditionalCommand(

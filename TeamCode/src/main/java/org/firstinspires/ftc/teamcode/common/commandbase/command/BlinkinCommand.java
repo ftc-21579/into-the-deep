@@ -15,6 +15,7 @@ public class BlinkinCommand extends CommandBase {
     }
 
     public BlinkinCommand(RevBlinkinLedDriver blinkin, Color color) {
+        this.blinkin = blinkin;
         if (color == Color.RED) {
             pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
         } else if (color == Color.BLUE) {

@@ -81,7 +81,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                         ),
                         // NOT GRABBING
                         new ParallelCommandGroup(
-                                new RumbleControllerCommand(b, 1000),
+                                new RumbleControllerCommand(b, 500),
                                 new ManualPivotCommand(b.getPivot(), Direction.UP),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new SetBotStateCommand(b, BotState.INTAKE),
@@ -91,7 +91,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                         new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE)
                                 )
                         ),
-                        b.getClaw()::isGrabbing
+                        () -> b.getClaw().isGrabbing() && b.getClaw().isCorrectColor()
                 )
         );
     }

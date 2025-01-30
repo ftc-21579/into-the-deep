@@ -46,6 +46,16 @@ public class Intake extends SubsystemBase {
         return positionDegrees > grabbedAngle;
     }
 
+    public boolean isCorrectColor() {
+        Color allianceColor = bot.getAllianceColor();
+        Color currentColor = getColor();
+        if (currentColor == allianceColor || currentColor == Color.YELLOW) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public double getAnalogDegrees() {
         double feedbackVoltage = clawFeedback.getVoltage();
         return mapVoltageToDegrees(feedbackVoltage);

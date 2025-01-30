@@ -161,4 +161,8 @@ public class Bot extends Robot {
     public Gamepad getGamepad() {
         return gamepad;
     }
+
+    public Color getAllianceColor() {
+        return allianceColor;
+    }
 }

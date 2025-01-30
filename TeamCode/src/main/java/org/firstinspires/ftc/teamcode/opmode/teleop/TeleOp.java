@@ -13,9 +13,11 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.SetPTOCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoHangCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
@@ -198,6 +200,7 @@ public class TeleOp extends CommandOpMode {
         schedule(
                 new ParallelCommandGroup(
                         new SetBotStateCommand(bot, BotState.INTAKE),
+                        new BlinkinCommand(bot.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225)),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
