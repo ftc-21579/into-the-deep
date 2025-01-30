@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
@@ -23,6 +26,7 @@ public class DepositCommand extends SequentialCommandGroup {
                         // Check which element the bot is holding
                         // SAMPLE
                         new SequentialCommandGroup(
+                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new WaitCommand(250),
                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
@@ -33,15 +37,16 @@ public class DepositCommand extends SequentialCommandGroup {
                         // SPECIMEN
                         new SequentialCommandGroup(
                                 new ConditionalCommand(
-                                        new SequentialCommandGroup(
+                                        new ParallelCommandGroup(
                                                 new ClawOuttakeCommand(b.getClaw()),
+                                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
                                                 new SetPivotAngleCommand(b.getPivot(), 10)
                                         ),
                                         new SequentialCommandGroup(
                                                 new SetExtensionCommand(b.getExtension(), 0),
-                                                //new WaitCommand(250),
                                                 new ClawOuttakeCommand(b.getClaw()),
+                                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 210)),
                                                 new SetPivotAngleCommand(b.getPivot(), 15)
                                         ),

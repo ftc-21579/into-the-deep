@@ -103,6 +103,12 @@ public class Bot extends Robot {
     public Ascent getAscent() { return ascent; }
 
     /**
+     * Get the Blinkin subsystem of the robot
+     * @return the blinkin subsystem of the robot
+     */
+    public RevBlinkinLedDriver getBlinkin() { return blinkin; }
+
+    /**
      * Get the state of the robot
      * @return BotState - the state of the robot
      */

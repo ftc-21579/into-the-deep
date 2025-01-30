@@ -5,8 +5,10 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.RumbleControllerCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
@@ -36,8 +38,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // Sequence depending on the element (sample or specimen)
                                 // SAMPLE
                                 new SequentialCommandGroup(
-                                        //new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 225)),
-                                        //new SetPivotAngleCommand(b.getPivot(), 15),
+                                        new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 45)),
                                         new SetExtensionCommand(b.getExtension(), 0),
                                         new WaitCommand(350),
@@ -59,12 +60,14 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // Correct sequence based on the current specimen target mode
                                                 // Intake Shuttling
                                                 new SequentialCommandGroup(
+                                                        new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new SetExtensionCommand(b.getExtension(), 0)
                                                 ),
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
+                                                        new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetExtensionCommand(b.getExtension(), 0),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
                                                         new SetPivotAngleCommand(b.getPivot(), 105, true),
@@ -77,11 +80,16 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 () -> b.getTargetElement() == GameElement.SAMPLE
                         ),
                         // NOT GRABBING
-                        new SequentialCommandGroup(
+                        new ParallelCommandGroup(
                                 new RumbleControllerCommand(b, 1000),
                                 new ManualPivotCommand(b.getPivot(), Direction.UP),
                                 new ClawOuttakeCommand(b.getClaw()),
-                                new SetBotStateCommand(b, BotState.INTAKE)
+                                new SetBotStateCommand(b, BotState.INTAKE),
+                                new SequentialCommandGroup(
+                                        new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.STROBE_RED),
+                                        new WaitCommand(500),
+                                        new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE)
+                                )
                         ),
                         b.getClaw()::isGrabbing
                 )

@@ -16,9 +16,10 @@ public class Wrist extends SubsystemBase {
     private double twistTarget = 0.0;
     private double angleTarget = degreesToServoPosition(225);
 
-    private final double twistRatio = 18.0 / 52.0;
-
-    private static final double SERVO_RANGE_DEGREES = 270.0;
+    private static final double twistRatio = 18.0 / 52.0;
+    private static final double twistRange = 180.0;
+    private static final double angleRange = 180.0;
+    private static final double SERVO_RANGE_DEGREES = angleRange + (twistRange * twistRatio) * 2;
 
     public Wrist(Bot bot) {
         this.bot = bot;
@@ -84,7 +85,7 @@ public class Wrist extends SubsystemBase {
 
     // Clamp degrees between 0 and the maximum range of motion
     private double clampAngleDegrees(double degrees) {
-        return Math.max(0.0, Math.min(SERVO_RANGE_DEGREES, degrees));
+        return Math.max(45.0, Math.min(225.0, degrees));
     }
 
     private double clampTwistDegrees(double degrees) {
