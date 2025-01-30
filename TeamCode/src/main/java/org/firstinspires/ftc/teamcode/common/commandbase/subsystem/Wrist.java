@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 
@@ -11,21 +12,26 @@ public class Wrist extends SubsystemBase {
 
     private final Bot bot;
 
-    private final Servo left, right;
+    private final ServoImplEx left, right;
 
     private double twistTarget = 0.0;
-    private double angleTarget = 0.5;
+    private double angleTarget = normalizeAngle(180);
 
-    private final double twistRatio = 18.0 / 52.0;
+    private static final double twistRatio = 18.0 / 52.0;
+    private static final double twistRange = 180.0;
+    private static final double angleRange = 180.0;
+    private static final double SERVO_RANGE_DEGREES = angleRange + (twistRange * twistRatio) * 2;
 
-    private static final double SERVO_RANGE_DEGREES = 270.0;
+    public static final double wristDown = 180, wristForward = 90, wristUp = 0;
 
     public Wrist(Bot bot) {
         this.bot = bot;
 
-        left = bot.hMap.get(Servo.class, "leftWrist");
-        right = bot.hMap.get(Servo.class, "rightWrist");
-        right.setDirection(Servo.Direction.REVERSE);
+        left = bot.hMap.get(ServoImplEx.class, "leftWrist");
+        right = bot.hMap.get(ServoImplEx.class, "rightWrist");
+
+        left.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        right.setPwmRange(new PwmControl.PwmRange(500, 2500));
     }
 
     @Override
@@ -37,6 +43,14 @@ public class Wrist extends SubsystemBase {
     public void setTwist(double targetTwistDegrees) {
         this.twistTarget = degreesToServoPosition(targetTwistDegrees);
         updateServoPositions();
+    }
+
+    public double normalizeAngle(double angle) {
+        return (Wrist.SERVO_RANGE_DEGREES / 2) - (90 - angle);
+    }
+
+    private double denormalizeAngle(double normalizedAngle) {
+        return 90 - ((Wrist.SERVO_RANGE_DEGREES / 2) - normalizedAngle);
     }
 
     // Set target angle in degrees (0 to 180)
@@ -85,7 +99,7 @@ public class Wrist extends SubsystemBase {
 
     // Clamp degrees between 0 and the maximum range of motion
     private double clampAngleDegrees(double degrees) {
-        return Math.max(0.0, Math.min(SERVO_RANGE_DEGREES, degrees));
+        return Math.max((SERVO_RANGE_DEGREES / 2) - 90, Math.min((SERVO_RANGE_DEGREES / 2) + 90, degrees));
     }
 
     private double clampTwistDegrees(double degrees) {
@@ -105,14 +119,10 @@ public class Wrist extends SubsystemBase {
         //double leftPosition = angleTarget + twistTarget;
         //double rightPosition = angleTarget - twistTarget;
 
-        //bot.telem.addData("Left Wrist Position", leftPosition);
-        //bot.telem.addData("Right Wrist Position", rightPosition);
-
-        //bot.telem.addData("Angle Target", angleTarget);
-        //bot.telem.addData("Twist Target", twistTarget);
-
-        //bot.telem.addData("Angle Target Degrees", getAngleDegrees());
-        //bot.telem.addData("Twist Target Degrees", getTwistDegrees());
+        bot.telem.addData("Left Wrist Position", leftPosition);
+        bot.telem.addData("Right Wrist Position", rightPosition);
+        bot.telem.addData("Angle Target Degrees", denormalizeAngle(getAngleDegrees()));
+        bot.telem.addData("Twist Target Degrees", getTwistDegrees());
 
         // Set the servo positions
         left.setPosition(leftPosition);

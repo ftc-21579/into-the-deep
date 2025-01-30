@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.common.util.Angle;
 /* Credit 16379 for this code */
 @Config
 public class AbsoluteAnalogEncoder {
-    public static double DEFAULT_RANGE = 1.024;
+    public static double DEFAULT_RANGE = 1.032;
     public static boolean VALUE_REJECTION = true;
     private final AnalogInput encoder;
     private double offset, analogRange;

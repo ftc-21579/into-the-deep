@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
 @Config
 public class MecanumDrivetrain extends SubsystemBase {
@@ -96,13 +97,17 @@ public class MecanumDrivetrain extends SubsystemBase {
             double extensionPosition = bot.getExtension().getPositionCM();
 
             double extensionThreshold = 20;
-            double rotationSpeedMultiplier = 1.0;
+            double speedMultiplier = 1.0;
 
             if (extensionPosition > extensionThreshold) {
-                rotationSpeedMultiplier = 0.5;
+                speedMultiplier = 0.5;
             }
 
-            rx *= rotationSpeedMultiplier;
+            if (bot.getState() == BotState.INTAKE) {
+                x *= speedMultiplier;
+                y *= speedMultiplier;
+                rx *= speedMultiplier;
+            }
 
             if (!fieldCentric) {
                 y *= 1.1; // counteract imperfect strafe
@@ -127,6 +132,9 @@ public class MecanumDrivetrain extends SubsystemBase {
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+            rotX *= -1;
+            rotY *= -1;
 
             rotX *= 1.1; // counteract imperfect strafe
 

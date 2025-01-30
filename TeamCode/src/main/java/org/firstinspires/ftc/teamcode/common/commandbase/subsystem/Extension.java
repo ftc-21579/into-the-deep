@@ -12,18 +12,23 @@ public class Extension extends SubsystemBase {
 
     private final Bot bot;
 
-    private final DcMotor extensionMotor;
+    private final DcMotor bottomExtensionMotor, topExtensionMotor;
 
     private final PIDFController extensionController;
-    public static double setpointCM = 0.0, depositTarget = 61.0, lowTarget = 20.0, highTarget = 61.0, ticksperCM = 21.65;
-    public static double minExtension = 0.0, depositMaxExtension = 61, intakeMaxExtension = 45;
+    public static double setpointCM = 0.0, highChamberTarget = 17.0, lowBasketTarget = 20.0, highBasketTarget = 60.0, ticksperCM = 10.37339803;
+    public static double minExtension = 0.0, depositMaxExtension = 60, intakeMaxExtension = 50;
 
     public Extension(Bot bot) {
         this.bot = bot;
 
-        extensionMotor = bot.hMap.get(DcMotor.class, "extension");
-        extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bottomExtensionMotor = bot.hMap.get(DcMotor.class, "bottomExtension");
+        bottomExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bottomExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        topExtensionMotor = bot.hMap.get(DcMotor.class, "topExtension");
+        topExtensionMotor.setDirection(DcMotor.Direction.REVERSE);
+        topExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        topExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         extensionController = new PIDFController(
                 Config.extension_kP,
@@ -36,17 +41,22 @@ public class Extension extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double target = bot.getPivot().getPosition() * -0.009 + setpointCM;
+        double calculatedkF = Config.extension_kF * (Math.cos(bot.getPivot().getPositionRAD() - Math.toRadians(90)));
+        extensionController.setF(calculatedkF);
+
+        double target = setpointCM;
 
         double power = extensionController.calculate(
-                extensionMotor.getCurrentPosition(),
+                topExtensionMotor.getCurrentPosition(),
                 target * ticksperCM
         );
 
-        extensionMotor.setPower(power);
+        topExtensionMotor.setPower(power);
+        bottomExtensionMotor.setPower(power);
 
-        //bot.telem.addData("Ext Encoder", extensionMotor.getCurrentPosition());
-        //bot.telem.addData("Ext Target", setpointCM * ticksperCM);
+        bot.telem.addData("Extension Position", getPositionCM());
+        bot.telem.addData("Extension Target", getSetpointCM());
+        bot.telem.addData("Calculated Extension kF", extensionController.getF());
     }
 
     /**
@@ -69,8 +79,8 @@ public class Extension extends SubsystemBase {
      * Get the current position of the extension in centimeters
      * @return the current position of the extension in centimeters
      */
-    public int getPositionCM() {
-        return extensionMotor.getCurrentPosition();
+    public double getPositionCM() {
+        return topExtensionMotor.getCurrentPosition() / ticksperCM;
     }
 
     /**

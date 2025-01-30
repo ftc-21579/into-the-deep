@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.extension;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 
 /**
@@ -27,6 +28,6 @@ public class SetExtensionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return (Math.abs(extension.getPositionCM()) - setpoint) <= Config.extension_tolerance;
     }
 }

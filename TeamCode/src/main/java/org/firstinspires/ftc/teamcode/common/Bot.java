@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,17 +10,17 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Claw;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
 public class Bot extends Robot {
-    private final IMU imu;
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
@@ -27,13 +28,17 @@ public class Bot extends Robot {
     public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
     private TargetMode targetMode = TargetMode.HIGH_BASKET;
+    private static Color allianceColor = Color.NONE;
+    private Color gameElementColor = Color.NONE;
 
     private MecanumDrivetrain drivetrain;
-    private final Claw claw;
+    private final Intake claw;
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
     private final Ascent ascent;
+
+    private final RevBlinkinLedDriver blinkin;
 
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
@@ -41,19 +46,10 @@ public class Bot extends Robot {
         this.hMap = hMap;
         this.gamepad = gamepad;
 
-        // TODO: Adjust IMU parameters to match hub orientation
-        imu = hMap.get(IMU.class, "imu");
-        imu.initialize(
-            new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                    RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
-                )
-            )
-        );
+        blinkin = hMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         /* Subsystems */
-        claw = new Claw(this);
+        claw = new Intake(this);
         wrist = new Wrist(this);
         if (enableDrive) {
             drivetrain = new MecanumDrivetrain(this);
@@ -62,12 +58,6 @@ public class Bot extends Robot {
         extension = new Extension(this);
         ascent = new Ascent(this);
     }
-
-    /**
-     * Get the IMU object for the robot
-     * @return the IMU object
-     */
-    public IMU getImu() { return imu; }
 
     /**
      * Get the MecanumDrivetrain subsystem of the robot
@@ -86,7 +76,7 @@ public class Bot extends Robot {
      * Get the Claw subsystem of the robot
      * @return the claw subsystem of the robot
      */
-    public Claw getClaw() { return claw; }
+    public Intake getClaw() { return claw; }
 
     /**
      * Get the Extension subsystem of the robot
@@ -111,6 +101,12 @@ public class Bot extends Robot {
      * @return the pivot subsystem of the robot
      */
     public Ascent getAscent() { return ascent; }
+
+    /**
+     * Get the Blinkin subsystem of the robot
+     * @return the blinkin subsystem of the robot
+     */
+    public RevBlinkinLedDriver getBlinkin() { return blinkin; }
 
     /**
      * Get the state of the robot
@@ -157,4 +153,16 @@ public class Bot extends Robot {
      * @param targetMode - the target mode to set the robot to
      */
     public void setTargetMode(TargetMode targetMode) { this.targetMode = targetMode; }
+
+    public void setGameElementColor(Color color) { gameElementColor = color; }
+
+    public void setAllianceColor(Color color) { allianceColor = color; }
+
+    public Gamepad getGamepad() {
+        return gamepad;
+    }
+
+    public Color getAllianceColor() {
+        return allianceColor;
+    }
 }

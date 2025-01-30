@@ -18,8 +18,9 @@ public class SetWristPositionCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        double mappedAngle = wrist.normalizeAngle(position.getY());
         wrist.setTwist(position.getX());
-        wrist.setAngle(position.getY());
+        wrist.setAngle(mappedAngle);
     }
 
     @Override

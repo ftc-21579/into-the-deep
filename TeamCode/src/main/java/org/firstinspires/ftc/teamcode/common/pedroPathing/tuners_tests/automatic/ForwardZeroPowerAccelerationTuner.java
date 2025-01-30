@@ -49,7 +49,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(name = "Forward Zero Power Acceleration Tuner", group = "Automatic Tuners")
 public class ForwardZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();

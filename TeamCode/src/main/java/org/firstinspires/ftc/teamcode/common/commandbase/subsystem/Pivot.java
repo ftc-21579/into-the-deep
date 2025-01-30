@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
+import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.depositMaxExtension;
+
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -18,7 +20,8 @@ public class Pivot extends SubsystemBase {
     private final AbsoluteAnalogEncoder pivotEncoder;
 
     private final PIDFController pivotController;
-    public double setpointDEG = 0.0, minAngle = -5.0, maxAngle = 90;
+    public double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 100;
+    private final double encoderOffset = 60.0;
 
     public Pivot(Bot bot) {
         this.bot = bot;
@@ -33,22 +36,28 @@ public class Pivot extends SubsystemBase {
                 Config.pivot_kP,
                 Config.pivot_kI,
                 Config.pivot_kD,
-                Config.pivot_kF
+                Config.pivot_min_kF
         );
     }
 
     @Override
     public void periodic() {
+        double kFConstant = (Config.pivot_max_kF - Config.pivot_min_kF) / depositMaxExtension;
+        double extensionFF = (kFConstant * (bot.getExtension().getPositionCM()));
+        double pivotFF  = (Math.cos(pivotEncoder.getCurrentPosition() - Math.toRadians(60)));
+        double calculatedKf = ((extensionFF + Config.pivot_min_kF) * pivotFF);
+        pivotController.setF(calculatedKf);
 
         double power = pivotController.calculate(
                 Math.toDegrees(pivotEncoder.getCurrentPosition()),
-                setpointDEG + 60
+                setpointDEG + encoderOffset
         );
         pivotMotor.setPower(power);
 
-        //bot.telem.addData("Pivot Angle", Math.toDegrees(pivotEncoder.getCurrentPosition()) - 60);
-        //bot.telem.addData("Pivot Target", setpointDEG);
-        //bot.telem.update();
+        bot.telem.addData("Pivot Angle", getPositionDEG());
+        bot.telem.addData("Pivot Target", setpointDEG);
+        bot.telem.addData("Bot State", bot.getState());
+        bot.telem.update();
     }
 
     /**
@@ -80,7 +89,15 @@ public class Pivot extends SubsystemBase {
      * Get the current position of the pivot in degrees
      * @return the position in degrees
      */
-    public double getPosition() {
-        return Math.toDegrees(pivotEncoder.getCurrentPosition());
+    public double getPositionDEG() {
+        return (Math.toDegrees(pivotEncoder.getCurrentPosition()) - encoderOffset);
+    }
+
+    /**
+     * Get the current position of the pivot in radians
+     * @return the position in radians
+     */
+    public double getPositionRAD() {
+        return (Math.toRadians(getPositionDEG()));
     }
 }
