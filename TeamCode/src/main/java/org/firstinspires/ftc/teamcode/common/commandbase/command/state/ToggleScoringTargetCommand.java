@@ -4,8 +4,13 @@ import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extens
 import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.lowBasketTarget;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
@@ -27,13 +32,13 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.HIGH_BASKET);
                     if (bot.getState() == BotState.DEPOSIT) {
-                        bot.getExtension().setSetpointCM(highBasketTarget);
+                        new SetExtensionCommand(bot.getExtension(), highBasketTarget).schedule();
                     }
                     break;
                 case HIGH_BASKET:
                     bot.setTargetMode(TargetMode.LOW_BASKET);
                     if (bot.getState() == BotState.DEPOSIT) {
-                        bot.getExtension().setSetpointCM(lowBasketTarget);
+                        new SetExtensionCommand(bot.getExtension(), lowBasketTarget).schedule();
                     }
                     break;
             }
@@ -44,15 +49,19 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case SPEC_DEPOSIT:
                     bot.setTargetMode(TargetMode.SPEC_INTAKE);
                     if (bot.getState() == BotState.INTAKE) {
-                        bot.getWrist().setAngle(bot.getWrist().normalizeAngle(Wrist.wristDown));
-                        bot.getPivot().setSetpointDEG(10);
+                        new ParallelCommandGroup(
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
+                                new SetPivotAngleCommand(bot.getPivot(), 10)
+                        ).schedule();
                     }
                     break;
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
                     if (bot.getState() == BotState.INTAKE) {
-                        bot.getWrist().setAngle(bot.getWrist().normalizeAngle(Wrist.wristDown - 15));
-                        bot.getPivot().setSetpointDEG(15);
+                        new ParallelCommandGroup(
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown - 15)),
+                                new SetPivotAngleCommand(bot.getPivot(), 15)
+                        ).schedule();
                     }
                     break;
             }

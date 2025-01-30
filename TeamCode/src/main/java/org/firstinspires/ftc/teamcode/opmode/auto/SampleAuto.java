@@ -35,6 +35,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotA
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
@@ -154,7 +155,7 @@ public class SampleAuto extends LinearOpMode {
                                 ),
                                 new ParallelCommandGroup(
                                         new ClawIntakeCommand(bot.getClaw()),
-                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 100)),
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 55)),
                                         new SetPivotAngleCommand(bot.getPivot(), 35),
                                         new SetExtensionCommand(bot.getExtension(), 40)
                                 )
@@ -170,7 +171,7 @@ public class SampleAuto extends LinearOpMode {
                                         new ClawOuttakeCommand(bot.getClaw()),
                                         new SetExtensionCommand(bot.getExtension(), 0),
                                         new SetPivotAngleCommand(bot.getPivot(), 15),
-                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225))
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown))
                                 )
                         )
                         ),
@@ -190,7 +191,7 @@ public class SampleAuto extends LinearOpMode {
                                 ),
                                 new SequentialCommandGroup(
                                         new ClawIntakeCommand(bot.getClaw()),
-                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 90)),
+                                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 45)),
                                         new SetPivotAngleCommand(bot.getPivot(), 95),
                                         new SetExtensionCommand(bot.getExtension(), Extension.highBasketTarget)
                                 )
@@ -203,7 +204,7 @@ public class SampleAuto extends LinearOpMode {
                         new WaitCommand(500),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new WaitCommand(250),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225)),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
                         new WaitCommand(250),
                         new SetExtensionCommand(bot.getExtension(), 0),
                         new SetPivotAngleCommand(bot.getPivot(), 10)
@@ -304,7 +305,7 @@ public class SampleAuto extends LinearOpMode {
                                 .build()
                         ),
                         new SequentialCommandGroup(
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-90, 225)),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-90, Wrist.wristDown)),
                                 new SetExtensionCommand(bot.getExtension(), 16)
                         )
                 ),
@@ -323,7 +324,7 @@ public class SampleAuto extends LinearOpMode {
                 new WaitCommand(500),
                 new ClawOuttakeCommand(bot.getClaw()),
                 new WaitCommand(250),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 135)),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, Wrist.wristForward)),
                 new WaitCommand(250),
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
@@ -340,7 +341,7 @@ public class SampleAuto extends LinearOpMode {
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
                                 new SetPivotAngleCommand(bot.getPivot(), 97, true),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 90))
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 45))
                                 )
                         )
         );

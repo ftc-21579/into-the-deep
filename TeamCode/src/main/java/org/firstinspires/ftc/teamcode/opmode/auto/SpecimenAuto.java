@@ -32,6 +32,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotA
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.ManualWristTwistCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
@@ -126,13 +127,13 @@ public class SpecimenAuto extends LinearOpMode {
         ParallelCommandGroup ScorePositionCommand = new ParallelCommandGroup(
                 new SetPivotAngleCommand(bot.getPivot(), 35),
                 new SetExtensionCommand(bot.getExtension(), 40),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 100))
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 55))
         );
 
         SequentialCommandGroup ScoreForwardsCommand = new SequentialCommandGroup(
                 new ClawOuttakeCommand(bot.getClaw()),
                 new SetExtensionCommand(bot.getExtension(), 0),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(58, 225)),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(58, Wrist.wristDown)),
                 new SetPivotAngleCommand(bot.getPivot(), 15),
                 new WaitCommand(500),
                 new SetExtensionCommand(bot.getExtension(), 36)
@@ -140,12 +141,12 @@ public class SpecimenAuto extends LinearOpMode {
 
         SequentialCommandGroup IntakeSpecimenCommand = new SequentialCommandGroup(
                 new ClawOuttakeCommand(bot.getClaw()),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150)),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105)),
                 new SetExtensionCommand(bot.getExtension(), 16),
                 new WaitCommand(250),
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 50))
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristUp))
         );
 
         SequentialCommandGroup auto = new SequentialCommandGroup(
@@ -202,7 +203,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new WaitCommand(150),
                 new ClawOuttakeCommand(bot.getClaw()),
                 new WaitCommand(150),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(60, 225)),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(60, Wrist.wristDown)),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -231,7 +232,7 @@ public class SpecimenAuto extends LinearOpMode {
                 ),
                 new WaitCommand(150),
                 new ClawOuttakeCommand(bot.getClaw()),
-                new SetWristPositionCommand(bot.getWrist(), new Vector2d(54, 225)),
+                new SetWristPositionCommand(bot.getWrist(), new Vector2d(54, Wrist.wristDown)),
                 new SetExtensionCommand(bot.getExtension(), 40),
                 new WaitCommand(150),
                 new FollowPathCommand(f, f.pathBuilder()
@@ -263,7 +264,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new ManualPivotCommand(bot.getPivot(), Direction.UP),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 5),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
                         )
                 ),
                 new SetPivotAngleCommand(bot.getPivot(), 20),
@@ -282,7 +283,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, Wrist.wristUp)),
                                 new SetPivotAngleCommand(bot.getPivot(), 95),
                                 new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
@@ -301,7 +302,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
                 ),
                 new WaitCommand(150),
                 IntakeSpecimenCommand,
@@ -318,7 +319,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, Wrist.wristUp)),
                                 new SetPivotAngleCommand(bot.getPivot(), 95),
                                 new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
@@ -337,7 +338,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
                 ),
                 new WaitCommand(150),
                 IntakeSpecimenCommand,
@@ -354,7 +355,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, Wrist.wristUp)),
                                 new SetPivotAngleCommand(bot.getPivot(), 95),
                                 new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
@@ -373,7 +374,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 150))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
                 ),
                 new WaitCommand(150),
                 IntakeSpecimenCommand,
@@ -390,7 +391,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new SequentialCommandGroup(
                                 new SetExtensionCommand(bot.getExtension(), 0),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, 50)),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-180, Wrist.wristUp)),
                                 new SetPivotAngleCommand(bot.getPivot(), 95),
                                 new SetExtensionCommand(bot.getExtension(), Extension.highChamberTarget)
                         )
@@ -409,7 +410,7 @@ public class SpecimenAuto extends LinearOpMode {
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetPivotAngleCommand(bot.getPivot(), 10),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 235))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown))
                 )
         );
 
