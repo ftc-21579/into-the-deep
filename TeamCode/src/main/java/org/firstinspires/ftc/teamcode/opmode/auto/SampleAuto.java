@@ -119,8 +119,10 @@ public class SampleAuto extends LinearOpMode {
 
             if (alliance == Color.RED) {
                 bot.getBlinkin().setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+                gamepad1.setLedColor(255, 0, 0, Gamepad.LED_DURATION_CONTINUOUS);
             } else {
                 bot.getBlinkin().setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                gamepad1.setLedColor(0, 0, 255, Gamepad.LED_DURATION_CONTINUOUS);
             }
 
             telem.addLine("Change alliance by pressing O");

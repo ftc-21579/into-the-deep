@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extens
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
@@ -43,14 +44,14 @@ public class ToggleScoringTargetCommand extends CommandBase {
                 case SPEC_DEPOSIT:
                     bot.setTargetMode(TargetMode.SPEC_INTAKE);
                     if (bot.getState() == BotState.INTAKE) {
-                        bot.getWrist().setAngle(225);
+                        bot.getWrist().setAngle(bot.getWrist().normalizeAngle(Wrist.wristDown));
                         bot.getPivot().setSetpointDEG(10);
                     }
                     break;
                 case SPEC_INTAKE:
                     bot.setTargetMode(TargetMode.SPEC_DEPOSIT);
                     if (bot.getState() == BotState.INTAKE) {
-                        bot.getWrist().setAngle(210);
+                        bot.getWrist().setAngle(bot.getWrist().normalizeAngle(Wrist.wristDown - 15));
                         bot.getPivot().setSetpointDEG(15);
                     }
                     break;

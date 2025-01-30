@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotA
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
@@ -39,11 +40,11 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 // SAMPLE
                                 new SequentialCommandGroup(
                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
-                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 45)),
+                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, Wrist.wristUp)),
                                         new SetExtensionCommand(b.getExtension(), 0),
                                         new WaitCommand(350),
                                         new SetPivotAngleCommand(b.getPivot(), 95),
-                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 90)),
+                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
                                         new ConditionalCommand(
                                                 // Go to the correct height based on the target mode
                                                 // low basket
@@ -61,7 +62,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 // Intake Shuttling
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 90)),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 45)),
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
                                                         new SetExtensionCommand(b.getExtension(), 0)
                                                 ),
@@ -69,8 +70,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetExtensionCommand(b.getExtension(), 0),
-                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
-                                                        new SetPivotAngleCommand(b.getPivot(), 105, true),
+                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp)),
+                                                        new SetPivotAngleCommand(b.getPivot(), 95, true),
                                                         new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE

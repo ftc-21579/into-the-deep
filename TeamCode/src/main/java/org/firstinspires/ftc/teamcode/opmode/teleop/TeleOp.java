@@ -201,7 +201,7 @@ public class TeleOp extends CommandOpMode {
                 new ParallelCommandGroup(
                         new SetBotStateCommand(bot, BotState.INTAKE),
                         new BlinkinCommand(bot.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 225)),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
                         new SetPivotAngleCommand(bot.getPivot(), 10)

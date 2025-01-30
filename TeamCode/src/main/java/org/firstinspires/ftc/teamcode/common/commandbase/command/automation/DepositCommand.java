@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.state.SetBotStateCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.wrist.SetWristPositionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
@@ -29,7 +30,7 @@ public class DepositCommand extends SequentialCommandGroup {
                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new WaitCommand(250),
-                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
+                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
                                 new WaitCommand(250),
                                 new SetExtensionCommand(b.getExtension(), 0),
                                 new SetPivotAngleCommand(b.getPivot(), 12.5)
@@ -40,14 +41,14 @@ public class DepositCommand extends SequentialCommandGroup {
                                         new ParallelCommandGroup(
                                                 new ClawOuttakeCommand(b.getClaw()),
                                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 225)),
+                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
                                                 new SetPivotAngleCommand(b.getPivot(), 10)
                                         ),
                                         new SequentialCommandGroup(
                                                 new SetExtensionCommand(b.getExtension(), 0),
                                                 new ClawOuttakeCommand(b.getClaw()),
                                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 210)),
+                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown - 10)),
                                                 new SetPivotAngleCommand(b.getPivot(), 15)
                                         ),
                                         () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
