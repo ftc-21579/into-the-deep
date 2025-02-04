@@ -22,13 +22,17 @@ public class Extension extends SubsystemBase {
         this.bot = bot;
 
         bottomExtensionMotor = bot.hMap.get(DcMotor.class, "bottomExtension");
-        bottomExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bottomExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (bottomExtensionMotor.getMode() != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            bottomExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bottomExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         topExtensionMotor = bot.hMap.get(DcMotor.class, "topExtension");
+        if (topExtensionMotor.getMode() != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            topExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            topExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         topExtensionMotor.setDirection(DcMotor.Direction.REVERSE);
-        topExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        topExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         extensionController = new PIDFController(
                 Config.extension_kP,

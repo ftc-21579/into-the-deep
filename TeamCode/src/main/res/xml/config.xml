@@ -24,6 +24,7 @@
             <ContinuousRotationServo name="rightActive" port="2"/>
             <AnalogInput name="analogIntakeSensor" port="0"/>
             <DigitalDevice name="digitalIntakeSensor" port="0"/>
+            <RevColorSensorV3 name="colorSensor" port="0" bus="2"/>
             <goBILDAPinpoint name="odo" port="0" bus="1"/>
         </LynxModule>
     </LynxUsbDevice>

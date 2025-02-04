@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
+import org.firstinspires.ftc.teamcode.common.util.BlinkinUtil;
 
 public class Intake extends SubsystemBase {
 
@@ -39,6 +41,21 @@ public class Intake extends SubsystemBase {
         rightActive.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
+    public void periodic() {
+        bot.telem.addData("Is Grabbed????????", isGrabbing());
+        bot.telem.addData("Is Correct Color????????", isCorrectColor());
+        //bot.telem.addData("Analog Voltage", clawFeedback.getVoltage());
+        //bot.telem.addData("Analog Degrees", getAnalogDegrees());
+        bot.telem.addData("Color", getColor());
+        bot.telem.addData("0 State", colorSensor0.getState());
+        bot.telem.addData("1 State", colorSensor1.getState());
+        bot.telem.addData("Bot State", bot.getState());
+        bot.telem.addData("Bot Target Mode", bot.getTargetMode());
+        BlinkinUtil.setBlinkinDriver(bot.getBlinkin());
+        RevBlinkinLedDriver.BlinkinPattern previousPattern = BlinkinUtil.getPattern();
+        bot.telem.addData("Blinkin Pattern", previousPattern);
+    }
+
     public boolean isGrabbing() {
         double feedbackVoltage = clawFeedback.getVoltage();
         double positionDegrees = mapVoltageToDegrees(feedbackVoltage);
@@ -49,11 +66,7 @@ public class Intake extends SubsystemBase {
     public boolean isCorrectColor() {
         Color allianceColor = bot.getAllianceColor();
         Color currentColor = getColor();
-        if (currentColor == allianceColor || currentColor == Color.YELLOW) {
-            return true;
-        } else {
-            return false;
-        }
+        return currentColor == allianceColor || currentColor == Color.YELLOW;
     }
 
     public double getAnalogDegrees() {

@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDri
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleFieldCentricCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
@@ -98,6 +99,11 @@ public class TeleOp extends CommandOpMode {
 
         //region Claw
         claw = bot.getClaw();
+
+        Button clawToggleButSus = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+                .whenPressed(
+                        new InstantCommand(() -> claw.toggle())
+                );
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_STICK_BUTTON))
                 .whenPressed(

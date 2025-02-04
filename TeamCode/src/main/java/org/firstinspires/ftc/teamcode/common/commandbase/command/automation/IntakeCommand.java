@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -28,8 +29,14 @@ public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Bot b) {
                 addCommands(
-                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
-                new WaitCommand(250),
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
+                                new WaitCommand(250)
+                        ),
+                        new InstantCommand(() -> {}),
+                        () -> b.getTargetElement() == GameElement.SAMPLE || b.getTargetElement() == GameElement.SPECIMEN && b.getTargetMode() == TargetMode.SPEC_INTAKE
+                ),
                 new ClawIntakeCommand(b.getClaw()),
                 new WaitCommand(250),
                 new ConditionalCommand(
@@ -64,14 +71,24 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 45)),
                                                         new ManualPivotCommand(b.getPivot(), Direction.UP),
-                                                        new SetExtensionCommand(b.getExtension(), 0)
+                                                        new SetExtensionCommand(b.getExtension(), 0),
+                                                        new WaitCommand(500),
+                                                        new SetExtensionCommand(b.getExtension(), 35)
                                                 ),
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
-                                                        new SetExtensionCommand(b.getExtension(), 0),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp)),
-                                                        new SetPivotAngleCommand(b.getPivot(), 95, true),
+                                                        //new SequentialCommandGroup(
+                                                                //new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristUp)),
+                                                                //new WaitCommand(500),
+                                                                //new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp))
+                                                        //),
+                                                        new WaitCommand(100),
+                                                        new ParallelCommandGroup(
+                                                                new SetExtensionCommand(b.getExtension(), 0),
+                                                                new SetPivotAngleCommand(b.getPivot(), 95, true)
+                                                        ),
                                                         new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
@@ -82,8 +99,12 @@ public class IntakeCommand extends SequentialCommandGroup {
                         ),
                         // NOT GRABBING
                         new ParallelCommandGroup(
+                                new ConditionalCommand(
+                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
+                                        new InstantCommand(() -> {}),
+                                        () -> b.getTargetElement() == GameElement.SAMPLE || b.getTargetElement() == GameElement.SPECIMEN && b.getTargetMode() == TargetMode.SPEC_INTAKE
+                                ),
                                 new RumbleControllerCommand(b, 500),
-                                new ManualPivotCommand(b.getPivot(), Direction.UP),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new SetBotStateCommand(b, BotState.INTAKE),
                                 new SequentialCommandGroup(
