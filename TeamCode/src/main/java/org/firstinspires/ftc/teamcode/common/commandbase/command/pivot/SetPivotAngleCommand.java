@@ -24,11 +24,7 @@ public class SetPivotAngleCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        if (ignoreSafety) {
-            pivot.setSetpoint(angleDeg);
-            return;
-        }
-        pivot.setSetpoint(angleDeg);
+        pivot.setSetpointDEG(angleDeg, ignoreSafety);
     }
 
     @Override

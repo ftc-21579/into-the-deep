@@ -17,13 +17,13 @@ public class SetExtensionCommand extends CommandBase {
     public SetExtensionCommand(Extension e, double setpointcm) {
         extension = e;
         this.setpoint = setpointcm;
-        extension.setSetpoint(setpoint);
+        extension.setSetpointCM(setpoint);
         addRequirements(extension);
     }
 
     @Override
     public void initialize() {
-        extension.setSetpoint(setpoint);
+        extension.setSetpointCM(setpoint);
     }
 
     @Override

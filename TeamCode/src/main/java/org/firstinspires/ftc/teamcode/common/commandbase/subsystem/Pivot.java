@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
-import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.depositMaxExtension;
 import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.extensionProfile;
 
 import static java.lang.Math.cos;
-import static java.lang.Math.max;
+import static java.lang.Math.signum;
+import static java.lang.Math.sin;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -36,20 +36,17 @@ public class Pivot extends SubsystemBase {
     public double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 100;
     private final double encoderOffset = 60.0;
 
-    public static double pivotKp = Config.pivot_kP * 0;
-    public static double pivotKi = Config.pivot_kI;
-    public static double pivotKd = Config.pivot_kD;
-    public static double pivotKgs = Config.pivot_Kgs;
-    public static double pivotKgd = Config.pivot_Kgd;
-    public static double pivotKv = Config.pivot_kV;
-    public static double pivotKa = Config.pivot_kA;
+    public static double telemPivotkF = 0.0;
     public static ToDoubleFunction<Object[]> pivotkF = a -> {
         MotionState pivotState = (MotionState)a[0];
         MotionState extensionState = (MotionState)a[1];
-        return (pivotKgs + pivotKgd * extensionState.x) * cos(Math.toRadians(pivotState.x))
-                + pivotKv * pivotState.v + pivotKa * pivotState.a;};
+        double pivotkF = (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * cos(Math.toRadians(pivotState.x))
+                + Config.pivot_kV * pivotState.v + Config.pivot_kA * pivotState.a;
+        telemPivotkF = pivotkF;
+        return pivotkF;
+    };
     public static final PidfCoefficients pivotCoeffs = new PidfCoefficients(
-            pivotKp, pivotKi, pivotKd, pivotkF);
+            Config.pivot_kP, Config.pivot_kI, Config.pivot_kP, pivotkF);
     public static double pivotVm = 350;
     public static double pivotAi = 500;
     public static double pivotAf = 500;
@@ -57,6 +54,10 @@ public class Pivot extends SubsystemBase {
     private PidfController pivotPidf = new PidfController(pivotCoeffs);
     public static MotionProfile pivotProfile = new DelayProfile(0, new MotionState(0, 0), 0);
 
+    /**
+     * Constructor for the Pivot subsystem.
+     * @param bot The robot instance
+     */
     public Pivot(Bot bot) {
         this.bot = bot;
 
@@ -74,39 +75,51 @@ public class Pivot extends SubsystemBase {
         MotionState pivotState = pivotProfile.state(t);
         MotionState extensionState = extensionProfile.state(t);
 
+        // Update the feedforward function with the current motion state
+        ToDoubleFunction<Object[]> newPivotKf = a -> {
+            double number = (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
+                    Config.pivot_kS * signum(extensionState.v) + Config.pivot_kS * extensionState.v + Config.pivot_kS * extensionState.a;
+            telemPivotkF = number;
+            return number;
+        };
+
+        // Update the PIDF coefficients with the new feedforward function
+        pivotPidf.setCoeffs(new PidfCoefficients(
+                Config.pivot_kP, Config.pivot_kI, Config.pivot_kD, newPivotKf));
+
+        // Update the PIDF controller with the current setpoint and motion state
         pivotPidf.set(pivotState.x);
         pivotPidf.update(t, pivotAngle, pivotState, extensionState);
 
+        // Set the motor power based on the PIDF controller output
         pivotMotor.setPower(pivotPidf.get());
 
+        // Add telemetry data for debugging and monitoring
         bot.telem.addData("Pivot Angle", getPositionDEG());
-        bot.telem.addData("Pivot Target", setpointDEG);
-        bot.telem.addData("Pivot Power", pivotPidf.get());
+        bot.telem.addData("Pivot Target", getSetpointDEG());
+        bot.telem.addData("Pivot Power", pivotMotor.getPower());
+        bot.telem.addData("Pivot Position", pivotState.x);
+        bot.telem.addData("Pivot Velocity", pivotState.v);
+        bot.telem.addData("Pivot Acceleration", pivotState.a);
+        bot.telem.addData("Pivot PID Coefficients", pivotCoeffs.getPidfCoefficients());
         bot.telem.addData("Pivot kF", pivotkF.applyAsDouble(new Object[]{pivotState, extensionState}));
         bot.telem.update();
     }
 
-    public void setSetpoint(double pivotAng) {
-        setpointDEG = Math.max(minAngle, Math.min(maxAngle, pivotAng));
+    /**
+     * Sets the setpoint for the pivot in degrees.
+     * @param pivotAng The desired pivot angle in degrees
+     * @param safetyIgnore Whether to ignore safety limits
+     */
+    public void setSetpointDEG(double pivotAng, boolean safetyIgnore) {
+        if (!safetyIgnore) {
+            pivotAng = Math.max(minAngle, Math.min(maxAngle, pivotAng));
+            setpointDEG = pivotAng;
+        } else {
+            setpointDEG = pivotAng;
+        }
         pivotProfile = AsymProfile.extendAsym(pivotProfile, pivotConstraints,
                 bot.getTime(), new MotionState(pivotAng, 0));
-    }
-
-    /**
-     * Set the setpoint of the pivot in degrees
-     * @param setpoint the setpoint in degrees
-     */
-    public void setSetpointDEG(double setpoint) {
-        setpointDEG = Math.max(minAngle, Math.min(maxAngle, setpoint));
-    }
-
-    /**
-     * Set the setpoint of the pivot in degrees, ignoring safety limits
-     * USE WITH EXTREME CAUTION, AUTOMATIONS ONLY
-     * @param setpoint
-     */
-    public void setSetpointIGNORE(double setpoint) {
-        setpointDEG = setpoint;
     }
 
     /**
