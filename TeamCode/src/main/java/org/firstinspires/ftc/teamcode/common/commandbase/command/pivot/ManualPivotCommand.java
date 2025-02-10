@@ -19,7 +19,7 @@ public class ManualPivotCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        pivot.setSetpointDEG(pivot.getSetpointDEG() + (Config.pivot_increment * (direction == Direction.UP ? 1 : -1)));
+        pivot.setSetpoint(pivot.getSetpointDEG() + (Config.pivot_increment * (direction == Direction.UP ? 1 : -1)));
     }
 
     @Override

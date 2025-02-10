@@ -33,9 +33,9 @@ public class ManualExtensionCommand extends CommandBase {
     @Override
     public void execute() {
         if (in.getAsDouble() > 0 && extension.getSetpointCM() > extension.getMinExtension()) {
-            extension.setSetpointCM(extension.getSetpointCM() - (Config.ext_increment * in.getAsDouble()));
+            extension.setSetpoint(extension.getSetpointCM() - (Config.ext_increment * in.getAsDouble()));
         } else if (out.getAsDouble() > 0 && extension.getSetpointCM() < extension.getMaxExtension()) {
-            extension.setSetpointCM(extension.getSetpointCM() + (Config.ext_increment * out.getAsDouble()));
+            extension.setSetpoint(extension.getSetpointCM() + (Config.ext_increment * out.getAsDouble()));
         }
     }
 }

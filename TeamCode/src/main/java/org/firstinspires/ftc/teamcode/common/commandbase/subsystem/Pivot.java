@@ -1,63 +1,95 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.subsystem;
 
 import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.depositMaxExtension;
+import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension.extensionProfile;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.max;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
+import org.firstinspires.ftc.teamcode.common.util.AsymProfile;
+import org.firstinspires.ftc.teamcode.common.util.AsymProfile.AsymConstraints;
 import org.firstinspires.ftc.teamcode.common.hardware.AbsoluteAnalogEncoder;
+import org.firstinspires.ftc.teamcode.common.util.DelayProfile;
+import org.firstinspires.ftc.teamcode.common.util.MotionProfile;
+import org.firstinspires.ftc.teamcode.common.util.MotionState;
+import org.firstinspires.ftc.teamcode.common.util.PidfCoefficients;
+import org.firstinspires.ftc.teamcode.common.util.PidfController;
+
+import java.util.function.ToDoubleFunction;
 
 @com.acmerobotics.dashboard.config.Config
 public class Pivot extends SubsystemBase {
 
     private final Bot bot;
 
-    private final DcMotor pivotMotor;
+    private double t;
+
+    private final DcMotorEx pivotMotor;
     private final AbsoluteAnalogEncoder pivotEncoder;
 
-    private final PIDFController pivotController;
     public double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 100;
     private final double encoderOffset = 60.0;
+
+    public static double pivotKp = Config.pivot_kP * 0;
+    public static double pivotKi = Config.pivot_kI;
+    public static double pivotKd = Config.pivot_kD;
+    public static double pivotKgs = Config.pivot_Kgs;
+    public static double pivotKgd = Config.pivot_Kgd;
+    public static double pivotKv = Config.pivot_kV;
+    public static double pivotKa = Config.pivot_kA;
+    public static ToDoubleFunction<Object[]> pivotkF = a -> {
+        MotionState pivotState = (MotionState)a[0];
+        MotionState extensionState = (MotionState)a[1];
+        return (pivotKgs + pivotKgd * extensionState.x) * cos(Math.toRadians(pivotState.x))
+                + pivotKv * pivotState.v + pivotKa * pivotState.a;};
+    public static final PidfCoefficients pivotCoeffs = new PidfCoefficients(
+            pivotKp, pivotKi, pivotKd, pivotkF);
+    public static double pivotVm = 350;
+    public static double pivotAi = 500;
+    public static double pivotAf = 500;
+    public static final AsymConstraints pivotConstraints = new AsymConstraints(pivotVm, pivotAi, pivotAf);
+    private PidfController pivotPidf = new PidfController(pivotCoeffs);
+    public static MotionProfile pivotProfile = new DelayProfile(0, new MotionState(0, 0), 0);
 
     public Pivot(Bot bot) {
         this.bot = bot;
 
-        pivotMotor = bot.hMap.get(DcMotor.class, "pivot");
+        pivotMotor = bot.hMap.get(DcMotorEx.class, "pivot");
 
         pivotEncoder = new AbsoluteAnalogEncoder(
                 bot.hMap.get(AnalogInput.class, "pivotEncoder")
-        );
-
-        pivotController = new PIDFController(
-                Config.pivot_kP,
-                Config.pivot_kI,
-                Config.pivot_kD,
-                Config.pivot_min_kF
         );
     }
 
     @Override
     public void periodic() {
-        double kFConstant = (Config.pivot_max_kF - Config.pivot_min_kF) / depositMaxExtension;
-        double extensionFF = (kFConstant * (bot.getExtension().getPositionCM()));
-        double pivotFF  = (Math.cos(pivotEncoder.getCurrentPosition() - Math.toRadians(60)));
-        double calculatedKf = ((extensionFF + Config.pivot_min_kF) * pivotFF);
-        pivotController.setF(calculatedKf);
+        t = bot.getTime();
+        double pivotAngle = getPositionDEG();
+        MotionState pivotState = pivotProfile.state(t);
+        MotionState extensionState = extensionProfile.state(t);
 
-        double power = pivotController.calculate(
-                Math.toDegrees(pivotEncoder.getCurrentPosition()),
-                setpointDEG + encoderOffset
-        );
-        pivotMotor.setPower(power);
+        pivotPidf.set(pivotState.x);
+        pivotPidf.update(t, pivotAngle, pivotState, extensionState);
+
+        pivotMotor.setPower(pivotPidf.get());
 
         bot.telem.addData("Pivot Angle", getPositionDEG());
         bot.telem.addData("Pivot Target", setpointDEG);
-        bot.telem.addData("Bot State", bot.getState());
+        bot.telem.addData("Pivot Power", pivotPidf.get());
+        bot.telem.addData("Pivot kF", pivotkF.applyAsDouble(new Object[]{pivotState, extensionState}));
         bot.telem.update();
+    }
+
+    public void setSetpoint(double pivotAng) {
+        setpointDEG = Math.max(minAngle, Math.min(maxAngle, pivotAng));
+        pivotProfile = AsymProfile.extendAsym(pivotProfile, pivotConstraints,
+                bot.getTime(), new MotionState(pivotAng, 0));
     }
 
     /**

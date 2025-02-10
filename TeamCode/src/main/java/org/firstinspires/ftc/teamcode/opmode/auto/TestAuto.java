@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.intake1;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.intake1Control;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score1;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.startingPose;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -7,6 +12,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
@@ -21,10 +27,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
-@Autonomous(name="TestPPAuto")
+@Autonomous(name="Test Auto")
 public class TestAuto extends LinearOpMode {
 
-    private final Pose startingPose = new Pose(0, 0, 0);
+    //private final Pose startingPose = new Pose(0, 0, 0);
 
     @Override
     public void runOpMode() {
@@ -34,10 +40,10 @@ public class TestAuto extends LinearOpMode {
 
         Bot bot = new Bot(telem, hardwareMap, gamepad1, false);
 
-        CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
-        CommandScheduler.getInstance().registerSubsystem(bot.getExtension());
-        CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
-        CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
+        //CommandScheduler.getInstance().registerSubsystem(bot.getPivot());
+        //CommandScheduler.getInstance().registerSubsystem(bot.getExtension());
+        //CommandScheduler.getInstance().registerSubsystem(bot.getWrist());
+        //CommandScheduler.getInstance().registerSubsystem(bot.getClaw());
 
         Constants.setConstants(FConstants.class, LConstants.class);
         Follower f = new Follower(hardwareMap);
@@ -46,7 +52,27 @@ public class TestAuto extends LinearOpMode {
         f.setMaxPower(0.75);
 
         SequentialCommandGroup auto = new SequentialCommandGroup(
-                new SetExtensionCommand(bot.getExtension(), 10)
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierLine(
+                                        new Point(startingPose),
+                                        new Point(new Pose(34, 67, 0))
+                                )
+                        )
+                        .setConstantHeadingInterpolation(score1.getHeading())
+                        .build()
+                ),
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        new Point(score1),
+                                        new Point(intake1Control),
+                                        new Point(intake1)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(score1.getHeading(), intake1.getHeading())
+                        .build()
+                )
         );
 
         // dashboard pose stuff

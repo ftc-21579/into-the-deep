@@ -59,6 +59,7 @@ public class TeleOp extends CommandOpMode {
     private boolean enableDrive = true;
 
     private GamepadEx driverGamepad;
+    private GamepadEx tuningGamepad;
 
     private MultipleTelemetry telem;
 
@@ -72,6 +73,7 @@ public class TeleOp extends CommandOpMode {
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
+        tuningGamepad = new GamepadEx(gamepad2);
         gamepad1.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
         bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
@@ -102,7 +104,12 @@ public class TeleOp extends CommandOpMode {
 
         Button clawToggleButSus = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
                 .whenPressed(
-                        new InstantCommand(() -> claw.toggle())
+                        //new InstantCommand(() -> claw.toggle())
+                        new ConditionalCommand(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
                 );
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_STICK_BUTTON))
@@ -202,15 +209,51 @@ public class TeleOp extends CommandOpMode {
 
         //endregion
 
+        Button extensionOutButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_UP))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SetExtensionCommand(bot.getExtension(), 35),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
+                );
+
+        Button extensionInButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_DOWN))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SetExtensionCommand(bot.getExtension(), 0),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
+                );
+
+        Button PivotUpButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_RIGHT))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SetPivotAngleCommand(bot.getPivot(), 90),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
+                );
+
+        Button PivotDownButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_LEFT))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SetPivotAngleCommand(bot.getPivot(), 0),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getState() == BotState.INTAKE
+                        )
+                );
+
 
         schedule(
                 new ParallelCommandGroup(
                         new SetBotStateCommand(bot, BotState.INTAKE),
                         new BlinkinCommand(bot.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristUp)),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
-                        new SetPivotAngleCommand(bot.getPivot(), 10)
+                        new SetPivotAngleCommand(bot.getPivot(), 0)
                 )
         );
     }

@@ -7,6 +7,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
@@ -24,6 +25,7 @@ public class Bot extends Robot {
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
+    private ElapsedTime clock = new ElapsedTime();
 
     public BotState state = BotState.DEPOSIT;
     private GameElement targetElement = GameElement.SAMPLE;
@@ -45,6 +47,7 @@ public class Bot extends Robot {
         this.telem = telem;
         this.hMap = hMap;
         this.gamepad = gamepad;
+        clock.reset();
 
         blinkin = hMap.get(RevBlinkinLedDriver.class, "blinkin");
 
@@ -57,6 +60,14 @@ public class Bot extends Robot {
         pivot = new Pivot(this);
         extension = new Extension(this);
         ascent = new Ascent(this);
+    }
+
+    public void resetTime() {
+        clock.reset();
+    }
+
+    public double getTime() {
+        return clock.seconds();
     }
 
     /**
