@@ -80,11 +80,15 @@ public class Pivot extends SubsystemBase {
         pivotConstraints.setAsymConstraints(Config.pivot_Vm, Config.pivot_Ai, Config.pivot_Af);
 
         // Update the PIDF controller with the current setpoint and motion state
-        pivotPidf.set(pivotState.x);
-        pivotPidf.update(t, pivotAngle, pivotState, extensionState);
-
-        // Set the motor power based on the PIDF controller output
-        pivotMotor.setPower(pivotPidf.get());
+        if (pivotState.x == 0) {
+            pivotMotor.setPower(-0.1);
+            pivotPidf.reset(t);
+        } else {
+            pivotPidf.set(pivotState.x);
+            pivotPidf.update(t, pivotAngle, pivotState, extensionState);
+            // Set the motor power based on the PIDF controller output
+            pivotMotor.setPower(pivotPidf.get());
+        }
 
         // Add telemetry data for debugging and monitoring
         bot.telem.addData("Pivot Position", getPositionDEG());
@@ -98,10 +102,6 @@ public class Pivot extends SubsystemBase {
         bot.telem.addData("Pivot PID Coefficients", pivotPidf.getCoeffs());
         bot.telem.addData("Pivot kF", newPivotKf.applyAsDouble(new Object[]{pivotState, extensionState}));
 
-        bot.telem.addData("First", Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x);
-        bot.telem.addData("Second", cos(Math.toRadians(pivotState.x)));
-        bot.telem.addData("Third", Config.pivot_kS * signum(extensionState.v));
-        bot.telem.addData("Fourth", Config.pivot_kS * extensionState.v);
         bot.telem.update();
     }
 

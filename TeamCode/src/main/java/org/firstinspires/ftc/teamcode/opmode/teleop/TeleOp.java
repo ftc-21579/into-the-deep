@@ -239,7 +239,7 @@ public class TeleOp extends CommandOpMode {
         Button PivotDownButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_LEFT))
                 .whenPressed(
                         new ConditionalCommand(
-                                new SetPivotAngleCommand(bot.getPivot(), 0),
+                                new SetPivotAngleCommand(bot.getPivot(), 10),
                                 new InstantCommand(() -> {}),
                                 () -> bot.getState() == BotState.INTAKE
                         )
@@ -250,10 +250,10 @@ public class TeleOp extends CommandOpMode {
                 new ParallelCommandGroup(
                         new SetBotStateCommand(bot, BotState.INTAKE),
                         new BlinkinCommand(bot.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristUp)),
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
-                        new SetPivotAngleCommand(bot.getPivot(), 0)
+                        new SetPivotAngleCommand(bot.getPivot(), 10)
                 )
         );
     }

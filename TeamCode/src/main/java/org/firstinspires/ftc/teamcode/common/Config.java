@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.common;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
-    public static double pivot_kP = 0.0, pivot_kI = 0.0, pivot_kD = 0.0, pivot_tolerance = 5.0;
+    public static double pivot_kP = 0.04, pivot_kI = 0.0, pivot_kD = 0.0025, pivot_tolerance = 5.0;
 
-    public static double pivot_Kgs = 0.2, pivot_Kgd = 0.005, pivot_kS = 0.08, pivot_kV = 0.0, pivot_kA = 0.0;
+    public static double pivot_Kgs = 0.2, pivot_Kgd = 0.005, pivot_kS = 0.08, pivot_kV = 0.0042, pivot_kA = 0.0005;
 
-    public static double pivot_Vm = 75, pivot_Ai = 750, pivot_Af = 200;
+    public static double pivot_Vm = 200, pivot_Ai = 10000, pivot_Af = 500;
 
     public static double extension_kP = 0.05, extension_kI = 0.0, extension_kD = 0.002, extension_tolerance = 5.0;
 
