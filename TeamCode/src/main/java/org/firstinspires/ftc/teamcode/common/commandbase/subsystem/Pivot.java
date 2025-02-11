@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.util.AsymProfile;
@@ -36,21 +37,15 @@ public class Pivot extends SubsystemBase {
     public double setpointDEG = 0.0, minAngle = 0.0, maxAngle = 100;
     private final double encoderOffset = 60.0;
 
-    public static double telemPivotkF = 0.0;
     public static ToDoubleFunction<Object[]> pivotkF = a -> {
         MotionState pivotState = (MotionState)a[0];
         MotionState extensionState = (MotionState)a[1];
-        double pivotkF = (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * cos(Math.toRadians(pivotState.x))
+        return (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * cos(Math.toRadians(pivotState.x))
                 + Config.pivot_kV * pivotState.v + Config.pivot_kA * pivotState.a;
-        telemPivotkF = pivotkF;
-        return pivotkF;
     };
     public static final PidfCoefficients pivotCoeffs = new PidfCoefficients(
             Config.pivot_kP, Config.pivot_kI, Config.pivot_kP, pivotkF);
-    public static double pivotVm = 350;
-    public static double pivotAi = 500;
-    public static double pivotAf = 500;
-    public static final AsymConstraints pivotConstraints = new AsymConstraints(pivotVm, pivotAi, pivotAf);
+    public static final AsymConstraints pivotConstraints = new AsymConstraints(Config.pivot_Vm, Config.pivot_Ai, Config.pivot_Af);
     private PidfController pivotPidf = new PidfController(pivotCoeffs);
     public static MotionProfile pivotProfile = new DelayProfile(0, new MotionState(0, 0), 0);
 
@@ -76,16 +71,13 @@ public class Pivot extends SubsystemBase {
         MotionState extensionState = extensionProfile.state(t);
 
         // Update the feedforward function with the current motion state
-        ToDoubleFunction<Object[]> newPivotKf = a -> {
-            double number = (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
-                    Config.pivot_kS * signum(extensionState.v) + Config.pivot_kS * extensionState.v + Config.pivot_kS * extensionState.a;
-            telemPivotkF = number;
-            return number;
-        };
+        ToDoubleFunction<Object[]> newPivotKf = a -> (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * cos(Math.toRadians(pivotState.x)) +
+                Config.pivot_kS * signum(extensionState.v) + Config.pivot_kS * extensionState.v + Config.pivot_kS * extensionState.a;
 
         // Update the PIDF coefficients with the new feedforward function
         pivotPidf.setCoeffs(new PidfCoefficients(
                 Config.pivot_kP, Config.pivot_kI, Config.pivot_kD, newPivotKf));
+        pivotConstraints.setAsymConstraints(Config.pivot_Vm, Config.pivot_Ai, Config.pivot_Af);
 
         // Update the PIDF controller with the current setpoint and motion state
         pivotPidf.set(pivotState.x);
@@ -95,14 +87,16 @@ public class Pivot extends SubsystemBase {
         pivotMotor.setPower(pivotPidf.get());
 
         // Add telemetry data for debugging and monitoring
-        bot.telem.addData("Pivot Angle", getPositionDEG());
+        bot.telem.addData("Pivot Position", getPositionDEG());
         bot.telem.addData("Pivot Target", getSetpointDEG());
+        bot.telem.addData("Pivot Velocity", pivotMotor.getVelocity());
         bot.telem.addData("Pivot Power", pivotMotor.getPower());
-        bot.telem.addData("Pivot Position", pivotState.x);
-        bot.telem.addData("Pivot Velocity", pivotState.v);
-        bot.telem.addData("Pivot Acceleration", pivotState.a);
-        bot.telem.addData("Pivot PID Coefficients", pivotCoeffs.getPidfCoefficients());
-        bot.telem.addData("Pivot kF", pivotkF.applyAsDouble(new Object[]{pivotState, extensionState}));
+        bot.telem.addData("Pivot Current", pivotMotor.getCurrent(CurrentUnit.AMPS));
+        bot.telem.addData("Pivot Target Position", pivotState.x);
+        bot.telem.addData("Pivot Target Velocity", pivotState.v);
+        bot.telem.addData("Pivot Target Acceleration", pivotState.a);
+        bot.telem.addData("Pivot PID Coefficients", pivotPidf.getCoeffs());
+        bot.telem.addData("Pivot kF", newPivotKf.applyAsDouble(new Object[]{pivotState, extensionState}));
         bot.telem.update();
     }
 

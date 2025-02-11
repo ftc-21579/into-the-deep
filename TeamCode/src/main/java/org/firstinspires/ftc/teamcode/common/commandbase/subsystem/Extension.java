@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.Config;
 import org.firstinspires.ftc.teamcode.common.util.AsymProfile;
@@ -33,21 +34,15 @@ public class Extension extends SubsystemBase {
     public static double setpointCM = 0.0, highChamberTarget = 17.0, lowBasketTarget = 20.0, highBasketTarget = 60.0, ticksperCM = 10.37339803;
     public static double minExtension = 0.0, depositMaxExtension = 60, intakeMaxExtension = 50;
 
-    public static double telemExtensionkF = 0.0;
     public static ToDoubleFunction<Object[]> extensionKf = a -> {
         MotionState pivotState = (MotionState) a[0];
         MotionState extensionState = (MotionState) a[1];
-        double extensionKf = (Config.extension_Kgs + Config.extension_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
+        return (Config.extension_Kgs + Config.extension_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
                 Config.extension_Ks * signum(extensionState.v) + Config.extension_Kv * extensionState.v + Config.extension_Ka * extensionState.a;
-        telemExtensionkF = extensionKf;
-        return extensionKf;
     };
     public static PidfCoefficients extensionCoeffs = new PidfCoefficients(
             Config.extension_kP, Config.extension_kI, Config.extension_kD, extensionKf);
-    public static double extensionVm = 125;
-    public static double extensionAi = 2500;
-    public static double extensionAf = 500;
-    public static final AsymConstraints extensionConstraints = new AsymConstraints(extensionVm, extensionAi, extensionAf);
+    public static final AsymConstraints extensionConstraints = new AsymConstraints(Config.extension_Vm, Config.extension_Ai, Config.extension_Af);
     private PidfController extensionPidf = new PidfController(extensionCoeffs);
     public static MotionProfile extensionProfile = new DelayProfile(0, new MotionState(0, 0), 0);
     private double extensionOffset = 0;
@@ -88,21 +83,17 @@ public class Extension extends SubsystemBase {
     @Override
     public void periodic() {
         t = bot.getTime();
-        double extensionExt = getPositionCM() - (extensionOffset / ticksperCM);
         MotionState pivotState = pivotProfile.state(t);
         MotionState extensionState = extensionProfile.state(t);
 
         // Update the feedforward function with the current motion state
-        ToDoubleFunction<Object[]> newExtensionKf = a -> {
-            double number = (Config.extension_Kgs + Config.extension_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
-                    Config.extension_Ks * signum(extensionState.v) + Config.extension_Kv * extensionState.v + Config.extension_Ka * extensionState.a;
-            telemExtensionkF = number;
-            return number;
-        };
+        ToDoubleFunction<Object[]> newExtensionKf = a -> (Config.extension_Kgs + Config.extension_Kgd * extensionState.x) * sin(Math.toRadians(pivotState.x)) +
+                Config.extension_Ks * signum(extensionState.v) + Config.extension_Kv * extensionState.v + Config.extension_Ka * extensionState.a;
 
         // Update the PIDF coefficients with the new feedforward function
         extensionPidf.setCoeffs(new PidfCoefficients(
                 Config.extension_kP, Config.extension_kI, Config.extension_kD, newExtensionKf));
+        extensionConstraints.setAsymConstraints(Config.extension_Vm, Config.extension_Ai, Config.extension_Af);
 
         // Check if the extension is at rest and update the zero time
         if (t > restTime() && extensionState.x == 0 && Double.isNaN(zeroTime)) {
@@ -118,7 +109,7 @@ public class Extension extends SubsystemBase {
         } else {
             // Update the PIDF controller with the current setpoint and motion state
             extensionPidf.set(extensionState.x);
-            extensionPidf.update(t, extensionExt, pivotState, extensionState);
+            extensionPidf.update(t, getPositionCM(), pivotState, extensionState);
             topExtensionMotor.setPower(extensionPidf.get());
             bottomExtensionMotor.setPower(extensionPidf.get());
         }
@@ -129,15 +120,16 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("Zero Time", zeroTime);
 
         bot.telem.addData("Extension Position", getPositionCM());
-        bot.telem.addData("Extension Offset Position", extensionExt);
         bot.telem.addData("Extension Target", getSetpointCM());
+        bot.telem.addData("Extension Velocity", topExtensionMotor.getVelocity());
         bot.telem.addData("Extension Power", topExtensionMotor.getPower());
-        bot.telem.addData("Extension Position", extensionState.x);
-        bot.telem.addData("Extension Velocity", extensionState.v);
-        bot.telem.addData("Extension Acceleration", extensionState.a);
+        bot.telem.addData("Extension Current", topExtensionMotor.getCurrent(CurrentUnit.AMPS));
+        bot.telem.addData("Extension Target Position", extensionState.x);
+        bot.telem.addData("Extension Target Velocity", extensionState.v);
+        bot.telem.addData("Extension Target Acceleration", extensionState.a);
         bot.telem.addData("Extension Offset", extensionOffset);
-        bot.telem.addData("Extension PID Coefficients", extensionCoeffs.getPidfCoefficients());
-        bot.telem.addData("Extension kF", extensionKf.applyAsDouble(new Object[]{pivotState, extensionState}));
+        bot.telem.addData("Extension PID Coefficients", extensionPidf.getCoeffs());
+        bot.telem.addData("Extension kF", newExtensionKf.applyAsDouble(new Object[]{pivotState, extensionState}));
     }
 
     /**
@@ -167,7 +159,7 @@ public class Extension extends SubsystemBase {
      * @return The current position of the extension in centimeters
      */
     public double getPositionCM() {
-        return topExtensionMotor.getCurrentPosition() / ticksperCM;
+        return (topExtensionMotor.getCurrentPosition() / ticksperCM) - (extensionOffset / ticksperCM);
     }
 
     /**

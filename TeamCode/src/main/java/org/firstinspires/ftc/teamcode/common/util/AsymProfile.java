@@ -2,13 +2,21 @@ package org.firstinspires.ftc.teamcode.common.util;
 import static java.lang.Math.*;
 public class AsymProfile extends MotionProfile {
     public static class AsymConstraints {
-        public final double vm;
-        public final double ai;
-        public final double af;
+        public double vm;
+        public double ai;
+        public double af;
         public AsymConstraints(double vm, double ai, double af) {
             this.vm = vm;
             this.ai = ai;
             this.af = af;
+        }
+        public void setAsymConstraints(double vm, double ai, double af) {
+            this.vm = vm;
+            this.ai = ai;
+            this.af = af;
+        }
+        public AsymConstraints getAsymConstraints() {
+            return new AsymConstraints(vm, ai, af);
         }
         public AsymConstraints scaleX(double f) {
             return new AsymConstraints(vm * f, ai * f, af * f);

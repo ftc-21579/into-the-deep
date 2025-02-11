@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import static java.lang.Math.signum;
+import static java.lang.Math.sin;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -11,6 +15,7 @@ import org.firstinspires.ftc.teamcode.common.util.PidfCoefficients;
 import org.firstinspires.ftc.teamcode.common.util.PidfController;
 import org.firstinspires.ftc.teamcode.common.util.MotionState;
 
+@Config
 @TeleOp(name = "Feedforward Tuner", group = "Tuning")
 public class FeedforwardTuner extends OpMode {
 
@@ -28,13 +33,13 @@ public class FeedforwardTuner extends OpMode {
     private double extensionSetpoint = 0;
 
     // New FF constants for tuning
-    public static double pivotKgs = 0.0;
-    public static double pivotKgd = 0.0;
+    public static double pivotKgs = 0.2;
+    public static double pivotKgd = 0.005;
     public static double pivotKs = 0.0;
     public static double pivotKv = 0.0;
     public static double pivotKa = 0.0;
 
-    public static double extensionKgs = 0.0;
+    public static double extensionKgs = 0.1;
     public static double extensionKgd = 0.0;
     public static double extensionKs = 0.0;
     public static double extensionKv = 0.0;
@@ -92,21 +97,23 @@ public class FeedforwardTuner extends OpMode {
         telemetry.addData("Pivot Position", pivotPosition);
         telemetry.addData("Pivot Target", pivotSetpoint);
         telemetry.addData("Pivot Power", pivotPidf.get());
+        telemetry.addData("Pivot kF", calculatePivotKf(new Object[]{new MotionState(pivotPosition, 0)}));
         telemetry.addData("Extension Position", extensionPosition);
         telemetry.addData("Extension Target", extensionSetpoint);
         telemetry.addData("Extension Power", extensionPidf.get());
+        telemetry.addData("Extension kF", calculateExtensionKf(new Object[]{new MotionState(extensionPosition, 0)}));
         telemetry.update();
     }
 
     private double calculatePivotKf(Object[] a) {
         MotionState pivotState = (MotionState) a[0];
-        return (pivotKgs + pivotKgd * getPositionCM()) * Math.sin(Math.toRadians(getPositionDEG())) +
+        return (pivotKgs + pivotKgd * getPositionCM()) * Math.cos(Math.toRadians(getPositionDEG())) +
                 pivotKs * Math.signum(pivotState.v) + pivotKv * pivotState.v + pivotKa * pivotState.a;
     }
 
     private double calculateExtensionKf(Object[] a) {
         MotionState extensionState = (MotionState) a[0];
-        return (extensionKgs + extensionKgd * getPositionCM()) * Math.cos(Math.toRadians(getPositionDEG())) +
+        return (extensionKgs + extensionKgd * getPositionCM()) * Math.sin(Math.toRadians(getPositionDEG())) +
                 extensionKs * Math.signum(extensionState.v) + extensionKv * extensionState.v + extensionKa * extensionState.a;
     }
 

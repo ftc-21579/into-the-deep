@@ -32,13 +32,13 @@ public class ExtensionTuningOpMode extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.dpad_up) {
-            extension.setSetpoint(0);
+            extension.setSetpointCM(0);
         } else if (gamepad1.dpad_down) {
-            extension.setSetpoint(35);
+            extension.setSetpointCM(35);
         } else if (gamepad1.dpad_left) {
-            pivot.setSetpoint(90);
+            pivot.setSetpointDEG(90, false);
         } else if (gamepad1.dpad_right) {
-            pivot.setSetpoint(0);
+            pivot.setSetpointDEG(0, false);
         }
 
         extension.periodic();

@@ -119,10 +119,10 @@ public class Wrist extends SubsystemBase {
         //double leftPosition = angleTarget + twistTarget;
         //double rightPosition = angleTarget - twistTarget;
 
-        bot.telem.addData("Left Wrist Position", leftPosition);
-        bot.telem.addData("Right Wrist Position", rightPosition);
-        bot.telem.addData("Angle Target Degrees", denormalizeAngle(getAngleDegrees()));
-        bot.telem.addData("Twist Target Degrees", getTwistDegrees());
+        //bot.telem.addData("Left Wrist Position", leftPosition);
+        //bot.telem.addData("Right Wrist Position", rightPosition);
+        //bot.telem.addData("Angle Target Degrees", denormalizeAngle(getAngleDegrees()));
+        //bot.telem.addData("Twist Target Degrees", getTwistDegrees());
 
         // Set the servo positions
         left.setPosition(leftPosition);

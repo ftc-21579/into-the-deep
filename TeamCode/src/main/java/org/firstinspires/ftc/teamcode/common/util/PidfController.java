@@ -18,6 +18,9 @@ public class PidfController {
     public void setCoeffs(PidfCoefficients coeffs) {
         this.coeffs = coeffs;
     }
+    public PidfCoefficients getCoeffs() {
+        return coeffs;
+    }
     public void set(double newSetPoint) {
         setPoint = newSetPoint;
     }
