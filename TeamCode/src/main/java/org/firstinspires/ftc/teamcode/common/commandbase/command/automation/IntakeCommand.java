@@ -79,11 +79,6 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp)),
-                                                        //new SequentialCommandGroup(
-                                                                //new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristUp)),
-                                                                //new WaitCommand(500),
-                                                                //new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp))
-                                                        //),
                                                         new WaitCommand(100),
                                                         new ParallelCommandGroup(
                                                                 new SetExtensionCommand(b.getExtension(), 0),

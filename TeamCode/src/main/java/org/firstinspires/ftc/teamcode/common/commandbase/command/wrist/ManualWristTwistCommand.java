@@ -20,10 +20,10 @@ public class ManualWristTwistCommand extends CommandBase {
     public void execute() {
         switch (direction) {
             case LEFT:
-                wrist.incrementTwist(Config.wristTwistIncrement);
+                wrist.incrementTwist(Config.wristTwistIncrement, true);
                 break;
             case RIGHT:
-                wrist.incrementTwist(-Config.wristTwistIncrement);
+                wrist.incrementTwist(-Config.wristTwistIncrement, true);
                 break;
         }
     }

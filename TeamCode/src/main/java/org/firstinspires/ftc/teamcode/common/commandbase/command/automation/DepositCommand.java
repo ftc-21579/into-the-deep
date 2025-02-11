@@ -46,15 +46,6 @@ public class DepositCommand extends SequentialCommandGroup {
                                                 new SetExtensionCommand(b.getExtension(), 0)
                                         ),
                                         new SequentialCommandGroup(
-                                                // ground intake
-                                                /*
-                                                new SetExtensionCommand(b.getExtension(), 0),
-                                                new ClawOuttakeCommand(b.getClaw()),
-                                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown - 10)),
-                                                new SetPivotAngleCommand(b.getPivot(), 15)
-                                                 */
-                                                // wall intake
                                                 new SetExtensionCommand(b.getExtension(), 0),
                                                 new ClawOuttakeCommand(b.getClaw()),
                                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),

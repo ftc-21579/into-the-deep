@@ -12,11 +12,11 @@ public class Config {
 
     public static double extension_Kgs = 0.1, extension_Kgd = 0.0, extension_Ks = 0.1, extension_Kv = 0.003, extension_Ka = 0.0;
 
-        public static double extension_Vm = 200, extension_Ai = 10000, extension_Af = 5000;
+    public static double extension_Vm = 200, extension_Ai = 10000, extension_Af = 5000;
 
     public static double ascent_kP = 0.01, ascent_kI = 0.0, ascent_kD = 0.0, ascent_kF = 0.0, ascent_tolerance = 10.0;
 
-    public static double ext_increment = 2.0, pivot_increment = 10.0;
+    public static double ext_increment = 5.0, pivot_increment = 10.0;
 
     public static double wristAngleIncrement = 45, wristTwistIncrement = 45;
 }
