@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.teleop;
+package org.firstinspires.ftc.teamcode.opmode.tuning;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -190,7 +190,10 @@ public class VelocityAccelerationTuner extends LinearOpMode {
             movePivotSafely(1.0, PIVOT_MAX_ANGLE);
             pivotMotionComplete = true; // Set the flag
         }
-        getPivotVelocity();
+        //getPivotVelocity();
+        if (pivotMotor.getVelocity() / ticksperCM > maxPivotVelocity) {
+            maxPivotVelocity = pivotMotor.getVelocity() / ticksperCM;
+        }
     }
 
     private void measurePivotAcceleration() {

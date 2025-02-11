@@ -212,7 +212,7 @@ public class TeleOp extends CommandOpMode {
         Button extensionOutButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_UP))
                 .whenPressed(
                         new ConditionalCommand(
-                                new SetExtensionCommand(bot.getExtension(), 35),
+                                new SetExtensionCommand(bot.getExtension(), 50),
                                 new InstantCommand(() -> {}),
                                 () -> bot.getState() == BotState.INTAKE
                         )

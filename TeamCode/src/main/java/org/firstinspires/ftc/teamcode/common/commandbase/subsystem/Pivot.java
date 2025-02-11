@@ -72,7 +72,7 @@ public class Pivot extends SubsystemBase {
 
         // Update the feedforward function with the current motion state
         ToDoubleFunction<Object[]> newPivotKf = a -> (Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x) * cos(Math.toRadians(pivotState.x)) +
-                Config.pivot_kS * signum(extensionState.v) + Config.pivot_kS * extensionState.v + Config.pivot_kS * extensionState.a;
+                Config.pivot_kV * pivotState.v + Config.pivot_kA * pivotState.a;
 
         // Update the PIDF coefficients with the new feedforward function
         pivotPidf.setCoeffs(new PidfCoefficients(
@@ -97,6 +97,11 @@ public class Pivot extends SubsystemBase {
         bot.telem.addData("Pivot Target Acceleration", pivotState.a);
         bot.telem.addData("Pivot PID Coefficients", pivotPidf.getCoeffs());
         bot.telem.addData("Pivot kF", newPivotKf.applyAsDouble(new Object[]{pivotState, extensionState}));
+
+        bot.telem.addData("First", Config.pivot_Kgs + Config.pivot_Kgd * extensionState.x);
+        bot.telem.addData("Second", cos(Math.toRadians(pivotState.x)));
+        bot.telem.addData("Third", Config.pivot_kS * signum(extensionState.v));
+        bot.telem.addData("Fourth", Config.pivot_kS * extensionState.v);
         bot.telem.update();
     }
 

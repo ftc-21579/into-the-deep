@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmode.teleop;
+package org.firstinspires.ftc.teamcode.opmode.tuning;
 
 import static java.lang.Math.signum;
-import static java.lang.Math.sin;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -107,13 +106,13 @@ public class FeedforwardTuner extends OpMode {
 
     private double calculatePivotKf(Object[] a) {
         MotionState pivotState = (MotionState) a[0];
-        return (pivotKgs + pivotKgd * getPositionCM()) * Math.cos(Math.toRadians(getPositionDEG())) +
+        return (pivotKgs + pivotKgd * getPositionCM()) * Math.cos(Math.toRadians(getPositionDEG())) + pivotKs +
                 pivotKs * Math.signum(pivotState.v) + pivotKv * pivotState.v + pivotKa * pivotState.a;
     }
 
     private double calculateExtensionKf(Object[] a) {
         MotionState extensionState = (MotionState) a[0];
-        return (extensionKgs + extensionKgd * getPositionCM()) * Math.sin(Math.toRadians(getPositionDEG())) +
+        return (extensionKgs + extensionKgd * getPositionCM()) * Math.sin(Math.toRadians(getPositionDEG())) + extensionKs +
                 extensionKs * Math.signum(extensionState.v) + extensionKv * extensionState.v + extensionKa * extensionState.a;
     }
 

@@ -121,7 +121,7 @@ public class Extension extends SubsystemBase {
 
         bot.telem.addData("Extension Position", getPositionCM());
         bot.telem.addData("Extension Target", getSetpointCM());
-        bot.telem.addData("Extension Velocity", topExtensionMotor.getVelocity());
+        bot.telem.addData("Extension Velocity", topExtensionMotor.getVelocity() / ticksperCM);
         bot.telem.addData("Extension Power", topExtensionMotor.getPower());
         bot.telem.addData("Extension Current", topExtensionMotor.getCurrent(CurrentUnit.AMPS));
         bot.telem.addData("Extension Target Position", extensionState.x);
