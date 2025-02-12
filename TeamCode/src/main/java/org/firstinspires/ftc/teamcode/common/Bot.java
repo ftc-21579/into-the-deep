@@ -39,7 +39,6 @@ public class Bot extends Robot {
     private Color gameElementColor = Color.NONE;
     private boolean robotCentric = true;
 
-    private MecanumDrivetrain drivetrain;
     private final Intake claw;
     private final Extension extension;
     private final Wrist wrist;
@@ -63,9 +62,6 @@ public class Bot extends Robot {
         /* Subsystems */
         claw = new Intake(this);
         wrist = new Wrist(this);
-        if (enableDrive) {
-            drivetrain = new MecanumDrivetrain(this);
-        }
         pivot = new Pivot(this);
         extension = new Extension(this);
         ascent = new Ascent(this);
@@ -81,19 +77,6 @@ public class Bot extends Robot {
 
     public double getTime() {
         return clock.seconds();
-    }
-
-    /**
-     * Get the MecanumDrivetrain subsystem of the robot
-     * @return the mecanum subsystem of the robot
-     */
-    public MecanumDrivetrain getDrivetrain() { return drivetrain; }
-
-    /**
-     * Set the pose estimate of the robot
-     */
-    public void setPoseEstimateDEG(Pose2d pose) {
-        drivetrain.setOdoPositionDEG(pose);
     }
 
     /**

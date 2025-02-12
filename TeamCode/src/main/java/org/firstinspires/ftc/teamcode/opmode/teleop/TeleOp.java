@@ -51,7 +51,6 @@ public class TeleOp extends CommandOpMode {
     private Extension extension;
     private Wrist wrist;
     private Ascent ascent;
-    private MecanumDrivetrain drivetrain;
 
     private boolean enableDrive = true;
 
