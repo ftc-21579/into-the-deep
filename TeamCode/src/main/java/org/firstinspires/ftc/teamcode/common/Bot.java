@@ -1,22 +1,18 @@
 package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
-import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
@@ -38,6 +34,7 @@ public class Bot extends Robot {
     private static Color allianceColor = Color.NONE;
     private Color gameElementColor = Color.NONE;
     private boolean robotCentric = true;
+    private boolean enableDrive = true;
 
     private final Intake claw;
     private final Extension extension;
@@ -114,6 +111,10 @@ public class Bot extends Robot {
     public void setRobotCentric(boolean robotCentric) { this.robotCentric = robotCentric; }
 
     public boolean getRobotCentric() { return robotCentric; }
+
+    public void setEnableDrive(boolean enableDrive) { this.enableDrive = enableDrive; }
+
+    public boolean getEnableDrive() { return enableDrive; }
 
     /**
      * Get the Blinkin subsystem of the robot

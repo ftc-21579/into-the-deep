@@ -27,4 +27,9 @@ public class FollowerCommand extends CommandBase {
         follower.setTeleOpMovementVectors(gamepad.getLeftY(), -gamepad.getLeftX(), -gamepad.getRightX(), bot.getRobotCentric());
         follower.update();
     }
+
+    @Override
+    public boolean isFinished() {
+        return !bot.getEnableDrive();
+    }
 }
