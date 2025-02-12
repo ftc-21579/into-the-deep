@@ -20,11 +20,12 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoHangCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowerCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.SetDriveCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.PedroTeleOpCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TestPedroCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleRobotCentricCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
@@ -75,13 +76,19 @@ public class TeleOp extends CommandOpMode {
         bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
 
         //region Drivetrain
-        FollowerCommand followerCommand = new FollowerCommand(bot, bot.getFollower(), driverGamepad);
-        schedule(followerCommand);
+        PedroTeleOpCommand pedroTeleOpCommand = new PedroTeleOpCommand(bot, bot.getFollower(), driverGamepad);
+        schedule(pedroTeleOpCommand);
 
         Button fieldCentricButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.BACK))
                 .whenPressed(
                         new ToggleRobotCentricCommand(bot)
                 );
+
+        Button testPedro = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
+                .whenPressed(
+                        new TestPedroCommand(bot)
+                );
+
         //endregion
 
         //region Claw
@@ -89,12 +96,7 @@ public class TeleOp extends CommandOpMode {
 
         Button clawToggleButSus = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
                 .whenPressed(
-                        //new InstantCommand(() -> claw.toggle())
-                        new ConditionalCommand(
-                                new SetExtensionCommand(bot.getExtension(), 0),
-                                new InstantCommand(() -> {}),
-                                () -> bot.getState() == BotState.INTAKE
-                        )
+                        new InstantCommand(() -> claw.toggle())
                 );
 
         Button clawToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.LEFT_STICK_BUTTON))

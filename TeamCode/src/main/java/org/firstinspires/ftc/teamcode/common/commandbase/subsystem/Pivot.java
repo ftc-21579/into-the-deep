@@ -90,6 +90,7 @@ public class Pivot extends SubsystemBase {
             pivotMotor.setPower(pivotPidf.get());
         }
 
+        /*
         // Add telemetry data for debugging and monitoring
         bot.telem.addData("Pivot Position", getPositionDEG());
         bot.telem.addData("Pivot Target", getSetpointDEG());
@@ -101,6 +102,7 @@ public class Pivot extends SubsystemBase {
         bot.telem.addData("Pivot Target Acceleration", pivotState.a);
         bot.telem.addData("Pivot PID Coefficients", pivotPidf.getCoeffs());
         bot.telem.addData("Pivot kF", newPivotKf.applyAsDouble(new Object[]{pivotState, extensionState}));
+         */
 
         bot.telem.update();
     }

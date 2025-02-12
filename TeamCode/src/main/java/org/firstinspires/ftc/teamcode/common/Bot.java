@@ -35,6 +35,7 @@ public class Bot extends Robot {
     private Color gameElementColor = Color.NONE;
     private boolean robotCentric = true;
     private boolean enableDrive = true;
+    private boolean enableTeleOpDrive = true;
 
     private final Intake claw;
     private final Extension extension;
@@ -115,6 +116,10 @@ public class Bot extends Robot {
     public void setEnableDrive(boolean enableDrive) { this.enableDrive = enableDrive; }
 
     public boolean getEnableDrive() { return enableDrive; }
+
+    public void setEnableTeleOpDrive(boolean enableTeleOpDrive) { this.enableTeleOpDrive = enableTeleOpDrive; }
+
+    public boolean getEnableTeleOpDrive() { return enableTeleOpDrive; }
 
     /**
      * Get the Blinkin subsystem of the robot

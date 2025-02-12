@@ -114,6 +114,7 @@ public class Extension extends SubsystemBase {
             bottomExtensionMotor.setPower(extensionPidf.get());
         }
 
+        /*
         // Add telemetry data for debugging and monitoring
         bot.telem.addData("Time", t);
         bot.telem.addData("Rest Time", restTime());
@@ -130,6 +131,7 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("Extension Offset", extensionOffset);
         bot.telem.addData("Extension PID Coefficients", extensionPidf.getCoeffs());
         bot.telem.addData("Extension kF", newExtensionKf.applyAsDouble(new Object[]{pivotState, extensionState}));
+         */
     }
 
     /**

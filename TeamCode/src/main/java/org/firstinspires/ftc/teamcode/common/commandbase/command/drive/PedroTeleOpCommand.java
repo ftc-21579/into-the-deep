@@ -6,12 +6,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 
-public class FollowerCommand extends CommandBase {
+public class PedroTeleOpCommand extends CommandBase {
     private final Bot bot;
     private final Follower follower;
     private final GamepadEx gamepad;
 
-    public FollowerCommand(Bot bot, Follower follower, GamepadEx gamepad) {
+    public PedroTeleOpCommand(Bot bot, Follower follower, GamepadEx gamepad) {
         this.bot = bot;
         this.follower = follower;
         this.gamepad = gamepad;
@@ -24,8 +24,11 @@ public class FollowerCommand extends CommandBase {
 
     @Override
     public void execute() {
-        follower.setTeleOpMovementVectors(gamepad.getLeftY(), -gamepad.getLeftX(), -gamepad.getRightX(), bot.getRobotCentric());
+        if (bot.getEnableTeleOpDrive()) {
+            follower.setTeleOpMovementVectors(gamepad.getLeftY(), -gamepad.getLeftX(), -gamepad.getRightX(), bot.getRobotCentric());
+        }
         follower.update();
+        bot.telem.addData("isBusy", follower.isBusy());
     }
 
     @Override
