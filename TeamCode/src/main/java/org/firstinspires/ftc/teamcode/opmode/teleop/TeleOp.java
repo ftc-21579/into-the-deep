@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -18,15 +17,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.ascent.SetPTOCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.AutoHangCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TeleOpDriveCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleFieldCentricCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowerCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleRobotCentricCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
@@ -79,24 +76,13 @@ public class TeleOp extends CommandOpMode {
         bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
 
         //region Drivetrain
-        drivetrain = bot.getDrivetrain();
+        FollowerCommand followerCommand = new FollowerCommand(bot, bot.getFollower(), driverGamepad);
+        schedule(followerCommand);
 
-        TeleOpDriveCommand driveCommand = new TeleOpDriveCommand(
-                drivetrain,
-                () -> -driverGamepad.getRightX(),
-                () -> driverGamepad.getLeftY(),
-                () -> -driverGamepad.getLeftX(),
-                () -> 1.0
-        );
-
-        Button fieldCentricToggle = (new GamepadButton(driverGamepad, GamepadKeys.Button.BACK))
+        Button fieldCentricButton = (new GamepadButton(driverGamepad, GamepadKeys.Button.BACK))
                 .whenPressed(
-                        new ToggleFieldCentricCommand(bot.getDrivetrain())
+                        new ToggleRobotCentricCommand(bot)
                 );
-
-        register(drivetrain);
-        drivetrain.setDefaultCommand(driveCommand);
-
         //endregion
 
         //region Claw

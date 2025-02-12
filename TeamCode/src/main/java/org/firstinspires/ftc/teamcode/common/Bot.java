@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.common;
 
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -20,6 +23,8 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
 public class Bot extends Robot {
     public final Telemetry telem;
@@ -32,6 +37,7 @@ public class Bot extends Robot {
     private TargetMode targetMode = TargetMode.HIGH_BASKET;
     private static Color allianceColor = Color.NONE;
     private Color gameElementColor = Color.NONE;
+    private boolean robotCentric = true;
 
     private MecanumDrivetrain drivetrain;
     private final Intake claw;
@@ -39,8 +45,11 @@ public class Bot extends Robot {
     private final Wrist wrist;
     private final Pivot pivot;
     private final Ascent ascent;
+    private final Follower follower;
 
     private final RevBlinkinLedDriver blinkin;
+
+    private final Pose startPose = new Pose(0, 0, 0);
 
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
@@ -60,6 +69,10 @@ public class Bot extends Robot {
         pivot = new Pivot(this);
         extension = new Extension(this);
         ascent = new Ascent(this);
+
+        Constants.setConstants(FConstants.class, LConstants.class);
+        follower = new Follower(hMap);
+        follower.setStartingPose(startPose);
     }
 
     public void resetTime() {
@@ -112,6 +125,12 @@ public class Bot extends Robot {
      * @return the pivot subsystem of the robot
      */
     public Ascent getAscent() { return ascent; }
+
+    public Follower getFollower() { return follower; }
+
+    public void setRobotCentric(boolean robotCentric) { this.robotCentric = robotCentric; }
+
+    public boolean getRobotCentric() { return robotCentric; }
 
     /**
      * Get the Blinkin subsystem of the robot
