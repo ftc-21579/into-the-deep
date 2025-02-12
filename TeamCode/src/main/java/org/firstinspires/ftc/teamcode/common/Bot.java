@@ -36,6 +36,7 @@ public class Bot extends Robot {
     private boolean robotCentric = true;
     private boolean enableDrive = true;
     private boolean enableTeleOpDrive = true;
+    private boolean isPathFinished = false;
 
     private final Intake claw;
     private final Extension extension;
@@ -120,6 +121,10 @@ public class Bot extends Robot {
     public void setEnableTeleOpDrive(boolean enableTeleOpDrive) { this.enableTeleOpDrive = enableTeleOpDrive; }
 
     public boolean getEnableTeleOpDrive() { return enableTeleOpDrive; }
+
+    public void setPathFinished(boolean pathFinished) { isPathFinished = pathFinished; }
+
+    public boolean getPathFinished() { return isPathFinished; }
 
     /**
      * Get the Blinkin subsystem of the robot

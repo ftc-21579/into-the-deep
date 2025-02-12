@@ -86,7 +86,7 @@ public class TeleOp extends CommandOpMode {
 
         Button testPedro = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
                 .whenPressed(
-                        new TestPedroCommand(bot)
+                        new TestPedroCommand(bot, 2)
                 );
 
         //endregion

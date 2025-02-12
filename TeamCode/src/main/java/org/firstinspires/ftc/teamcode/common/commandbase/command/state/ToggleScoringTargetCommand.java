@@ -116,7 +116,7 @@ public class ToggleScoringTargetCommand extends CommandBase {
                         new ParallelCommandGroup(
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristForward + 10)),
                                 new SetPivotAngleCommand(bot.getPivot(), 20),
-                                new SetExtensionCommand(bot.getExtension(), 10)
+                                new SetExtensionCommand(bot.getExtension(), 16)
                         ).schedule();
                     }
                     break;
