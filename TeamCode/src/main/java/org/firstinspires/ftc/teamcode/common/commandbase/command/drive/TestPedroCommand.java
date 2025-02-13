@@ -7,11 +7,13 @@ import com.pedropathing.localization.Pose;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class TestPedroCommand extends CommandBase {
     private final Bot bot;
-    private final int loopCount;
+    private final AtomicInteger loopCount;
 
-    public TestPedroCommand(Bot bot, int loopCount) {
+    public TestPedroCommand(Bot bot, AtomicInteger loopCount) {
         this.bot = bot;
         this.loopCount = loopCount;
     }
