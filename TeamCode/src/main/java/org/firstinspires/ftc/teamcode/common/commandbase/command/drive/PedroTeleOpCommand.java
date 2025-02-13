@@ -29,6 +29,7 @@ public class PedroTeleOpCommand extends CommandBase {
         }
         follower.update();
         bot.telem.addData("isBusy", follower.isBusy());
+        bot.telem.addData("Spec Cycles", bot.getSpecCycles());
     }
 
     @Override

@@ -11,11 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestPedroCommand extends CommandBase {
     private final Bot bot;
-    private final AtomicInteger loopCount;
 
-    public TestPedroCommand(Bot bot, AtomicInteger loopCount) {
+    public TestPedroCommand(Bot bot) {
         this.bot = bot;
-        this.loopCount = loopCount;
     }
 
     @Override
@@ -23,7 +21,7 @@ public class TestPedroCommand extends CommandBase {
         bot.setEnableTeleOpDrive(false);
         bot.getFollower().breakFollowing();
         bot.getFollower().setPose(specIntake);
-        new SpecCycleCommand(bot, loopCount).schedule();
+        new SpecCycleCommand(bot).schedule();
     }
 
     @Override

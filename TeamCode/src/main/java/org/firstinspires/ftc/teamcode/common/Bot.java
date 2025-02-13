@@ -17,10 +17,13 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bot extends Robot {
     public final Telemetry telem;
@@ -37,6 +40,7 @@ public class Bot extends Robot {
     private boolean enableDrive = true;
     private boolean enableTeleOpDrive = true;
     private boolean isPathFinished = false;
+    public AtomicInteger specCycles = new AtomicInteger(0);
 
     private final Intake claw;
     private final Extension extension;
@@ -125,6 +129,20 @@ public class Bot extends Robot {
     public void setPathFinished(boolean pathFinished) { isPathFinished = pathFinished; }
 
     public boolean getPathFinished() { return isPathFinished; }
+
+    public void setSpecCycles(int newSpecCycles) { specCycles.set(newSpecCycles); }
+
+    public AtomicInteger getSpecCycles() { return specCycles; }
+
+    public void incrementSpecCycles(Direction direction) {
+        switch (direction) {
+            case UP:
+                setSpecCycles(Math.max(0, Math.min(20, specCycles.get() + 1)));
+                break;
+            case DOWN:
+                setSpecCycles(Math.max(0, Math.min(20, specCycles.get() - 1)));
+        }
+    }
 
     /**
      * Get the Blinkin subsystem of the robot

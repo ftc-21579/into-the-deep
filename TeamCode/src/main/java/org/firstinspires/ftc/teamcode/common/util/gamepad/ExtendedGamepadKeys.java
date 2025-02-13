@@ -6,7 +6,7 @@ public class ExtendedGamepadKeys extends GamepadKeys {
 
     public enum Button {
         Y, X, A, B, CIRCLE, CROSS, TRIANGLE, SQUARE, LEFT_BUMPER, RIGHT_BUMPER, BACK,
-        START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT,
+        START, SHARE, OPTIONS, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT,
         LEFT_STICK_BUTTON, RIGHT_STICK_BUTTON, PS
     }
 
