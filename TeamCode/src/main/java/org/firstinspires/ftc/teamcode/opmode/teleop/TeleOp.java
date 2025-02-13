@@ -42,6 +42,11 @@ import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
+import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadButton;
+import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadEx;
+import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadKeys;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
@@ -57,6 +62,7 @@ public class TeleOp extends CommandOpMode {
 
     private GamepadEx driverGamepad;
     private GamepadEx tuningGamepad;
+    private ExtendedGamepadEx sussyGamepad;
 
     private MultipleTelemetry telem;
 
@@ -70,7 +76,8 @@ public class TeleOp extends CommandOpMode {
         telem = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driverGamepad = new GamepadEx(gamepad1);
-        tuningGamepad = new GamepadEx(gamepad2);
+        //tuningGamepad = new GamepadEx(gamepad2);
+        sussyGamepad = new ExtendedGamepadEx(gamepad2);
         gamepad1.setLedColor(255, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
 
         bot = new Bot(telem, hardwareMap, gamepad1, enableDrive);
@@ -86,7 +93,7 @@ public class TeleOp extends CommandOpMode {
 
         Button testPedro = (new GamepadButton(driverGamepad, GamepadKeys.Button.B))
                 .whenPressed(
-                        new TestPedroCommand(bot, 2)
+                        new TestPedroCommand(bot, new AtomicInteger(2))
                 );
 
         //endregion
@@ -94,7 +101,7 @@ public class TeleOp extends CommandOpMode {
         //region Claw
         claw = bot.getClaw();
 
-        Button clawToggleButSus = (new GamepadButton(driverGamepad, GamepadKeys.Button.A))
+        Button clawToggleButSus = (new ExtendedGamepadButton(sussyGamepad, ExtendedGamepadKeys.Button.SQUARE))
                 .whenPressed(
                         new InstantCommand(() -> claw.toggle())
                 );
@@ -196,6 +203,7 @@ public class TeleOp extends CommandOpMode {
 
         //endregion
 
+        /*
         Button extensionOutButton = (new GamepadButton(tuningGamepad, GamepadKeys.Button.DPAD_UP))
                 .whenPressed(
                         new ConditionalCommand(
@@ -231,7 +239,7 @@ public class TeleOp extends CommandOpMode {
                                 () -> bot.getState() == BotState.INTAKE
                         )
                 );
-
+         */
 
         schedule(
                 new ParallelCommandGroup(
