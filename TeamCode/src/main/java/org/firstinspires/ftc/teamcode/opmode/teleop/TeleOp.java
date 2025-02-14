@@ -98,14 +98,14 @@ public class TeleOp extends CommandOpMode {
         Button addSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CIRCLE))
                 .whenPressed(
                         new InstantCommand(() -> {
-                            bot.incrementSpecCycles(Direction.UP);
+                            bot.incrementTargetSpecCycles(Direction.UP);
                         })
                 );
 
         Button subtractSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CROSS))
                 .whenPressed(
                         new InstantCommand(() -> {
-                            bot.incrementSpecCycles(Direction.DOWN);
+                            bot.incrementTargetSpecCycles(Direction.DOWN);
                         })
                 );
         //endregion

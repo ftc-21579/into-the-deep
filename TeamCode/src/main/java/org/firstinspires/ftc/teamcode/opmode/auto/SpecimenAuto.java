@@ -56,6 +56,8 @@ public class SpecimenAuto extends LinearOpMode {
 
     public static Pose specIntake = new Pose(18, 26, Math.toRadians(180));
 
+    public static Pose scoreControl = new Pose(24, 60, Math.toRadians(180));
+
     public static Pose intake1 = new Pose(32, 44, Math.toRadians(-58));
     public static Pose intake1Control = new Pose(9, 55);
     public static Pose intake1Shuttle = new Pose(30, 40, Math.toRadians(-140));

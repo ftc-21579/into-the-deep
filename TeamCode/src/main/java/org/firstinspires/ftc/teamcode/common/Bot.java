@@ -40,7 +40,8 @@ public class Bot extends Robot {
     private boolean enableDrive = true;
     private boolean enableTeleOpDrive = true;
     private boolean isPathFinished = false;
-    public AtomicInteger specCycles = new AtomicInteger(0);
+    public AtomicInteger targetSpecCycles = new AtomicInteger(0);
+    public AtomicInteger currentSpecCycles = new AtomicInteger(0);
 
     private final Intake claw;
     private final Extension extension;
@@ -130,17 +131,25 @@ public class Bot extends Robot {
 
     public boolean getPathFinished() { return isPathFinished; }
 
-    public void setSpecCycles(int newSpecCycles) { specCycles.set(newSpecCycles); }
-
-    public AtomicInteger getSpecCycles() { return specCycles; }
-
-    public void incrementSpecCycles(Direction direction) {
+    public void incrementTargetSpecCycles(Direction direction) {
         switch (direction) {
             case UP:
-                setSpecCycles(Math.max(0, Math.min(20, specCycles.get() + 1)));
+                targetSpecCycles.set(Math.max(0, Math.min(20, targetSpecCycles.get() + 1)));
                 break;
             case DOWN:
-                setSpecCycles(Math.max(0, Math.min(20, specCycles.get() - 1)));
+                targetSpecCycles.set(Math.max(0, Math.min(20, targetSpecCycles.get() - 1)));
+                break;
+        }
+    }
+
+    public void incrementCurrentSpecCycles(Direction direction) {
+        switch (direction) {
+            case UP:
+                currentSpecCycles.set(Math.max(0, Math.min(20, currentSpecCycles.get() + 1)));
+                break;
+            case DOWN:
+                currentSpecCycles.set(Math.max(0, Math.min(20, currentSpecCycles.get() - 1)));
+                break;
         }
     }
 
