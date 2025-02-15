@@ -31,7 +31,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                 addCommands(
                 new ConditionalCommand(
                         new SequentialCommandGroup(
-                                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
+                                //new ManualPivotCommand(b.getPivot(), Direction.DOWN),
+                                new SetPivotAngleCommand(b.getPivot(), 0),
                                 new WaitCommand(250)
                         ),
                         new InstantCommand(() -> {}),

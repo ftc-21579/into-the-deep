@@ -31,8 +31,8 @@ public class Extension extends SubsystemBase {
 
     private final DcMotorEx bottomExtensionMotor, topExtensionMotor;
 
-    public static double setpointCM = 0.0, highChamberTarget = 20.0, lowBasketTarget = 20.0, highBasketTarget = 60.0, ticksperCM = 10.37339803;
-    public static double minExtension = 0.0, depositMaxExtension = 60, intakeMaxExtension = 50;
+    public static double setpointCM = 0.0, highChamberTarget = 20.0, lowBasketTarget = 20.0, highBasketTarget = 62.0, ticksperCM = 10.37339803;
+    public static double minExtension = 0.0, depositMaxExtension = 62, intakeMaxExtension = 50;
 
     public static ToDoubleFunction<Object[]> extensionKf = a -> {
         MotionState pivotState = (MotionState) a[0];
@@ -114,7 +114,6 @@ public class Extension extends SubsystemBase {
             bottomExtensionMotor.setPower(extensionPidf.get());
         }
 
-        /*
         // Add telemetry data for debugging and monitoring
         bot.telem.addData("Time", t);
         bot.telem.addData("Rest Time", restTime());
@@ -131,7 +130,6 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("Extension Offset", extensionOffset);
         bot.telem.addData("Extension PID Coefficients", extensionPidf.getCoeffs());
         bot.telem.addData("Extension kF", newExtensionKf.applyAsDouble(new Object[]{pivotState, extensionState}));
-         */
     }
 
     /**

@@ -205,7 +205,13 @@ public class TeleOp extends CommandOpMode {
 
         Button toggleElementButton = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.SQUARE))
                 .whenPressed(
-                    new ToggleElementCommand(bot)
+                    new ConditionalCommand(
+                            new ToggleElementCommand(bot),
+                            new InstantCommand(() -> {
+                                bot.setPathFinished(true);
+                            }),
+                            () -> bot.getPathFinished()
+                    )
                 );
 
         //endregion

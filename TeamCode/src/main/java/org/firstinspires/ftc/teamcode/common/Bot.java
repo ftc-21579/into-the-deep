@@ -39,7 +39,7 @@ public class Bot extends Robot {
     private boolean robotCentric = true;
     private boolean enableDrive = true;
     private boolean enableTeleOpDrive = true;
-    private boolean isPathFinished = false;
+    private boolean isPathFinished = true;
     public AtomicInteger targetSpecCycles = new AtomicInteger(0);
     public AtomicInteger currentSpecCycles = new AtomicInteger(0);
 

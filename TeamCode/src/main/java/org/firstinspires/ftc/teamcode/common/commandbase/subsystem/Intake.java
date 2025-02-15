@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
     private final Servo claw;
     private final AnalogInput clawFeedback;
     private final DigitalChannel colorSensor0, colorSensor1;
-    public static double grabbedAngle = 285.0;
+    public static double grabbedAngle = 280.0;
 
     private final CRServo leftActive, rightActive;
 

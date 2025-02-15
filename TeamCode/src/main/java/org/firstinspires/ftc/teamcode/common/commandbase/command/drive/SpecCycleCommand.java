@@ -39,24 +39,24 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                                         new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                 .addPath(
                                                         new BezierLine(
-                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - (yOffset * 2), score2.getHeading() + 0)),
-                                                                new Point(new Pose(currentXOffset + 0, specIntake.getY() + 0, specIntake.getHeading() + 0))
+                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - (yOffset * 2), score2.getHeading())),
+                                                                new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading()))
                                                         )
                                                 )
                                                 .setConstantHeadingInterpolation(specIntake.getHeading())
                                                 .build()
                                         ),
-                                        new WaitCommand(500),
+                                        new WaitCommand(250),
                                         new ParallelCommandGroup(
                                                 new IntakeCommand(bot),
                                                 new SequentialCommandGroup(
-                                                        new WaitCommand(500),
+                                                        new WaitCommand(250),
                                                         new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                                 .addPath(
                                                                         new BezierCurve(
-                                                                                new Point(new Pose(currentXOffset + 0, specIntake.getY() + 0, specIntake.getHeading() + 0)),
+                                                                                new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading())),
                                                                                 new Point(scoreControl),
-                                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - yOffset, score2.getHeading() + 0))
+                                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - yOffset, score2.getHeading()))
                                                                         )
                                                                 )
                                                                 .setConstantHeadingInterpolation(score2.getHeading())
@@ -93,7 +93,7 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                         new IntakeCommand(bot),
                                         new SequentialCommandGroup(
-                                                new WaitCommand(500),
+                                                new WaitCommand(250),
                                                 new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                         .addPath(
                                                                 new BezierCurve(
@@ -142,4 +142,6 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                 })
         );
     }
+
+
 }

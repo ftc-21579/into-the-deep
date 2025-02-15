@@ -10,7 +10,7 @@ public class Config {
 
     public static double extension_kP = 0.05, extension_kI = 0.0, extension_kD = 0.002, extension_tolerance = 5.0;
 
-    public static double extension_Kgs = 0.15, extension_Kgd = 0.0, extension_Ks = 0.1, extension_Kv = 0.003, extension_Ka = 0.0;
+    public static double extension_Kgs = 0.15, extension_Kgd = 0.003, extension_Ks = 0.1, extension_Kv = 0.003, extension_Ka = 0.0;
 
     public static double extension_Vm = 200, extension_Ai = 10000, extension_Af = 5000;
 
