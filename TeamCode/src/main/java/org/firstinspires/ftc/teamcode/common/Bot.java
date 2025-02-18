@@ -31,9 +31,9 @@ public class Bot extends Robot {
     public final Gamepad gamepad;
     private ElapsedTime clock = new ElapsedTime();
 
-    public BotState state = BotState.DEPOSIT;
-    private GameElement targetElement = GameElement.SAMPLE;
-    private TargetMode targetMode = TargetMode.HIGH_BASKET;
+    public static BotState state = BotState.DEPOSIT;
+    private static GameElement targetElement = GameElement.SAMPLE;
+    private static TargetMode targetMode = TargetMode.HIGH_BASKET;
     private static Color allianceColor = Color.NONE;
     private Color gameElementColor = Color.NONE;
     private boolean robotCentric = true;

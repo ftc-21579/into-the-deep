@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
 public class PedroTeleOpCommand extends CommandBase {
     private final Bot bot;
@@ -27,8 +28,17 @@ public class PedroTeleOpCommand extends CommandBase {
 
     @Override
     public void execute() {
+        double forward = gamepad.getLeftY();
+        double lateral = gamepad.getLeftX();
+        double heading = gamepad.getRightX();
+        double multiplier = 0.5;
         if (bot.getEnableTeleOpDrive()) {
-            follower.setTeleOpMovementVectors(gamepad.getLeftY(), -gamepad.getLeftX(), -gamepad.getRightX(), bot.getRobotCentric());
+            if (bot.getState() == BotState.INTAKE && bot.getExtension().getPositionCM() > 20) {
+                forward *= multiplier;
+                lateral *= multiplier;
+                heading *= multiplier;
+            }
+            follower.setTeleOpMovementVectors(forward, -lateral, -heading, bot.getRobotCentric());
         }
         follower.update();
         bot.telem.addData("isBusy", follower.isBusy());

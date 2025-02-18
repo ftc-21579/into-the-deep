@@ -130,6 +130,8 @@ public class Extension extends SubsystemBase {
         bot.telem.addData("Extension Offset", extensionOffset);
         bot.telem.addData("Extension PID Coefficients", extensionPidf.getCoeffs());
         bot.telem.addData("Extension kF", newExtensionKf.applyAsDouble(new Object[]{pivotState, extensionState}));
+
+        bot.telem.addData("Is Path Finished?", bot.getPathFinished());
     }
 
     /**

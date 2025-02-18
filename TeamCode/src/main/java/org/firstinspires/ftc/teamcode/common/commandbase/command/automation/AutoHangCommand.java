@@ -25,14 +25,14 @@ public class AutoHangCommand extends SequentialCommandGroup {
                         new SetDriveCommand(b, false),
                         new SetPivotAngleCommand(b.getPivot(), 0),
                         new SetExtensionCommand(b.getExtension(), 0),
-                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristForward))
-                        //new SetPTOCommand(b.getAscent(), Ascent.PTOState.ENGAGED)
+                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristForward)),
+                        new SetPTOCommand(b.getAscent(), Ascent.PTOState.ENGAGED)
                 ),
                 new WaitCommand(1000),
                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER),
                 new WinchArmsCommand(b.getAscent()),
-                new WaitCommand(3000)
-                //new SetPTOCommand(b.getAscent(), Ascent.PTOState.LOCKED)
+                new WaitCommand(3000),
+                new SetPTOCommand(b.getAscent(), Ascent.PTOState.LOCKED)
         );
     }
 

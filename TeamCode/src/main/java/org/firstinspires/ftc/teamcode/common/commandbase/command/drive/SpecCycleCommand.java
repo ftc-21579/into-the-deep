@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.intake3Shuttle;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score2;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControl;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControlBack;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
@@ -25,8 +26,8 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class SpecCycleCommand extends SequentialCommandGroup {
 
     public SpecCycleCommand(Bot bot) {
-        double yOffset = 1.5;
-        double xOffset = 0.25;
+        double yOffset = 5.0;
+        double xOffset = 5.0;
         double currentXOffset = specIntake.getX() + (xOffset * bot.currentSpecCycles.get()) - xOffset;
         SequentialCommandGroup specLoop = new SequentialCommandGroup(
                 new ConditionalCommand(
@@ -38,8 +39,9 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                                 new SequentialCommandGroup(
                                         new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                 .addPath(
-                                                        new BezierLine(
-                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - (yOffset * 2), score2.getHeading())),
+                                                        new BezierCurve(
+                                                                new Point(new Pose(score2.getX(), score2.getY() + (yOffset * bot.currentSpecCycles.get()) - (yOffset * 2), score2.getHeading())),
+                                                                new Point(scoreControlBack),
                                                                 new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading()))
                                                         )
                                                 )
@@ -56,7 +58,7 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                                                                         new BezierCurve(
                                                                                 new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading())),
                                                                                 new Point(scoreControl),
-                                                                                new Point(new Pose(score2.getX() + 2, score2.getY() + (yOffset * bot.currentSpecCycles.get()) - yOffset, score2.getHeading()))
+                                                                                new Point(new Pose(score2.getX(), score2.getY() + (yOffset * bot.currentSpecCycles.get()) - yOffset, score2.getHeading()))
                                                                         )
                                                                 )
                                                                 .setConstantHeadingInterpolation(score2.getHeading())
@@ -99,7 +101,7 @@ public class SpecCycleCommand extends SequentialCommandGroup {
                                                                 new BezierCurve(
                                                                         new Point(specIntake),
                                                                         new Point(scoreControl),
-                                                                        new Point(new Pose(score2.getX() + 2, score2.getY(), score2.getHeading()))
+                                                                        new Point(new Pose(score2.getX(), score2.getY(), score2.getHeading()))
                                                                 )
                                                         )
                                                         .setConstantHeadingInterpolation(score2.getHeading())

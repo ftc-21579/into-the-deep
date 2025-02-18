@@ -82,7 +82,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void intake() {
-        claw.setPosition(0.0);
+        claw.setPosition(0.025);
         state = ClawState.OPEN;
     }
 

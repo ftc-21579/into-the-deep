@@ -92,6 +92,15 @@ public class TeleOp extends CommandOpMode {
 
         Button cycleSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.PS))
                 .whenPressed(
+                        /*
+                        new ConditionalCommand(
+                                new TestPedroCommand(bot),
+                                new InstantCommand(() -> {
+                                    bot.targetSpecCycles.set(0);
+                                }),
+                                () -> bot.getPathFinished()
+                        )
+                         */
                         new TestPedroCommand(bot)
                 );
 

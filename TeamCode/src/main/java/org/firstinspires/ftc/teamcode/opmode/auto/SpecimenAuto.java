@@ -50,13 +50,14 @@ public class SpecimenAuto extends LinearOpMode {
 
     public static Pose score1 = new Pose(38, 67, 0);
     public static Pose score2 = new Pose(38, 79, Math.toRadians(180));
-    public static Pose score3 = new Pose(38, 75, Math.toRadians(180));
-    public static Pose score4 = new Pose(38, 71, Math.toRadians(180));
-    public static Pose score5 = new Pose(38, 67, Math.toRadians(180));
+    public static Pose score3 = new Pose(38, 77, Math.toRadians(180));
+    public static Pose score4 = new Pose(38, 75, Math.toRadians(180));
+    public static Pose score5 = new Pose(38, 73, Math.toRadians(180));
 
-    public static Pose specIntake = new Pose(18, 26, Math.toRadians(180));
+    public static Pose specIntake = new Pose(17, 26, Math.toRadians(180));
 
     public static Pose scoreControl = new Pose(24, 60, Math.toRadians(180));
+    public static Pose scoreControlBack = new Pose(32, 26, Math.toRadians(180));
 
     public static Pose intake1 = new Pose(32, 44, Math.toRadians(-58));
     public static Pose intake1Control = new Pose(9, 55);
@@ -300,8 +301,9 @@ public class SpecimenAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
-                                        new BezierLine(
+                                        new BezierCurve(
                                                 new Point(score2),
+                                                new Point(scoreControlBack),
                                                 new Point(specIntake)
                                         )
                                 )
@@ -336,8 +338,9 @@ public class SpecimenAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
-                                        new BezierLine(
+                                        new BezierCurve(
                                                 new Point(score3),
+                                                new Point(scoreControlBack),
                                                 new Point(specIntake)
                                         )
                                 )
@@ -372,8 +375,9 @@ public class SpecimenAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
                                 .addPath(
-                                        new BezierLine(
+                                        new BezierCurve(
                                                 new Point(score4),
+                                                new Point(scoreControlBack),
                                                 new Point(specIntake)
                                         )
                                 )

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.pedropathing.localization.Pose;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
@@ -30,7 +31,7 @@ public class TestPedroCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        new SpecCycleCommand(bot).cancel();
+        CommandScheduler.getInstance().cancelAll();
         bot.getFollower().breakFollowing();
         bot.setPathFinished(true);
         bot.getFollower().startTeleopDrive();

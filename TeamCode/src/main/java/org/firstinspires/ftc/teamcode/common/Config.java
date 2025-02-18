@@ -16,7 +16,7 @@ public class Config {
 
     public static double ascent_kP = 0.01, ascent_kI = 0.0, ascent_kD = 0.0, ascent_kF = 0.0, ascent_tolerance = 10.0;
 
-    public static double ext_increment = 5.0, pivot_increment = 10.0;
+    public static double ext_increment = 5.0, pivot_increment = 12.5;
 
     public static double wristAngleIncrement = 45, wristTwistIncrement = 45;
 }

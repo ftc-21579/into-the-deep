@@ -47,7 +47,7 @@ public class ToggleScoringTargetCommand extends CommandBase {
                     } else {
                         new SequentialCommandGroup(
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
-                                new SetPivotAngleCommand(bot.getPivot(), 10)
+                                new SetPivotAngleCommand(bot.getPivot(), 12.5)
                         ).schedule();
                     }
                     break;
@@ -63,7 +63,7 @@ public class ToggleScoringTargetCommand extends CommandBase {
                     } else {
                         new SequentialCommandGroup(
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
-                                new SetPivotAngleCommand(bot.getPivot(), 10)
+                                new SetPivotAngleCommand(bot.getPivot(), 12.5)
                         ).schedule();
                     }
                     break;
@@ -92,7 +92,7 @@ public class ToggleScoringTargetCommand extends CommandBase {
                     if (bot.getState() == BotState.INTAKE) {
                         new ParallelCommandGroup(
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
-                                new SetPivotAngleCommand(bot.getPivot(), 10),
+                                new SetPivotAngleCommand(bot.getPivot(), 12.5),
                                 new SetExtensionCommand(bot.getExtension(), 0)
                         ).schedule();
                     }
@@ -115,7 +115,7 @@ public class ToggleScoringTargetCommand extends CommandBase {
                     if (bot.getState() == BotState.INTAKE) {
                         new ParallelCommandGroup(
                                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristForward + 10)),
-                                new SetPivotAngleCommand(bot.getPivot(), 17),
+                                new SetPivotAngleCommand(bot.getPivot(), 19),
                                 new SetExtensionCommand(bot.getExtension(), 16)
                         ).schedule();
                     }

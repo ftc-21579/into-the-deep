@@ -31,8 +31,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                 addCommands(
                 new ConditionalCommand(
                         new SequentialCommandGroup(
-                                //new ManualPivotCommand(b.getPivot(), Direction.DOWN),
-                                new SetPivotAngleCommand(b.getPivot(), 0),
+                                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
+                                //new SetPivotAngleCommand(b.getPivot(), 0),
                                 new WaitCommand(250)
                         ),
                         new InstantCommand(() -> {}),
@@ -50,7 +50,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, Wrist.wristUp)),
                                         new SetExtensionCommand(b.getExtension(), 0),
-                                        new WaitCommand(350),
+                                        //new WaitCommand(350),
                                         new SetPivotAngleCommand(b.getPivot(), 95),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
                                         new ConditionalCommand(
