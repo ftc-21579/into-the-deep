@@ -97,6 +97,7 @@ public class SpecimenAuto extends LinearOpMode {
 
         Color alliance = Color.RED;
         GameElement element = GameElement.SPECIMEN;
+        TargetMode mode = TargetMode.SPEC_INTAKE;
 
         // Allow changing of preload for conditional (coming soon)
         while (opModeInInit()) {
@@ -114,8 +115,10 @@ public class SpecimenAuto extends LinearOpMode {
             if (currentController.circle && !previousController.circle) {
                 if (element == GameElement.SPECIMEN) {
                     element = GameElement.SAMPLE;
+                    mode = TargetMode.HIGH_BASKET;
                 } else {
                     element = GameElement.SPECIMEN;
+                    mode = TargetMode.SPEC_INTAKE;
                 }
             }
 
@@ -138,6 +141,7 @@ public class SpecimenAuto extends LinearOpMode {
 
         bot.setAllianceColor(alliance);
         GameElement finalElement = element;
+        TargetMode finalMode = mode;
         bot.setTargetElement(GameElement.SPECIMEN);
         bot.setTargetMode(TargetMode.SPEC_INTAKE);
         bot.setState(BotState.INTAKE);
@@ -265,19 +269,29 @@ public class SpecimenAuto extends LinearOpMode {
                                         new BezierCurve(
                                                 new Point(intake3),
                                                 new Point(intake3ShuttleControl),
-                                                new Point(specIntake)
+                                                new Point(new Pose(specIntake.getX() + 5, specIntake.getY(), specIntake.getHeading()))
                                         )
                                 )
                                 .setLinearHeadingInterpolation(intake3.getHeading(), specIntake.getHeading(), 0.6)
                                 .build()
                         ),
-                        new SetExtensionCommand(bot.getExtension(), 16),
+                        new SetExtensionCommand(bot.getExtension(), 18),
                         new SetPivotAngleCommand(bot.getPivot(), 20),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown))
                 ),
                 new ClawOuttakeCommand(bot.getClaw()),
-                new WaitCommand(150),
                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105)),
+                new WaitCommand(500),
+                new FollowPathCommand(f, f.pathBuilder()
+                        .addPath(
+                                new BezierLine(
+                                        new Point(new Pose(specIntake.getX() + 5, specIntake.getY(), specIntake.getHeading())),
+                                        new Point(specIntake)
+                                )
+                        )
+                        .setConstantHeadingInterpolation(specIntake.getHeading())
+                        .build()
+                ),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
                         new FollowPathCommand(f, f.pathBuilder()
@@ -311,9 +325,11 @@ public class SpecimenAuto extends LinearOpMode {
                                 .build()
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
-                        new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetExtensionCommand(bot.getExtension(), 16),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105)),
+                        new SequentialCommandGroup(
+                                new SetPivotAngleCommand(bot.getPivot(), 20),
+                                new SetExtensionCommand(bot.getExtension(), 18)
+                        )
                 ),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
@@ -348,9 +364,11 @@ public class SpecimenAuto extends LinearOpMode {
                                 .build()
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
-                        new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetExtensionCommand(bot.getExtension(), 16),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105)),
+                        new SequentialCommandGroup(
+                                new SetPivotAngleCommand(bot.getPivot(), 20),
+                                new SetExtensionCommand(bot.getExtension(), 18)
+                        )
                 ),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
@@ -385,9 +403,11 @@ public class SpecimenAuto extends LinearOpMode {
                                 .build()
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
-                        new SetPivotAngleCommand(bot.getPivot(), 20),
-                        new SetExtensionCommand(bot.getExtension(), 16),
-                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105))
+                        new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 105)),
+                        new SequentialCommandGroup(
+                                new SetPivotAngleCommand(bot.getPivot(), 20),
+                                new SetExtensionCommand(bot.getExtension(), 18)
+                        )
                 ),
                 IntakeSpecimenCommand,
                 new ParallelCommandGroup(
@@ -421,11 +441,12 @@ public class SpecimenAuto extends LinearOpMode {
                                 .build()
                         ),
                         new ClawOuttakeCommand(bot.getClaw()),
-                        new SetPivotAngleCommand(bot.getPivot(), 10),
+                        new SetPivotAngleCommand(bot.getPivot(), 12.5),
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown))
                 ),
                 new InstantCommand(() -> {
                     bot.setTargetElement(finalElement);
+                    bot.setTargetMode(finalMode);
                 })
         );
 

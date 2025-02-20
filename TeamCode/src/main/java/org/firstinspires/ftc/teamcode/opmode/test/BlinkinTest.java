@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.opmode.test;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.commandbase.command.BlinkinCommand;
 
+@Disabled
 @TeleOp(name = "BlinkinTest", group = "TeleOp")
 public class BlinkinTest extends CommandOpMode {
     private RevBlinkinLedDriver blinkin;

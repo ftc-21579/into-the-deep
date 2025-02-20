@@ -92,16 +92,22 @@ public class TeleOp extends CommandOpMode {
 
         Button cycleSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.PS))
                 .whenPressed(
-                        /*
                         new ConditionalCommand(
-                                new TestPedroCommand(bot),
+                                new TestPedroCommand(bot).interruptOn(() -> bot.getPathFinished()),
+                                new InstantCommand(() -> {}),
+                                () -> bot.getPathFinished()
+                        )
+                );
+
+        Button cancelSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.PS))
+                .whenPressed(
+                        new ConditionalCommand(
+                                new InstantCommand(() -> {}),
                                 new InstantCommand(() -> {
-                                    bot.targetSpecCycles.set(0);
+                                    bot.setPathFinished(true);
                                 }),
                                 () -> bot.getPathFinished()
                         )
-                         */
-                        new TestPedroCommand(bot)
                 );
 
         Button addSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CIRCLE))
@@ -268,7 +274,7 @@ public class TeleOp extends CommandOpMode {
                         new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, Wrist.wristDown)),
                         new ClawOuttakeCommand(bot.getClaw()),
                         new SetExtensionCommand(bot.getExtension(), 0),
-                        new SetPivotAngleCommand(bot.getPivot(), 10)
+                        new SetPivotAngleCommand(bot.getPivot(), 12.5)
                 )
         );
     }

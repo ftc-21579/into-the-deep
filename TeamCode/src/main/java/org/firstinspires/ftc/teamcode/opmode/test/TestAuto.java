@@ -11,11 +11,13 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,6 +26,7 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPat
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
 
+@Disabled
 @Autonomous(name="Test Auto")
 public class TestAuto extends LinearOpMode {
 

@@ -2,16 +2,23 @@ package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
 
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.pedropathing.follower.Follower;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.util.DashboardPoseTracker;
+import com.pedropathing.util.Drawing;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 
+@Config
 public class PedroTeleOpCommand extends CommandBase {
     private final Bot bot;
     private final Follower follower;
+    private PoseUpdater poseUpdater;
+    private DashboardPoseTracker dashboardPoseTracker;
     private final GamepadEx gamepad;
     double xOffset = 1;
 
@@ -24,10 +31,18 @@ public class PedroTeleOpCommand extends CommandBase {
     @Override
     public void initialize() {
         follower.startTeleopDrive();
+        poseUpdater = new PoseUpdater(bot.hMap);
+        dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
+
+        Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
+        Drawing.sendPacket();
     }
 
     @Override
     public void execute() {
+        poseUpdater.update();
+        dashboardPoseTracker.update();
+
         double forward = gamepad.getLeftY();
         double lateral = gamepad.getLeftX();
         double heading = gamepad.getRightX();
@@ -48,6 +63,10 @@ public class PedroTeleOpCommand extends CommandBase {
         bot.telem.addData("Target Spec Cycles", bot.targetSpecCycles.get());
         bot.telem.addData("Target Game Element", bot.getTargetElement());
         bot.telem.addData("Target Scoring Mode", bot.getTargetMode());
+
+        Drawing.drawPoseHistory(dashboardPoseTracker, "#4CAF50");
+        Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
+        Drawing.sendPacket();
     }
 
     @Override

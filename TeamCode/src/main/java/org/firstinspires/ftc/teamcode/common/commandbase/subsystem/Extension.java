@@ -31,7 +31,7 @@ public class Extension extends SubsystemBase {
 
     private final DcMotorEx bottomExtensionMotor, topExtensionMotor;
 
-    public static double setpointCM = 0.0, highChamberTarget = 20.0, lowBasketTarget = 20.0, highBasketTarget = 62.0, ticksperCM = 10.37339803;
+    public static double setpointCM = 0.0, highChamberTarget = 21.0, lowBasketTarget = 20.0, highBasketTarget = 62.0, ticksperCM = 10.37339803;
     public static double minExtension = 0.0, depositMaxExtension = 62, intakeMaxExtension = 50;
 
     public static ToDoubleFunction<Object[]> extensionKf = a -> {
