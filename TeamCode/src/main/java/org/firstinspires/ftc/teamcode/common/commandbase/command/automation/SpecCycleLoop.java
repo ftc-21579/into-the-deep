@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
+package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
+import static org.firstinspires.ftc.teamcode.common.Config.xOffset;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score2;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControl;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControlBack;
@@ -15,8 +16,7 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Point;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
@@ -24,12 +24,11 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class SpecCycleLoop extends SequentialCommandGroup {
 
     public SpecCycleLoop(Bot bot) {
-        double yOffset = 1.0;
-        double xOffset = 0.5;
-        double currentXOffset = specIntake.getX() + (xOffset * bot.currentSpecCycles.get()) - xOffset;
         addCommands(
                 new ConditionalCommand(
-                        new InstantCommand(() -> {}),
+                        new InstantCommand(() -> {
+                            bot.setPathFinished(true);
+                        }),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> {
                                     bot.incrementCurrentSpecCycles(Direction.UP);
@@ -38,9 +37,10 @@ public class SpecCycleLoop extends SequentialCommandGroup {
                                         new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                 .addPath(
                                                         new BezierCurve(
-                                                                new Point(new Pose(score2.getX(), score2.getY() + (yOffset * bot.currentSpecCycles.get()) - (yOffset * 2), score2.getHeading())),
+                                                                new Point(new Pose(score2.getX(), bot.getXOffset() + xOffset, score2.getHeading())),
+                                                                new Point(scoreControl),
                                                                 new Point(scoreControlBack),
-                                                                new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading()))
+                                                                new Point(new Pose(bot.getXOffset(), specIntake.getY(), specIntake.getHeading()))
                                                         )
                                                 )
                                                 .setConstantHeadingInterpolation(specIntake.getHeading())
@@ -54,10 +54,10 @@ public class SpecCycleLoop extends SequentialCommandGroup {
                                                         new FollowPathCommand(bot.getFollower(), bot.getFollower().pathBuilder()
                                                                 .addPath(
                                                                         new BezierCurve(
-                                                                                new Point(new Pose(currentXOffset, specIntake.getY(), specIntake.getHeading())),
+                                                                                new Point(new Pose(bot.getXOffset(), specIntake.getY(), specIntake.getHeading())),
                                                                                 new Point(scoreControl),
-                                                                                new Point(new Pose(score2.getX(), score2.getY() + (yOffset * bot.currentSpecCycles.get()) - yOffset, score2.getHeading()))
-                                                                        )
+                                                                                new Point(new Pose(score2.getX(), bot.getYOffset(), score2.getHeading()))
+                                                                      )
                                                                 )
                                                                 .setConstantHeadingInterpolation(score2.getHeading())
                                                                 .build()

@@ -43,6 +43,9 @@ public class PedroTeleOpCommand extends CommandBase {
         poseUpdater.update();
         dashboardPoseTracker.update();
 
+        bot.updateXOffset();
+        bot.updateYOffset();
+
         double forward = gamepad.getLeftY();
         double lateral = gamepad.getLeftX();
         double heading = gamepad.getRightX();

@@ -19,4 +19,6 @@ public class Config {
     public static double ext_increment = 5.0, pivot_increment = 12.5;
 
     public static double wristAngleIncrement = 45, wristTwistIncrement = 45;
+
+    public static double xOffset = 1.5, yOffset = 5.0;
 }

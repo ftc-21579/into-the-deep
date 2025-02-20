@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.tuning;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.hardware.AbsoluteAnalogEncoder;
 
+@Disabled
 @TeleOp(name="Velocity/Acceleration Tuner", group="Tuning")
 public class VelocityAccelerationTuner extends LinearOpMode {
     private DcMotorEx bottomExtensionMotor, topExtensionMotor, pivotMotor;

@@ -72,7 +72,7 @@ public class SampleAuto extends LinearOpMode {
     //public static Pose pickup3ToBasketControl = new Pose()
 
     // Hamburger Special
-    public static Pose hamburgerSpecialPose = new Pose(12, 58, Math.toRadians(-110));
+    public static Pose hamburgerSpecialPose = new Pose(11, 59, Math.toRadians(-110));
     public static Pose hamburgerSpecialControl = new Pose(16, 72);
 
 
@@ -294,8 +294,8 @@ public class SampleAuto extends LinearOpMode {
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 new DepositCommand(bot),
-                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(180 + Math.toDegrees(hamburgerSpecialPose.getHeading()), Wrist.wristDown)),
-                                new SetPivotAngleCommand(bot.getPivot(), 12),
+                                new SetWristPositionCommand(bot.getWrist(), new Vector2d(-70, Wrist.wristDown)),
+                                new SetPivotAngleCommand(bot.getPivot(), 12.5),
                                 new SetExtensionCommand(bot.getExtension(), 45)
                         ),
                         new SequentialCommandGroup(
@@ -314,7 +314,7 @@ public class SampleAuto extends LinearOpMode {
                         )
                 ),
                 new SequentialCommandGroup(
-                        new WaitCommand(250),
+                        new WaitCommand(500),
                         new SetPivotAngleCommand(bot.getPivot(), 0),
                         new ClawIntakeCommand(bot.getClaw()),
                         new WaitCommand(250),

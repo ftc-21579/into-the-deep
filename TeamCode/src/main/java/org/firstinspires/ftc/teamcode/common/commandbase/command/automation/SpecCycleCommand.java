@@ -1,22 +1,17 @@
-package org.firstinspires.ftc.teamcode.common.commandbase.command.drive;
+package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
 
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.pedropathing.localization.Pose;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-public class TestPedroCommand extends CommandBase {
+public class SpecCycleCommand extends CommandBase {
     private final Bot bot;
 
-    public TestPedroCommand(Bot bot) {
+    public SpecCycleCommand(Bot bot) {
         this.bot = bot;
     }
 
@@ -27,8 +22,10 @@ public class TestPedroCommand extends CommandBase {
         bot.getFollower().breakFollowing();
         bot.getFollower().setPose(specIntake);
         bot.getFollower().setMaxPower(1.0);
-        new SpecCycleCommand(bot).schedule();
-        //new SpecCycleWithoutOffsetCommand(bot).schedule();
+        new SequentialCommandGroup(
+                new SpecCycleStart(bot),
+                new SpecCycleLoop(bot).perpetually().interruptOn(bot::getPathFinished)
+        ).schedule();
     }
 
     @Override

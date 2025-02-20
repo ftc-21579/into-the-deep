@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot.
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.common.util.PidfCoefficients;
 import org.firstinspires.ftc.teamcode.common.util.PidfController;
 import org.firstinspires.ftc.teamcode.common.util.MotionState;
 
+@Disabled
 @Config
 @TeleOp(name = "Trajectory Tuner", group = "Tuning")
 public class TrajectoryTuner extends OpMode {

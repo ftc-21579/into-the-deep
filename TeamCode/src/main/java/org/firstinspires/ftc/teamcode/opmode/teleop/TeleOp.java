@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -21,12 +20,10 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.Auto
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.PedroTeleOpCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.SpecCycleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.TestPedroCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.SpecCycleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.ToggleRobotCentricCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.ManualExtensionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
-import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.intake.ClawOuttakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.ManualPivotCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.pivot.SetPivotAngleCommand;
@@ -46,8 +43,6 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadButton;
 import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadEx;
 import org.firstinspires.ftc.teamcode.common.util.gamepad.ExtendedGamepadKeys;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 public class TeleOp extends CommandOpMode {
@@ -85,7 +80,7 @@ public class TeleOp extends CommandOpMode {
         PedroTeleOpCommand pedroTeleOpCommand = new PedroTeleOpCommand(bot, bot.getFollower(), driverGamepad);
         schedule(pedroTeleOpCommand);
 
-        Button fieldCentricButton = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.SHARE))
+        Button robotCentricToggle = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.SHARE))
                 .whenPressed(
                         new ToggleRobotCentricCommand(bot)
                 );
@@ -93,7 +88,7 @@ public class TeleOp extends CommandOpMode {
         Button cycleSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.PS))
                 .whenPressed(
                         new ConditionalCommand(
-                                new TestPedroCommand(bot).interruptOn(() -> bot.getPathFinished()),
+                                new SpecCycleCommand(bot).interruptOn(() -> bot.getPathFinished()),
                                 new InstantCommand(() -> {}),
                                 () -> bot.getPathFinished()
                         )
@@ -117,7 +112,7 @@ public class TeleOp extends CommandOpMode {
                         })
                 );
 
-        Button subtractSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CROSS))
+        Button removeSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CROSS))
                 .whenPressed(
                         new InstantCommand(() -> {
                             bot.incrementTargetSpecCycles(Direction.DOWN);

@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.common;
 
+import static org.firstinspires.ftc.teamcode.common.Config.xOffset;
+import static org.firstinspires.ftc.teamcode.common.Config.yOffset;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score2;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
+
 import com.arcrobotics.ftclib.command.Robot;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -42,6 +47,8 @@ public class Bot extends Robot {
     private boolean isPathFinished = true;
     public AtomicInteger targetSpecCycles = new AtomicInteger(0);
     public AtomicInteger currentSpecCycles = new AtomicInteger(0);
+    public double currentXOffset;
+    public double currentYOffset;
 
     private final Intake claw;
     private final Extension extension;
@@ -151,6 +158,22 @@ public class Bot extends Robot {
                 currentSpecCycles.set(Math.max(0, Math.min(20, currentSpecCycles.get() - 1)));
                 break;
         }
+    }
+
+    public void setXOffset(double xOffset) { currentXOffset = xOffset; }
+
+    public void setYOffset(double yOffset) { currentYOffset = yOffset; }
+
+    public double getXOffset() { return currentXOffset; }
+
+    public double getYOffset() { return currentYOffset; }
+
+    public void updateXOffset() {
+        currentXOffset = specIntake.getX() + (xOffset * currentSpecCycles.get()) - xOffset;
+    }
+
+    public void updateYOffset() {
+        currentYOffset = score2.getY() + (yOffset * currentSpecCycles.get()) - yOffset;
     }
 
     /**

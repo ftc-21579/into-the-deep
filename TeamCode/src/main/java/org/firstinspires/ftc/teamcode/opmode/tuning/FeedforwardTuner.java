@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.tuning;
 import static java.lang.Math.signum;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.common.util.PidfCoefficients;
 import org.firstinspires.ftc.teamcode.common.util.PidfController;
 import org.firstinspires.ftc.teamcode.common.util.MotionState;
 
+@Disabled
 @Config
 @TeleOp(name = "Feedforward Tuner", group = "Tuning")
 public class FeedforwardTuner extends OpMode {
