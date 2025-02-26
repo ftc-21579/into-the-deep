@@ -160,20 +160,16 @@ public class Bot extends Robot {
         }
     }
 
-    public void setXOffset(double xOffset) { currentXOffset = xOffset; }
-
-    public void setYOffset(double yOffset) { currentYOffset = yOffset; }
-
     public double getXOffset() { return currentXOffset; }
 
     public double getYOffset() { return currentYOffset; }
 
     public void updateXOffset() {
-        currentXOffset = specIntake.getX() + (xOffset * currentSpecCycles.get()) - xOffset;
+        currentXOffset = specIntake.getX() - (xOffset * currentSpecCycles.get()) + xOffset;
     }
 
     public void updateYOffset() {
-        currentYOffset = score2.getY() + (yOffset * currentSpecCycles.get()) - yOffset;
+        currentYOffset = score2.getY() - (yOffset * currentSpecCycles.get()) + yOffset;
     }
 
     /**

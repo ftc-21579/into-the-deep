@@ -1,25 +1,35 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.intake3Shuttle;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score2;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControl;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.scoreControlBack;
 import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.RepeatCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Point;
 
 import org.firstinspires.ftc.teamcode.common.Bot;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.DepositCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.IntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbase.command.automation.SpecCycleLoop;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.drive.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetExtensionCommand;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
+import org.firstinspires.ftc.teamcode.common.util.SussyRepeatCommand;
 
-public class SpecCycleStart extends SequentialCommandGroup {
+public class SpecCycle extends SequentialCommandGroup {
 
-    public SpecCycleStart(Bot bot) {
+    public SpecCycle(Bot bot) {
         addCommands(
                 new ConditionalCommand(
                         new SequentialCommandGroup(
@@ -62,7 +72,28 @@ public class SpecCycleStart extends SequentialCommandGroup {
                             bot.setPathFinished(true);
                         }),
                         () -> bot.targetSpecCycles.get() > 0
-                )
+                ),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new SpecCycleLoop(bot),
+                new InstantCommand(() -> {
+                    bot.currentSpecCycles.set(0);
+                })
         );
     }
 }

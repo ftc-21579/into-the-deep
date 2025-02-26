@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
     private final Servo claw;
     private final AnalogInput clawFeedback;
     private final DigitalChannel colorSensor0, colorSensor1;
-    public static double grabbedAngle = 280.0;
+    public static double grabbedAngle = 265.0;
 
     private final CRServo leftActive, rightActive;
 
@@ -41,22 +41,11 @@ public class Intake extends SubsystemBase {
         rightActive.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    /*
     public void periodic() {
         bot.telem.addData("Is Grabbed????????", isGrabbing());
-        bot.telem.addData("Is Correct Color????????", isCorrectColor());
         bot.telem.addData("Analog Voltage", clawFeedback.getVoltage());
         bot.telem.addData("Analog Degrees", getAnalogDegrees());
-        bot.telem.addData("Color", getColor());
-        bot.telem.addData("0 State", colorSensor0.getState());
-        bot.telem.addData("1 State", colorSensor1.getState());
-        bot.telem.addData("Bot State", bot.getState());
-        bot.telem.addData("Bot Target Mode", bot.getTargetMode());
-        //BlinkinUtil.setBlinkinDriver(bot.getBlinkin());
-        //RevBlinkinLedDriver.BlinkinPattern previousPattern = BlinkinUtil.getPattern();
-        //bot.telem.addData("Blinkin Pattern", previousPattern);
     }
-     */
 
     public boolean isGrabbing() {
         double feedbackVoltage = clawFeedback.getVoltage();

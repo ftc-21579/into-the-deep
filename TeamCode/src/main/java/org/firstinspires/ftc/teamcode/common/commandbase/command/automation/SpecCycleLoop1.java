@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.common.commandbase.command.extension.SetEx
 import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 
-public class SpecCycleLoop extends SequentialCommandGroup {
+public class SpecCycleLoop1 extends SequentialCommandGroup {
 
-    public SpecCycleLoop(Bot bot) {
+    public SpecCycleLoop1(Bot bot) {
         double yOffset = 1.0;
         double xOffset = 0.5;
         double currentXOffset = specIntake.getX() + (xOffset * bot.currentSpecCycles.get()) - xOffset;

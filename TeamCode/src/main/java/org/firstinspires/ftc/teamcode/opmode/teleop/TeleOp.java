@@ -7,6 +7,9 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.RepeatCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -115,7 +118,9 @@ public class TeleOp extends CommandOpMode {
         Button removeSpecs = (new ExtendedGamepadButton(driverGamepad, ExtendedGamepadKeys.Button.CROSS))
                 .whenPressed(
                         new InstantCommand(() -> {
-                            bot.incrementTargetSpecCycles(Direction.DOWN);
+                            //bot.incrementTargetSpecCycles(Direction.DOWN);
+                            bot.getClaw().toggle();
+
                         })
                 );
         //endregion

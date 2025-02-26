@@ -98,7 +98,8 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                                 new SequentialCommandGroup(
                                                                         new SetExtensionCommand(b.getExtension(), 0),
                                                                         new WaitCommand(500),
-                                                                        new SetExtensionCommand(b.getExtension(), 35)
+                                                                        new SetExtensionCommand(b.getExtension(), 35),
+                                                                        new SetBotStateCommand(b, BotState.DEPOSIT)
                                                                 ),
                                                                 new ParallelCommandGroup(
                                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
@@ -124,11 +125,11 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                                 new SetExtensionCommand(b.getExtension(), 0),
                                                                 new SetPivotAngleCommand(b.getPivot(), 95, true)
                                                         ),
-                                                        new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
+                                                        new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget),
+                                                        new SetBotStateCommand(b, BotState.DEPOSIT)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
-                                        ),
-                                        new SetBotStateCommand(b, BotState.DEPOSIT)
+                                        )
                                 ),
                                 () -> b.getTargetElement() == GameElement.SAMPLE
                         ),

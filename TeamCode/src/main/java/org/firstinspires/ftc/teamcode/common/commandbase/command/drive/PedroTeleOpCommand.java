@@ -61,14 +61,17 @@ public class PedroTeleOpCommand extends CommandBase {
         follower.update();
         bot.telem.addData("isBusy", follower.isBusy());
         bot.telem.addData("Pose", follower.getPose());
-        bot.telem.addData("Spec Intake X", specIntake.getX() - (xOffset * bot.currentSpecCycles.get()) + xOffset);
+        bot.telem.addData("X Offset", bot.getXOffset());
+        bot.telem.addData("Y Offset", bot.getYOffset());
         bot.telem.addData("Current Spec Cycles", bot.currentSpecCycles.get());
         bot.telem.addData("Target Spec Cycles", bot.targetSpecCycles.get());
         bot.telem.addData("Target Game Element", bot.getTargetElement());
         bot.telem.addData("Target Scoring Mode", bot.getTargetMode());
+        bot.telem.addData("Is Path Finished?", bot.getPathFinished());
 
         Drawing.drawPoseHistory(dashboardPoseTracker, "#4CAF50");
         Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
+        //Drawing.drawPath(follower.getCurrentPath(), "#2838b5");
         Drawing.sendPacket();
     }
 

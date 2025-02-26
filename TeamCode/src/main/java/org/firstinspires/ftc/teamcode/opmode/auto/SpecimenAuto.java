@@ -63,10 +63,10 @@ public class SpecimenAuto extends LinearOpMode {
     public static Pose intake1Control = new Pose(9, 55);
     public static Pose intake1Shuttle = new Pose(30, 40, Math.toRadians(-140));
 
-    public static Pose intake2 = new Pose(33, 33, Math.toRadians(-60));
+    public static Pose intake2 = new Pose(33, 32, Math.toRadians(-60));
     public static Pose intake2Shuttle = new Pose(30, 40, Math.toRadians(-140));
 
-    public static Pose intake3 = new Pose(31.5, 25, Math.toRadians(-54));
+    public static Pose intake3 = new Pose(31.5, 24, Math.toRadians(-54));
     public static Pose intake3Shuttle = new Pose(19, 26, Math.toRadians(180));
     public static Pose intake3ShuttleControl = new Pose(30, 24);
 
@@ -147,7 +147,7 @@ public class SpecimenAuto extends LinearOpMode {
         bot.setState(BotState.INTAKE);
 
         ParallelCommandGroup ScorePositionCommand = new ParallelCommandGroup(
-                new SetPivotAngleCommand(bot.getPivot(), 36),
+                new SetPivotAngleCommand(bot.getPivot(), 35),
                 new SetExtensionCommand(bot.getExtension(), 40),
                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(0, 55))
         );
@@ -202,6 +202,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
                 new ManualPivotCommand(bot.getPivot(), Direction.UP),
+                new SetExtensionCommand(bot.getExtension(), 40),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -216,6 +217,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ClawOuttakeCommand(bot.getClaw()),
                 new WaitCommand(150),
                 new SetWristPositionCommand(bot.getWrist(), new Vector2d(60, Wrist.wristDown)),
+                new SetExtensionCommand(bot.getExtension(), 36),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -231,6 +233,7 @@ public class SpecimenAuto extends LinearOpMode {
                 new ClawIntakeCommand(bot.getClaw()),
                 new WaitCommand(250),
                 new ManualPivotCommand(bot.getPivot(), Direction.UP),
+                new SetExtensionCommand(bot.getExtension(), 40),
                 new FollowPathCommand(f, f.pathBuilder()
                         .addPath(
                                 new BezierLine(
@@ -269,7 +272,7 @@ public class SpecimenAuto extends LinearOpMode {
                                         new BezierCurve(
                                                 new Point(intake3),
                                                 new Point(intake3ShuttleControl),
-                                                new Point(new Pose(specIntake.getX() + 5, specIntake.getY(), specIntake.getHeading()))
+                                                new Point(new Pose(specIntake.getX() + 8, specIntake.getY(), specIntake.getHeading()))
                                         )
                                 )
                                 .setLinearHeadingInterpolation(intake3.getHeading(), specIntake.getHeading(), 0.6)
