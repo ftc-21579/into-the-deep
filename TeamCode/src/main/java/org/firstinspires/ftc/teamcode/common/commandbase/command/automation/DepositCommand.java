@@ -42,14 +42,16 @@ public class DepositCommand extends SequentialCommandGroup {
                                                 new ClawOuttakeCommand(b.getClaw()),
                                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
                                                 new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
-                                                new SetPivotAngleCommand(b.getPivot(), 10)
+                                                new SetPivotAngleCommand(b.getPivot(), 12.5),
+                                                new SetExtensionCommand(b.getExtension(), 0)
                                         ),
                                         new SequentialCommandGroup(
                                                 new SetExtensionCommand(b.getExtension(), 0),
                                                 new ClawOuttakeCommand(b.getClaw()),
                                                 new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE),
-                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown - 10)),
-                                                new SetPivotAngleCommand(b.getPivot(), 15)
+                                                new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristForward + 10)),
+                                                new SetPivotAngleCommand(b.getPivot(), 19),
+                                                new SetExtensionCommand(b.getExtension(), 16)
                                         ),
                                         () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
                                 )

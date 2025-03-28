@@ -1,75 +1,93 @@
 package org.firstinspires.ftc.teamcode.common;
 
+import static org.firstinspires.ftc.teamcode.common.Config.xOffset;
+import static org.firstinspires.ftc.teamcode.common.Config.yOffset;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.score2;
+import static org.firstinspires.ftc.teamcode.opmode.auto.SpecimenAuto.specIntake;
+
 import com.arcrobotics.ftclib.command.Robot;
-import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Ascent;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Extension;
-import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Pivot;
 import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Wrist;
 import org.firstinspires.ftc.teamcode.common.intothedeep.BotState;
 import org.firstinspires.ftc.teamcode.common.intothedeep.Color;
+import org.firstinspires.ftc.teamcode.common.intothedeep.Direction;
 import org.firstinspires.ftc.teamcode.common.intothedeep.GameElement;
 import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.common.pedroPathing.constants.LConstants;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bot extends Robot {
     public final Telemetry telem;
     public final HardwareMap hMap;
     public final Gamepad gamepad;
+    private ElapsedTime clock = new ElapsedTime();
 
-    public BotState state = BotState.DEPOSIT;
-    private GameElement targetElement = GameElement.SAMPLE;
-    private TargetMode targetMode = TargetMode.HIGH_BASKET;
+    public static BotState state = BotState.DEPOSIT;
+    private static GameElement targetElement = GameElement.SAMPLE;
+    private static TargetMode targetMode = TargetMode.HIGH_BASKET;
     private static Color allianceColor = Color.NONE;
     private Color gameElementColor = Color.NONE;
+    private boolean robotCentric = true;
+    private boolean enableDrive = true;
+    private boolean enableTeleOpDrive = true;
+    private boolean isPathFinished = true;
+    public AtomicInteger targetSpecCycles = new AtomicInteger(0);
+    public AtomicInteger currentSpecCycles = new AtomicInteger(0);
+    public double currentXOffset;
+    public double currentYOffset;
 
-    private MecanumDrivetrain drivetrain;
     private final Intake claw;
     private final Extension extension;
     private final Wrist wrist;
     private final Pivot pivot;
     private final Ascent ascent;
+    private final Follower follower;
 
     private final RevBlinkinLedDriver blinkin;
+
+    private final Pose startPose = new Pose(0, 0, 0);
 
 
     public Bot(Telemetry telem, HardwareMap hMap, Gamepad gamepad, boolean enableDrive) {
         this.telem = telem;
         this.hMap = hMap;
         this.gamepad = gamepad;
+        clock.reset();
 
         blinkin = hMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         /* Subsystems */
         claw = new Intake(this);
         wrist = new Wrist(this);
-        if (enableDrive) {
-            drivetrain = new MecanumDrivetrain(this);
-        }
         pivot = new Pivot(this);
         extension = new Extension(this);
         ascent = new Ascent(this);
+
+        Constants.setConstants(FConstants.class, LConstants.class);
+        follower = new Follower(hMap);
+        follower.setStartingPose(startPose);
     }
 
-    /**
-     * Get the MecanumDrivetrain subsystem of the robot
-     * @return the mecanum subsystem of the robot
-     */
-    public MecanumDrivetrain getDrivetrain() { return drivetrain; }
+    public void resetTime() {
+        clock.reset();
+    }
 
-    /**
-     * Set the pose estimate of the robot
-     */
-    public void setPoseEstimateDEG(Pose2d pose) {
-        drivetrain.setOdoPositionDEG(pose);
+    public double getTime() {
+        return clock.seconds();
     }
 
     /**
@@ -101,6 +119,58 @@ public class Bot extends Robot {
      * @return the pivot subsystem of the robot
      */
     public Ascent getAscent() { return ascent; }
+
+    public Follower getFollower() { return follower; }
+
+    public void setRobotCentric(boolean robotCentric) { this.robotCentric = robotCentric; }
+
+    public boolean getRobotCentric() { return robotCentric; }
+
+    public void setEnableDrive(boolean enableDrive) { this.enableDrive = enableDrive; }
+
+    public boolean getEnableDrive() { return enableDrive; }
+
+    public void setEnableTeleOpDrive(boolean enableTeleOpDrive) { this.enableTeleOpDrive = enableTeleOpDrive; }
+
+    public boolean getEnableTeleOpDrive() { return enableTeleOpDrive; }
+
+    public void setPathFinished(boolean pathFinished) { isPathFinished = pathFinished; }
+
+    public boolean getPathFinished() { return isPathFinished; }
+
+    public void incrementTargetSpecCycles(Direction direction) {
+        switch (direction) {
+            case UP:
+                targetSpecCycles.set(Math.max(0, Math.min(20, targetSpecCycles.get() + 1)));
+                break;
+            case DOWN:
+                targetSpecCycles.set(Math.max(0, Math.min(20, targetSpecCycles.get() - 1)));
+                break;
+        }
+    }
+
+    public void incrementCurrentSpecCycles(Direction direction) {
+        switch (direction) {
+            case UP:
+                currentSpecCycles.set(Math.max(0, Math.min(20, currentSpecCycles.get() + 1)));
+                break;
+            case DOWN:
+                currentSpecCycles.set(Math.max(0, Math.min(20, currentSpecCycles.get() - 1)));
+                break;
+        }
+    }
+
+    public double getXOffset() { return currentXOffset; }
+
+    public double getYOffset() { return currentYOffset; }
+
+    public void updateXOffset() {
+        currentXOffset = specIntake.getX() - (xOffset * currentSpecCycles.get()) + xOffset;
+    }
+
+    public void updateYOffset() {
+        currentYOffset = score2.getY() - (yOffset * currentSpecCycles.get()) + yOffset;
+    }
 
     /**
      * Get the Blinkin subsystem of the robot

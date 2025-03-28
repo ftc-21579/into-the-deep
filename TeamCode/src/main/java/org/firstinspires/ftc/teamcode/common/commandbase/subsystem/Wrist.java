@@ -60,9 +60,9 @@ public class Wrist extends SubsystemBase {
     }
 
     // Increment twist by a certain amount in degrees
-    public void incrementTwist(double deltaTwistDegrees) {
+    public void incrementTwist(double deltaTwistDegrees, boolean manual) {
         double newTwistDegrees = getTwistDegrees() + deltaTwistDegrees;
-        setTwist(clampTwistDegrees(newTwistDegrees));
+        setTwist(clampTwistDegrees(newTwistDegrees, manual));
     }
 
     // Increment angle by a certain amount in degrees
@@ -102,8 +102,12 @@ public class Wrist extends SubsystemBase {
         return Math.max((SERVO_RANGE_DEGREES / 2) - 90, Math.min((SERVO_RANGE_DEGREES / 2) + 90, degrees));
     }
 
-    private double clampTwistDegrees(double degrees) {
-        return Math.max(-180.0, Math.min(90.0, degrees));
+    private double clampTwistDegrees(double degrees, boolean manual) {
+        if (manual) {
+            return Math.max(-90.0, Math.min(90.0, degrees));
+        } else {
+            return Math.max(-180.0, Math.min(90.0, degrees));
+        }
     }
 
     // Update servo positions based on current twist and angle targets
@@ -119,10 +123,10 @@ public class Wrist extends SubsystemBase {
         //double leftPosition = angleTarget + twistTarget;
         //double rightPosition = angleTarget - twistTarget;
 
-        bot.telem.addData("Left Wrist Position", leftPosition);
-        bot.telem.addData("Right Wrist Position", rightPosition);
-        bot.telem.addData("Angle Target Degrees", denormalizeAngle(getAngleDegrees()));
-        bot.telem.addData("Twist Target Degrees", getTwistDegrees());
+        //bot.telem.addData("Left Wrist Position", leftPosition);
+        //bot.telem.addData("Right Wrist Position", rightPosition);
+        //bot.telem.addData("Angle Target Degrees", denormalizeAngle(getAngleDegrees()));
+        //bot.telem.addData("Twist Target Degrees", getTwistDegrees());
 
         // Set the servo positions
         left.setPosition(leftPosition);

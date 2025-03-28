@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.commandbase.command.automation;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -27,9 +28,19 @@ import org.firstinspires.ftc.teamcode.common.intothedeep.TargetMode;
 public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Bot b) {
-                addCommands(
-                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
-                new WaitCommand(250),
+        ParallelCommandGroup missed = new ParallelCommandGroup(
+
+        );
+        addCommands(
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new ManualPivotCommand(b.getPivot(), Direction.DOWN),
+                                //new SetPivotAngleCommand(b.getPivot(), 0),
+                                new WaitCommand(250)
+                        ),
+                        new InstantCommand(() -> {}),
+                        () -> b.getTargetElement() == GameElement.SAMPLE || b.getTargetElement() == GameElement.SPECIMEN && b.getTargetMode() == TargetMode.SPEC_INTAKE
+                ),
                 new ClawIntakeCommand(b.getClaw()),
                 new WaitCommand(250),
                 new ConditionalCommand(
@@ -41,19 +52,37 @@ public class IntakeCommand extends SequentialCommandGroup {
                                 new SequentialCommandGroup(
                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, Wrist.wristUp)),
-                                        new SetExtensionCommand(b.getExtension(), 0),
-                                        new WaitCommand(350),
-                                        new SetPivotAngleCommand(b.getPivot(), 95),
-                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, 45)),
+                                        //new ManualPivotCommand(b.getPivot(), Direction.UP),
+                                        new SetPivotAngleCommand(b.getPivot(), 12.5),
                                         new ConditionalCommand(
-                                                // Go to the correct height based on the target mode
-                                                // low basket
-                                                new SetExtensionCommand(b.getExtension(), Extension.lowBasketTarget),
-                                                // high basket
-                                                new SetExtensionCommand(b.getExtension(), Extension.highBasketTarget),
-                                                () -> b.getTargetMode() == TargetMode.LOW_BASKET
-                                        ),
-                                        new SetBotStateCommand(b, BotState.DEPOSIT)
+                                              new SequentialCommandGroup(
+                                                      new SetExtensionCommand(b.getExtension(), 0),
+                                                      new SetPivotAngleCommand(b.getPivot(), 95),
+                                                      new SetWristPositionCommand(b.getWrist(), new Vector2d(-90, 45)),
+                                                      new ConditionalCommand(
+                                                              // Go to the correct height based on the target mode
+                                                              // low basket
+                                                              new SetExtensionCommand(b.getExtension(), Extension.lowBasketTarget),
+                                                              // high basket
+                                                              new SetExtensionCommand(b.getExtension(), Extension.highBasketTarget),
+                                                              () -> b.getTargetMode() == TargetMode.LOW_BASKET
+                                                      ),
+                                                      new SetBotStateCommand(b, BotState.DEPOSIT)
+                                              ),
+                                              new ParallelCommandGroup(
+                                                      new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
+                                                      new SetPivotAngleCommand(b.getPivot(), 12.5),
+                                                      new RumbleControllerCommand(b, 500),
+                                                      new ClawOuttakeCommand(b.getClaw()),
+                                                      new SetBotStateCommand(b, BotState.INTAKE),
+                                                      new SequentialCommandGroup(
+                                                              new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.STROBE_RED),
+                                                              new WaitCommand(500),
+                                                              new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE)
+                                                      )
+                                              ),
+                                              () ->  b.getClaw().isGrabbing() && b.getClaw().isCorrectColor()
+                                        )
                                 ),
                                 // SPECIMEN
                                 new SequentialCommandGroup(
@@ -63,27 +92,56 @@ public class IntakeCommand extends SequentialCommandGroup {
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(0, 45)),
-                                                        new ManualPivotCommand(b.getPivot(), Direction.UP),
-                                                        new SetExtensionCommand(b.getExtension(), 0)
+                                                        //new ManualPivotCommand(b.getPivot(), Direction.UP),
+                                                        new SetPivotAngleCommand(b.getPivot(), 12.5),
+                                                        new ConditionalCommand(
+                                                                new SequentialCommandGroup(
+                                                                        new SetExtensionCommand(b.getExtension(), 0),
+                                                                        new WaitCommand(500),
+                                                                        new SetExtensionCommand(b.getExtension(), 35),
+                                                                        new SetBotStateCommand(b, BotState.DEPOSIT)
+                                                                ),
+                                                                new ParallelCommandGroup(
+                                                                        new SetWristPositionCommand(b.getWrist(), new Vector2d(0, Wrist.wristDown)),
+                                                                        new SetPivotAngleCommand(b.getPivot(), 12.5),
+                                                                        new RumbleControllerCommand(b, 500),
+                                                                        new ClawOuttakeCommand(b.getClaw()),
+                                                                        new SetBotStateCommand(b, BotState.INTAKE),
+                                                                        new SequentialCommandGroup(
+                                                                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.STROBE_RED),
+                                                                                new WaitCommand(500),
+                                                                                new BlinkinCommand(b.getBlinkin(), RevBlinkinLedDriver.BlinkinPattern.WHITE)
+                                                                        )
+                                                                ),
+                                                                () ->  b.getClaw().isGrabbing() && b.getClaw().isCorrectColor()
+                                                        )
                                                 ),
                                                 // Deposit Shuttling
                                                 new SequentialCommandGroup(
                                                         new BlinkinCommand(b.getBlinkin(), b.getClaw().getColor()),
-                                                        new SetExtensionCommand(b.getExtension(), 0),
                                                         new SetWristPositionCommand(b.getWrist(), new Vector2d(-180, Wrist.wristUp)),
-                                                        new SetPivotAngleCommand(b.getPivot(), 95, true),
-                                                        new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget)
+                                                        new WaitCommand(100),
+                                                        new ParallelCommandGroup(
+                                                                new SetExtensionCommand(b.getExtension(), 0),
+                                                                new SetPivotAngleCommand(b.getPivot(), 95, true)
+                                                        ),
+                                                        new SetExtensionCommand(b.getExtension(), Extension.highChamberTarget),
+                                                        new SetBotStateCommand(b, BotState.DEPOSIT)
                                                 ),
                                                 () -> b.getTargetMode() == TargetMode.SPEC_INTAKE
-                                        ),
-                                        new SetBotStateCommand(b, BotState.DEPOSIT)
+                                        )
                                 ),
                                 () -> b.getTargetElement() == GameElement.SAMPLE
                         ),
                         // NOT GRABBING
                         new ParallelCommandGroup(
+                                new ConditionalCommand(
+                                        //new ManualPivotCommand(b.getPivot(), Direction.UP),
+                                        new SetPivotAngleCommand(b.getPivot(), 12.5),
+                                        new InstantCommand(() -> {}),
+                                        () -> b.getTargetElement() == GameElement.SAMPLE || b.getTargetElement() == GameElement.SPECIMEN && b.getTargetMode() == TargetMode.SPEC_INTAKE
+                                ),
                                 new RumbleControllerCommand(b, 500),
-                                new ManualPivotCommand(b.getPivot(), Direction.UP),
                                 new ClawOuttakeCommand(b.getClaw()),
                                 new SetBotStateCommand(b, BotState.INTAKE),
                                 new SequentialCommandGroup(
